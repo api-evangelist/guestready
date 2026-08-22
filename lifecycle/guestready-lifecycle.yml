@@ -1,0 +1,75 @@
+generated: '2026-08-22'
+method: searched
+source: >-
+  openapi/guestready-rentalready-openapi.yml,
+  https://support.rentalready.com/hc/en-us/articles/28084114094481-RentalReady-latest-improvments
+api: RentalReady API
+versioning:
+  scheme: uri-path
+  current_version: v3
+  base: https://pms.rentalready.io/api/v3/
+  spec_version: 1.0.0 (api)
+  openapi_version: 3.0.3
+  policy_published: false
+  note: >-
+    The major version is carried in the path (/api/v3/). No written versioning policy, no version-negotiation
+    header and no dated version string are published on any anonymously reachable surface.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: 0
+  deprecated_scopes:
+  - scope: hosts:read
+    label: Read hosts (deprecated)
+    successor: owners:read / property_managers:read
+    source: components.securitySchemes.oauth2.flows.authorizationCode.scopes
+  - scope: hosts:write
+    label: Write hosts (deprecated)
+    successor: owners:write
+    source: components.securitySchemes.oauth2.flows.authorizationCode.scopes
+  note: >-
+    No operation carries `deprecated: true`. The only deprecation signal anywhere in the contract is inside
+    two OAuth scope LABELS, where the provider has written "(deprecated)" into the human description of the
+    hosts:read / hosts:write scopes — a real signal, but not a policy, not dated, and not machine-detectable
+    by any standard mechanism. No Deprecation pointer is emitted in apis.yml because no deprecation policy
+    is published.
+status_page:
+  published: false
+  probed:
+  - url: https://status.rentalready.com/
+    status: 0
+    result: NXDOMAIN / no listener
+  - url: https://status.rentalready.io/
+    status: 0
+    result: NXDOMAIN / no listener
+  - url: https://status.guestready.com/
+    status: 0
+    result: NXDOMAIN / no listener
+  - url: https://rentalready.statuspage.io/
+    status: 200
+    result: >-
+      FALSE POSITIVE — redirects to https://www.atlassian.com/software/statuspage (Atlassian's own product
+      page), and /api/v2/summary.json returns that same marketing HTML rather than JSON. There is no
+      Statuspage tenant for this provider.
+  note: no StatusPage pointer is emitted, because no status page exists
+sla:
+  published: false
+  note: no SLA or uptime commitment is published on an anonymously reachable surface
+changelog:
+  published: true
+  scope: product (RentalReady PMS), not API-specific
+  url: https://support.rentalready.com/hc/en-us/articles/28084114094481-RentalReady-latest-improvments
+  cadence: monthly
+  coverage: 2023-03 through 2026-08
+  details: changelog/guestready-changelog.yml
+support:
+  help_center: https://support.rentalready.com/hc/en-us
+  email: help@rentalready.com
+  source: https://support.rentalready.com/hc/en-us/articles/17601752109713-I-need-help
+maturity:
+  api_generation: 3rd (v3)
+  spec_generator: drf-spectacular (Django REST Framework)
+  spec_served_anonymously: true
+  observed: 2026-08-22

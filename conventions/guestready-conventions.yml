@@ -1,0 +1,176 @@
+generated: '2026-08-22'
+method: derived
+source: >-
+  openapi/guestready-rentalready-openapi.yml (verbatim from https://pms.rentalready.io/api/v3/schema/),
+  https://github.com/guestready/rentalready-api-client-examples
+api: RentalReady API
+base_url: https://pms.rentalready.io/api/v3/
+auth:
+  style: oauth2-authorization-code
+  header: 'Authorization: Bearer <access_token>'
+  alternatives:
+  - 'Authorization: Token <token> (tokenAuth apiKey scheme)'
+  - HTTP Basic (basicAuth)
+  - session cookie `sessionid` (cookieAuth — browser/console only)
+  authorization_url: https://pms.rentalready.io/o/authorize/
+  token_url: https://pms.rentalready.io/o/token/
+  refresh_url: https://pms.rentalready.io/o/token/
+  authorization_code_ttl: 60 seconds
+  scopes: 54 (see scopes/guestready-scopes.yml)
+  details: authentication/guestready-authentication.yml
+  source: https://github.com/guestready/rentalready-api-client-examples#readme
+pagination:
+  style: limit-offset
+  params:
+  - limit
+  - offset
+  secondary_style: cursor
+  secondary_params:
+  - cursor
+  response_fields:
+  - count
+  - next
+  - previous
+  - results
+  - limit
+  envelope_schema: Paginated*List (e.g. PaginatedIcalSyncList, PaginatedReservationList)
+  note: >-
+    Django REST Framework LimitOffsetPagination on 63 collection endpoints; three collections
+    (cursor-paginated) expose a `cursor` parameter instead. `next`/`previous` are absolute URLs.
+filtering:
+  ordering_param: ordering
+  common_filters:
+  - created_after
+  - created_before
+  - modified_after
+  - modified_before
+  - status
+  - rental_id
+  - reservation_id
+  note: >-
+    Change-window filters (created_after / modified_after) are present on 13 and 11 operations
+    respectively — the practical incremental-sync mechanism in the absence of webhooks.
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  custom_fields: true
+  operations:
+  - custom_fields_list
+  - custom_fields_create
+  - custom_fields_search_retrieve
+  - rentals_custom_fields_retrieve
+  - rentals_custom_fields_create
+  - reservations_custom_fields_retrieve
+  - reservations_custom_fields_create
+  note: user-defined custom fields exist on rentals and reservations via a typed CustomFieldDefinition
+request_id_tracing:
+  supported: unknown
+  note: no request-id or correlation header is declared in the specification
+versioning:
+  style: uri-path
+  current: v3
+  path_prefix: /api/v3/
+  spec_version: 1.0.0 (api)
+  openapi_version: 3.0.3
+  details: lifecycle/guestready-lifecycle.yml
+errors:
+  format: non-standard
+  rfc9457: false
+  content_type: application/json
+  envelopes_observed:
+  - '{"detail": "<message>"}                       # DRF permission / auth errors'
+  - '{"message": "<message>"}                      # domain rule violations'
+  - '{"<field>": ["<validation message>", ...]}    # field validation errors'
+  - '{"non_field_errors": ["<message>", ...]}      # object-level validation errors'
+  catalog: errors/guestready-problem-types.yml
+  note: >-
+    Only 11 of 252 operations declare a 4xx response (six 400s, five 403s); the envelope shapes above are
+    read from the `example` payloads those responses carry. No application/problem+json anywhere.
+rate_limits:
+  documented: true
+  limit: 400 requests per minute
+  source: info.description of the OpenAPI specification ("### Throttling — Our API supports up to 400 requests per minute")
+  headers: unknown
+  details: rate-limits/guestready-rate-limits.yml
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No Idempotency-Key (or equivalent) parameter or header appears anywhere in the 252-operation spec, and
+    the client examples repository does not mention one. Retrying a POST — reservations_create,
+    missions_create, payment_acceptance_transactions_create — is not safe. No Idempotency pointer is emitted
+    in apis.yml, because the provider does not offer the guarantee.
+dry_run_mode:
+  supported: false
+  note: no preview/simulate/validate-only parameter exists on any write operation
+reversibility:
+  grade: documented
+  credit_basis: >-
+    Reversal PATHS are present in the contract and are first-class named operations, but the specification
+    and the public Help Center state no WINDOW for any of them, so this grades `documented` and not
+    `verified`. No window is asserted below, because inventing one on a refund or a cancellation could cost
+    a user real money.
+  surfaces:
+  - write_surface: reservation
+    forward: reservations_create
+    reversal: reservations_cancel_partial_update
+    reversal_path: PATCH /api/v3/reservations/{id}/cancel/
+    window: null
+    window_source: null
+    note: >-
+      cancellation is a status transition on the reservation, not a delete; cancellation POLICY (the guest-facing
+      refund terms) is configured per property via CancellationPolicyCategoryEnum and is not exposed as a window
+      on this operation
+  - write_surface: mission (operational task — cleaning, check-in, maintenance)
+    forward: missions_create
+    reversal: missions_cancel_partial_update
+    reversal_path: PATCH /api/v3/missions/{id}/cancel/
+    window: null
+    window_source: null
+  - write_surface: payment acceptance transaction
+    forward: payment_acceptance_transactions_create
+    reversal: payment_acceptance_transactions_refund_create
+    reversal_path: POST /api/v3/payment_acceptance_transactions/{id}/refund/
+    window: null
+    window_source: null
+    note: >-
+      the spec's own 400/403 examples state two preconditions — "Refund not allowed for acceptance transaction"
+      and "Refund allowed only for stripe payment gateway" — but no time window
+  - write_surface: incident
+    forward: incidents_list (incidents are raised by the platform)
+    reversal: incidents_close_partial_update / incidents_archive_partial_update
+    reversal_path: PATCH /api/v3/incidents/{id}/close/ , PATCH /api/v3/incidents/{id}/archive/
+    window: null
+    window_source: null
+    note: 'the 400 example states a one-way rule: "An archived incident cannot change status"'
+  - write_surface: calendar block
+    forward: calendar_block_create
+    reversal: calendar_unblock_create
+    reversal_path: POST /api/v3/calendar/unblock/
+    window: null
+    window_source: null
+  - write_surface: rental / property availability
+    forward: rentals_block_partial_update , rentals_disable_create
+    reversal: rentals_unblock_partial_update , rentals_enable_create
+    reversal_path: PATCH /api/v3/rentals/{numero_contrat}/unblock/ , POST /api/v3/rentals/{numero_contrat}/enable/
+    window: null
+    window_source: null
+  - write_surface: OTA listing
+    forward: listings_enable_create
+    reversal: listings_disable_create
+    reversal_path: POST /api/v3/listings/{id}/disable/
+    window: null
+    window_source: null
+  hard_deletes:
+    note: >-
+      16 DELETE operations (bathrooms_destroy, bedrooms_destroy, icals_destroy, owners_destroy,
+      photos_destroy, rate_rules_destroy, rentals_destroy, subrooms_destroy, tags_destroy and others) have
+      NO restore counterpart and no documented retention period — these are the irreversible writes in this API.
+related:
+  authentication: authentication/guestready-authentication.yml
+  scopes: scopes/guestready-scopes.yml
+  errors: errors/guestready-problem-types.yml
+  lifecycle: lifecycle/guestready-lifecycle.yml
+  rate_limits: rate-limits/guestready-rate-limits.yml

@@ -1,0 +1,345 @@
+generated: '2026-08-22'
+method: searched
+source: https://pms.rentalready.io/api/v3/schema/
+docs: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+also:
+- https://github.com/guestready/rentalready-api-client-examples/blob/main/python/.env.example
+note: >-
+  RentalReady publishes no standalone scopes or permissions reference page. The authoritative scope list is
+  the OAuth 2.0 securityScheme inside the specification the provider serves anonymously at
+  https://pms.rentalready.io/api/v3/schema/, rendered for humans at its Swagger UI. The provider's own
+  client-examples repository publishes a working SCOPES string in python/.env.example naming 24 of these
+  scopes, which corroborates the spec but is a strict subset of it — the spec is the superset and is what
+  is recorded here. Descriptions below are the provider's own verbatim scope labels. Two scopes carry a
+  deprecation marker in their own label (hosts:read, hosts:write, both "(deprecated)"); see
+  lifecycle/guestready-lifecycle.yml.
+authorization_url: https://pms.rentalready.io/o/authorize/
+token_url: https://pms.rentalready.io/o/token/
+grant: authorization_code
+authorization_code_ttl_seconds: 60
+schemes:
+- name: oauth2
+  source: openapi/guestready-rentalready-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: /o/authorize/
+    tokenUrl: /o/token/
+scopes:
+- scope: accounting_invoice:read
+  description: Read accounting invoices
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: accounting_invoice:write
+  description: Write accounting invoices
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: agents:read
+  description: Read agents
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: amenities:read
+  description: Read amenities
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: amenities:write
+  description: Create, update and delete amenities
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: blacklist:read
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: calendar:read
+  description: Read calendar
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: calendar:write
+  description: Write calendar
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: city_tax_rules:read
+  description: Read city tax rules
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: conversations:read
+  description: Read conversations
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: conversations:write
+  description: Write conversations
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: custom_fields:read
+  description: Read custom fields
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: custom_fields:write
+  description: Write custom fields
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: guest_registration:read
+  description: Read guest registration data
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: hosts:read
+  description: Read hosts (deprecated)
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: hosts:write
+  description: Write hosts (deprecated)
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: incidents:read
+  description: Read incidents
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: incidents:write
+  description: Write incidents
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: inquiries:read
+  description: Read inquiries
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: issues:read
+  description: Read issues
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: issues:write
+  description: Write issues
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: listing_requests:read
+  description: Read listing requests
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: messages:read
+  description: Read messages
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: messages:write
+  description: Write messages
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: missions:read
+  description: Read missions
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: missions:write
+  description: Write missions
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: neighbourhoods:read
+  description: Read neighbourhoods
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: offices:read
+  description: Read offices
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: onboarding_requests:read
+  description: Read onboarding requests
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: owners:read
+  description: Read owners
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: owners:write
+  description: Write owners
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: payment_acceptance_transactions:read
+  description: Read payment acceptance transactions
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: payment_acceptance_transactions:write
+  description: Write payment acceptance transactions
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: payment_links:read
+  description: Read payment links
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: payout_adjustments:read
+  description: Read payout adjustments
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: payout_adjustments:write
+  description: Write payout adjustments
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: photos:write
+  description: Create, update and delete photos
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: pricing:read
+  description: Read pricing
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: pricing:write
+  description: Create, update and delete pricing
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: property_managers:read
+  description: Read property managers
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: read
+  description: Read scope
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: rentals:read
+  description: Read rentals
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: rentals:write
+  description: Create, update and delete rentals
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: reservation_platform:read
+  description: Read reservation platform
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: reservations:read
+  description: Read reservations
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: reservations:write
+  description: Create, update and cancel reservations
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: reviews:read
+  description: Read reviews
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: reviews:write
+  description: Write reviews
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: smart_schedulers:read
+  description: Read smart schedulers
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: smart_schedulers:write
+  description: Write smart schedulers
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: swikly_deposits:read
+  description: Read swikly deposits
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: users:read
+  description: Read user data
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: vouchers:read
+  sources:
+  - openapi/guestready-rentalready-openapi.yml
+- scope: write
+  description: Write scope
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/guestready-rentalready-openapi.yml

@@ -1,0 +1,27 @@
+generated: '2026-08-22'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.guestready.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 31 23:48:55 2026 GMT
+  hsts: false
+- host: pms.rentalready.io
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 11 19:05:07 2026 GMT
+  hsts: false
+domains:
+- domain: guestready.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: none
+- domain: rentalready.io
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: none

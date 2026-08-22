@@ -1,23 +1,130 @@
 aid: guestready
 name: GuestReady
-description: 'GuestReady is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  GuestReady is a full-service short-term and mid-term rental hospitality management company operating
+  across Europe and the Middle East (United Kingdom, France, Portugal, Spain, Switzerland and the UAE),
+  managing Airbnb, Booking.com, Vrbo and direct-booking properties on behalf of owners and investors —
+  listing optimisation, dynamic pricing, guest communication, cleaning, maintenance and on-the-ground
+  operations. GuestReady Group is also the author of RentalReady, the property management system (PMS)
+  it originally built for its own operations and now sells to external property managers. RentalReady
+  is the group's developer-facing surface: a 252-operation OpenAPI 3.0.3 REST API at
+  pms.rentalready.io/api/v3/ covering rentals, reservations, calendar, pricing, missions, issues,
+  conversations, reviews, owners, invoicing and payments, secured with OAuth 2.0 authorization-code
+  flow and 50+ granular scopes, plus a Model Context Protocol (MCP) server that connects AI agents to
+  live PMS data.
+image: https://d1od3nh65mn5zb.cloudfront.net/app/uploads/2024/06/18144540/Template-1-Homepage.png
 url: https://raw.githubusercontent.com/api-evangelist/guestready/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-22'
 modified: '2026-08-22'
 tags:
-- Company
-apis: []
+- Property Management
+- Short Term Rentals
+- Vacation Rentals
+- Hospitality
+- Travel
+- Real Estate
+- Channel Management
+- Reservations
+- Revenue Management
+- PMS
+- MCP
+- OAuth
+apis:
+- name: RentalReady API
+  description: >-
+    REST API for the RentalReady property management system built by GuestReady Group. 252 operations
+    across 60 resource groups — rentals and property layout, reservations and quotes, calendar and daily
+    prices, rate rules and pricing algorithms, missions and agents, issues and incidents, conversations,
+    messages and inquiries, reviews, owners and property managers, listings and rental platform accounts,
+    iCal calendar sync, guest registration, city tax rules, payment links, payout adjustments, payment
+    acceptance transactions and accounting invoices. OAuth 2.0 authorization-code flow with per-resource
+    read/write scopes; also accepts a Token header and HTTP basic. Documented throttle of 400 requests
+    per minute.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - Property Management
+  - Short Term Rentals
+  - Vacation Rentals
+  - Hospitality
+  - Reservations
+  - Channel Management
+  - Revenue Management
+  - PMS
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-rentalready-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/guestready-domain-security.yml
+- type: OAuthScopes
+  url: scopes/guestready-scopes.yml
+- type: Authentication
+  url: authentication/guestready-authentication.yml
 - type: Website
-  url: https://forgeglobal.com/guestready_stock/
+  url: https://www.guestready.com/
+- type: Blog
+  url: https://www.guestready.com/blog/
+- type: BlogRSS
+  url: https://www.guestready.com/blog/feed/
+- type: Pricing
+  url: https://www.guestready.com/pricing/
+- type: TermsOfService
+  url: https://www.guestready.com/terms/
+- type: PrivacyPolicy
+  url: https://www.guestready.com/privacy/
+- type: Support
+  url: https://support.rentalready.com/hc/en-us
+- type: GitHubOrganization
+  url: https://github.com/guestready
+- type: Login
+  url: https://pms.rentalready.io/account/login/
+- type: FAQ
+  url: https://www.guestready.com/faq/
+- type: LLMsTxt
+  url: llms/guestready-llms.txt
+- type: MCPServer
+  url: mcp/guestready-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/guestready-tool-crosswalk.yml
+- type: Conventions
+  url: conventions/guestready-conventions.yml
+- type: ErrorCatalog
+  url: errors/guestready-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/guestready-lifecycle.yml
+- type: ChangeLog
+  url: changelog/guestready-changelog.yml
+- type: Conformance
+  url: conformance/guestready-conformance.yml
+- type: DataModel
+  url: data-model/guestready-data-model.yml
+- type: Components
+  url: components/guestready-components.yml
+- type: Packages
+  url: packages/guestready-packages.yml
+- type: Plans
+  url: plans/guestready-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/guestready-rate-limits.yml
+- type: Overlay
+  url: overlays/guestready-rentalready-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-08-22'
+  status: enriched
+  artifacts_added: 20
+  pass: local-v1

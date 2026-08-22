@@ -1,0 +1,61 @@
+generated: '2026-08-22'
+method: searched
+source: https://support.rentalready.com/hc/en-us
+api: RentalReady
+summary: >-
+  RentalReady ships client-side and hosted surfaces that a property manager embeds or white-labels, distinct
+  from the REST API and from any SDK. All of them are activated by RentalReady support rather than
+  self-serve, and none is distributed through a package registry.
+families:
+- family: embeddable booking
+  components:
+  - name: Instant booking widget
+    kind: embeddable script
+    install: >-
+      HTML snippet installed on the property manager's own website, one per property listing page; RentalReady
+      support issues a platform ID that must be added to the code
+    synchronizes:
+    - rates and availability from the calendar
+    - property cancellation policy
+    - discount codes
+    - guest messages
+    prerequisites:
+    - RentalReady payment system subscription, or a Stripe account connected to RentalReady
+    - property must be active
+    loader: not published
+    version: null
+    note: >-
+      version is null because the loader URL and its versioning are not published on any anonymously
+      reachable page — a consumer cannot tell what build they are embedding.
+    docs: https://support.rentalready.com/hc/en-us/articles/18530115746961-Booking-widget
+- family: hosted white-label spaces
+  components:
+  - name: Guest space
+    kind: hosted portal
+    audience: guests
+    surfaces: reservation details, arrival form, security deposit request, upselling, extension, cancellation, property access and Wi-Fi
+    docs: https://support.rentalready.com/hc/en-us/articles/28999200107793-Guest-space
+  - name: Owner space
+    kind: hosted white-label portal
+    audience: property owners
+    surfaces: reservations, financial data, performance, calendar management, per-owner visibility controls
+    docs: https://support.rentalready.com/hc/en-us/articles/35653747159185-Owner-space
+  - name: Agent space
+    kind: hosted white-label portal
+    audience: field agents / cleaners
+    surfaces: mission data, reviews, statistics, checklists
+    access: https://pms.rentalready.io or a personalised URL, plus the RentalReady Agents mobile app
+    docs: https://support.rentalready.com/hc/en-us/articles/35890635449233-Agent-space
+- family: generated sites
+  components:
+  - name: Direct booking website
+    kind: hosted site generator
+    default_domain: demo-guest.rentalready.io
+    custom_domain: supported, connected by RentalReady support
+    prerequisites:
+    - RentalReady payment system subscription, or a connected Stripe account
+    docs: https://support.rentalready.com/hc/en-us/articles/21747939844753-Direct-booking-website-by-RentalReady
+note: >-
+  Every component above is provisioned by contacting RentalReady support. There is no self-serve embed, no
+  npm/CDN distribution and no published component version, so an integrator cannot pin or audit what they
+  render.

@@ -1,0 +1,110 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the RentalReady API
+  version: 1.0.0
+extends: openapi/guestready-rentalready-openapi.yml
+x-provenance:
+  generated: '2026-08-22'
+  method: generated
+  source: >-
+    Enhancements derived by API Evangelist from the verbatim specification at
+    https://pms.rentalready.io/api/v3/schema/ plus the provider's own client-examples repository and Help
+    Center. This overlay is NEVER applied to the original; the original stays byte-identical in
+    openapi/_original/.
+  note: >-
+    The upstream document declares no servers[] block, no tags[] declarations, no contact, no licence and no
+    externalDocs. Everything below restores information the provider publishes elsewhere so the document is
+    self-describing; nothing is invented.
+actions:
+- target: $
+  description: >-
+    Add the servers[] block. The upstream spec omits it entirely, so a generated client has no host. The
+    value is the provider's own — python/.env.example in guestready/rentalready-api-client-examples sets
+    BASE_URL=https://pms.rentalready.io/api/v3/.
+  update:
+    servers:
+    - url: https://pms.rentalready.io/api/v3
+      description: Production (the only environment RentalReady publishes)
+- target: $.info
+  description: >-
+    Add contact and externalDocs. Support address from the Help Center article "I need help"; reference URL
+    is the provider's own Swagger UI.
+  update:
+    contact:
+      name: RentalReady Support
+      email: help@rentalready.com
+      url: https://support.rentalready.com/hc/en-us
+    x-api-evangelist:
+      profile: https://apis.io/provider/guestready/
+      harvested: '2026-08-22'
+      harvested_from: https://pms.rentalready.io/api/v3/schema/
+- target: $
+  description: >-
+    Declare the 60 tag groups the operations already use. The upstream document tags every operation but
+    declares no tags[] array, so no renderer can group or describe them.
+  update:
+    externalDocs:
+      description: RentalReady API reference (Swagger UI, served by the provider)
+      url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+- target: $.components.securitySchemes.oauth2.flows.authorizationCode
+  description: >-
+    Make the OAuth URLs absolute. Upstream declares them relative (/o/authorize/, /o/token/), which is legal
+    but unresolvable without the servers[] block that upstream also omits.
+  update:
+    x-absolute-urls:
+      authorizationUrl: https://pms.rentalready.io/o/authorize/
+      tokenUrl: https://pms.rentalready.io/o/token/
+      refreshUrl: https://pms.rentalready.io/o/token/
+    x-authorization-code-ttl-seconds: 60
+- target: $.info
+  description: Record the published throttle as structured data rather than prose buried in the description.
+  update:
+    x-rate-limit:
+      requests: 400
+      window: 1 minute
+      source: info.description
+      headers: none published
+- target: $.info
+  description: >-
+    Record the reversibility surface — which writes can be taken back and by which operation. No window is
+    asserted because the provider states none.
+  update:
+    x-reversibility:
+      grade: documented
+      pairs:
+      - forward: reservations_create
+        reversal: reservations_cancel_partial_update
+      - forward: missions_create
+        reversal: missions_cancel_partial_update
+      - forward: payment_acceptance_transactions_create
+        reversal: payment_acceptance_transactions_refund_create
+      - forward: calendar_block_create
+        reversal: calendar_unblock_create
+      - forward: rentals_block_partial_update
+        reversal: rentals_unblock_partial_update
+      - forward: listings_enable_create
+        reversal: listings_disable_create
+      irreversible: 16 DELETE operations with no restore counterpart
+- target: $.info
+  description: >-
+    Record the two OAuth scopes the provider has marked deprecated in their human labels, so the signal is
+    machine-readable instead of hiding in a description string.
+  update:
+    x-deprecated-scopes:
+    - scope: hosts:read
+      successor: owners:read
+    - scope: hosts:write
+      successor: owners:write
+x-gaps-for-the-provider:
+  note: >-
+    Recorded for a provenance issue, not patched here — the scorer reads the ORIGINAL document, so these are
+    changes only RentalReady can make.
+  items:
+  - 226 of 252 operations carry no `summary` (26 do)
+  - 143 of 252 operations carry no `description`
+  - no tags[] declarations, so the 60 tag groups are undescribed
+  - no servers[] block
+  - no contact, licence or externalDocs in info
+  - only 11 of 252 operations declare any 4xx response; none declares 401, 404 or 429
+  - no request/response examples outside the 11 error examples
+  - enum schema names are machine-generated with hash suffixes (CategoryC86Enum, Status3eaEnum)

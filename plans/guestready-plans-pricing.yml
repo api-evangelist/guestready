@@ -1,0 +1,38 @@
+generated: '2026-08-22'
+method: searched
+source: https://www.guestready.com/pricing/
+plan_count: 0
+summary: >-
+  Neither GuestReady nor RentalReady publishes a priced plan table, and neither publishes any API pricing at
+  all. GuestReady's own pricing page states a commission model with no figure — "The commission depends on the
+  property profile and location" — plus a one-time onboarding fee whose amount "varies based on property size,
+  location, and availability" and is deducted from the first month's rental income rather than charged upfront;
+  in some markets a fixed-rent alternative is offered. The page's only path to a number is a city selector or a
+  quote request. RentalReady (the software, and the product the API belongs to) routes to a demo request; its
+  pricing page could not be read (see access_barriers).
+plans: []
+commercial_model:
+- product: GuestReady property management
+  model: commission + one-time onboarding fee
+  price: not published
+  currency: varies by market (GBP, EUR, AED, CHF)
+  billing_period: per guest stay (commission), one-time (onboarding)
+  quote_path: https://www.guestready.com/get-a-quote/
+  evidence: 'https://www.guestready.com/pricing/ (HTTP 200) — "GuestReady presents a commission-based solution for owners, collecting a commission for each guest''s stay."'
+- product: RentalReady PMS (the API's product)
+  model: not published
+  price: not published
+  quote_path: https://www.rentalready.com/get-a-demo-of-rentalready/
+  evidence: sales-gated; see access_barriers
+api_pricing:
+  published: false
+  metered: unknown
+  note: >-
+    The RentalReady API has no separate published price, no free tier and no self-serve signup. Access is via
+    an OAuth client_id/client_secret that RentalReady issues to an existing customer — the client-examples
+    repository assumes you already hold one, and there is no developer registration page on any host. API
+    access is therefore a feature of a PMS subscription, not a product with a price.
+access_barriers:
+- url: https://www.rentalready.com/pricing/
+  status: 202
+  detail: "SiteGround robot-challenge interstitial (sg-captcha: challenge) returned to every user agent tried"

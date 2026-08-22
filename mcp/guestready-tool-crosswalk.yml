@@ -1,0 +1,193 @@
+generated: '2026-08-22'
+method: derived
+source: >-
+  openapi/guestready-rentalready-openapi.yml (252 operations, verbatim from
+  https://pms.rentalready.io/api/v3/schema/) crossed with the capability areas RentalReady publishes for its
+  MCP server at https://www.rentalready.com/features/mcp/
+confidence_note: >-
+  The live MCP tools/list manifest could NOT be retrieved — every candidate endpoint on mcp.rentalready.io
+  returned 404 and the feature page documenting the server answers HTTP 202 behind a SiteGround robot
+  challenge (see mcp/guestready-mcp.yml). No tool NAME and no inputSchema is asserted here. Rows below bind
+  a provider-published CAPABILITY AREA to the REST operations that back it, so every row is confidence: low
+  and binding: capability-area. When the MCP manifest becomes readable, replace these rows with real
+  tool -> operationId bindings at confidence high.
+surfaces:
+  openapi:
+    file: openapi/guestready-rentalready-openapi.yml
+    base_url: https://pms.rentalready.io/api/v3/
+    operations: 252
+    gated: false
+    note: spec is served anonymously; the operations themselves require an OAuth 2.0 access token
+  graphql:
+    endpoint: null
+    note: no GraphQL surface found on any RentalReady host
+  mcp:
+    url: null
+    gated: true
+    note: endpoint not published on any anonymously reachable surface
+coverage:
+  capability_areas: 7
+  rest_operations_total: 252
+  rest_operations_bound_to_a_capability_area: 92
+  rest_only_operations: 160
+  mcp_only_capabilities: 0
+crosswalk:
+- tool: reservations
+  category: bookings
+  rest:
+  - reservations_list
+  - reservations_retrieve
+  - reservations_create
+  - reservations_partial_update
+  - reservations_cancel_partial_update
+  - reservations_update_arrival_time_partial_update
+  - reservations_update_key_code_partial_update
+  - reservations_custom_fields_retrieve
+  - reservations_custom_fields_create
+  - inquiries_list
+  - inquiries_retrieve
+  binding: capability-area
+  confidence: low
+  note: provider lists "reservations" as an MCP capability area; these are the REST operations that serve it
+- tool: guest messaging and conversations
+  category: communications
+  rest:
+  - conversations_list
+  - conversations_retrieve
+  - conversations_create
+  - conversations_set_flag_partial_update
+  - conversation_flags_list
+  - conversation_flags_retrieve
+  - messages_list
+  - messages_retrieve
+  - messages_create
+  binding: capability-area
+  confidence: low
+- tool: tickets / tasks
+  category: operations
+  rest:
+  - issues_list
+  - issues_retrieve
+  - issues_create
+  - issues_partial_update
+  - issues_close_partial_update
+  - issue_notes_list
+  - issue_notes_create
+  - issue_categories_list
+  - issue_files_list
+  - missions_list
+  - missions_retrieve
+  - missions_create
+  - missions_partial_update
+  - missions_cancel_partial_update
+  - missions_mark_mission_as_done_partial_update
+  - missions_update_agent_partial_update
+  - incidents_list
+  - incidents_retrieve
+  - incidents_close_partial_update
+  - incidents_archive_partial_update
+  binding: capability-area
+  confidence: low
+- tool: reviews
+  category: reputation
+  rest:
+  - reviews_list
+  - reviews_retrieve
+  binding: capability-area
+  confidence: low
+- tool: property data
+  category: inventory
+  rest:
+  - rentals_list
+  - rentals_retrieve
+  - rentals_create
+  - rentals_partial_update
+  - rentals_history_list
+  - rentals_custom_fields_retrieve
+  - bedrooms_list
+  - bathrooms_list
+  - subrooms_list
+  - multi_units_list
+  - rental_amenities_list
+  - amenities_list
+  - descriptions_list
+  - photos_list
+  - check_in_steps_list
+  - smart_locks_list
+  - listings_list
+  binding: capability-area
+  confidence: low
+- tool: reporting
+  category: finance
+  rest:
+  - invoicing_list
+  - invoicing_retrieve
+  - payout_adjustments_list
+  - payout_adjustments_retrieve
+  - payment_acceptance_transactions_list
+  - payment_acceptance_transactions_retrieve
+  - payment_links_list
+  - payment_links_retrieve
+  - accounting_invoices_create
+  binding: capability-area
+  confidence: low
+- tool: operational activity
+  category: scheduling
+  rest:
+  - calendar_block_create
+  - calendar_unblock_create
+  - daily_prices_list
+  - daily_prices_create
+  - pricing_list
+  - rate_rules_list
+  - smart_schedulers_list
+  - los_list
+  - agents_list
+  - offices_list
+  binding: capability-area
+  confidence: low
+mcp_only: []
+rest_only:
+- group: owners and property managers
+  rest:
+  - owners_list
+  - owners_create
+  - owners_retrieve
+  - owners_partial_update
+  - owners_destroy
+  - property_managers_list
+  - property_manager_platform_settings_list
+  reason: no matching capability area in the published MCP description
+- group: channel / OTA distribution
+  rest:
+  - rental_platform_accounts_list
+  - rental_platform_settings_list
+  - reservation_platforms_list
+  - listings_disable_create
+  - listings_enable_create
+  - icals_list
+  - icals_create
+  - icals_update
+  - icals_destroy
+  reason: no matching capability area in the published MCP description
+- group: compliance and tax
+  rest:
+  - guest_registration_retrieve
+  - city_tax_rules_list
+  - blacklist_list
+  - rental_agreement_signatures_list
+  - reservation_documents_list
+  - midterm_contract_files_list
+  reason: no matching capability area in the published MCP description
+- group: reference data
+  rest:
+  - countries_list
+  - cities_list
+  - neighbourhoods_list
+  - bed_types_list
+  - subroom_types_list
+  - type_missions_list
+  - sub_type_missions_list
+  - tags_list
+  - users_me_retrieve
+  reason: lookup/reference endpoints, not an agent capability area

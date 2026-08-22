@@ -1,0 +1,51 @@
+generated: '2026-08-22'
+method: searched
+source: https://support.rentalready.com/hc/en-us/articles/28084114094481-RentalReady-latest-improvments
+name: RentalReady latest improvements
+scope: >-
+  Product changelog for the RentalReady PMS, published as a Help Center index article that links one
+  release note per month. It is NOT an API changelog — no entry is tied to an API version, an operationId or
+  a breaking-change classification, and the OpenAPI itself carries a static version string ("1.0.0 (api)").
+url: https://support.rentalready.com/hc/en-us/articles/28084114094481-RentalReady-latest-improvments
+scheme: monthly release notes
+cadence: monthly
+current_version: null
+coverage:
+  earliest: '2023-03'
+  latest: '2026-08'
+  months_published: 39
+  article_last_updated: '2026-08-05T07:19:16Z'
+entries:
+- version: '2026-08'
+  date: '2026-08'
+  breaking: unknown
+  additions: unknown
+  highlights: monthly release note (linked from the index article)
+- version: '2026-07'
+  date: '2026-07'
+  breaking: unknown
+  additions: unknown
+  highlights: monthly release note
+- version: '2026-06'
+  date: '2026-06'
+  breaking: unknown
+  additions: unknown
+  highlights: monthly release note
+- version: '2026-05'
+  date: '2026-05'
+  breaking: unknown
+  additions: unknown
+  highlights: monthly release note
+- version: '2026-04'
+  date: '2026-04'
+  breaking: unknown
+  additions: unknown
+  highlights: monthly release note
+note: >-
+  Only the index article is readable without authentication; it lists month links but the linked monthly
+  notes were not fetched, so per-entry highlights are recorded as `unknown` rather than summarised. The
+  breaking-vs-additive split the pipeline normally records is not published by this provider.
+adjacent_signals:
+- source: https://shorttermrentalz.com/news/rentalready-launches-ai-tools-to-help-short-term-rental-managers-analyse-operational-data/
+  event: RentalReady launches an MCP server and an upgraded Maia Insights AI assistant
+  note: trade-press coverage, not a provider changelog entry

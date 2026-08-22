@@ -1,0 +1,68 @@
+generated: '2026-08-22'
+method: searched
+source: https://www.rentalready.com/features/mcp/
+name: RentalReady MCP
+provider: GuestReady Group (RentalReady)
+status: published
+summary: >-
+  RentalReady — the property management system authored by GuestReady Group — publishes a Model Context
+  Protocol server that connects AI agents and assistants (Claude, OpenAI, Gemini) to live RentalReady PMS
+  data and workflows: reservations, guest messaging and conversations, tickets/tasks, reviews, property
+  data and reporting. The provider positions it for property management companies, technical teams and
+  partners building AI-powered workflows, internal tools and automations on top of RentalReady, with the
+  operator retaining control over what an agent may read or action.
+deployment:
+  mode: remote
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  note: >-
+    mode is recorded as `remote` on evidence, not on a claim: RentalReady is a hosted multi-tenant Django
+    SaaS (pms.rentalready.io / mcp.rentalready.io), the vendor describes agents connecting to LIVE PMS data,
+    and no stdio distribution exists — npm registry search for "rentalready" and "guestready" returns zero
+    packages and PyPI returns 404 for rentalready, guestready, rentalready-api and rentalready-client
+    (all probed 2026-08-22). The exact endpoint URL is NOT recorded because it was not published on any
+    surface reachable without authentication: www.rentalready.com/features/mcp/ answers HTTP 202 with a
+    SiteGround robot-challenge interstitial to every user agent tried (browser, Googlebot, facebookexternalhit,
+    Twitterbot, LinkedInBot, curl), and the RentalReady Help Center — read in full through its public Zendesk
+    API, all 303 articles — carries no MCP or developer article. Probing mcp.rentalready.io for /mcp, /mcp/,
+    /sse, /message, /messages/ and /api/mcp/ returned 404; the 400 "Missing trailing slash" JSON on /api/mcp
+    is a generic Django APPEND_SLASH response returned for any /api/<anything> path and is NOT evidence of an
+    MCP route. Guessing a URL here would manufacture a verified agent surface, so it is left null.
+endpoints_probed:
+- url: https://mcp.rentalready.io/
+  status: 302
+  result: redirects to /account/login/ — RentalReady application login (gunicorn/Django)
+- url: https://mcp.rentalready.io/mcp/
+  status: 404
+- url: https://mcp.rentalready.io/sse
+  status: 404
+- url: https://mcp.rentalready.io/api/mcp/
+  status: 404
+- url: https://mcp.rentalready.io/.well-known/oauth-protected-resource
+  status: 404
+- url: https://mcp.rentalready.io/.well-known/oauth-authorization-server
+  status: 404
+tools:
+  status: not-published
+  note: >-
+    No tools/list manifest could be retrieved (see endpoints_probed). The capability AREAS below are quoted
+    from the provider's own MCP feature page as indexed; they are capability domains, not tool names, and no
+    tool name or inputSchema is asserted anywhere in this repo.
+capability_areas:
+- reservations
+- guest messaging and conversations
+- tickets / tasks
+- reviews
+- property data
+- reporting
+- operational activity
+references:
+- https://www.rentalready.com/features/mcp/
+- https://www.rentalready.com/features/ai-features/
+- https://shorttermrentalz.com/news/rentalready-launches-ai-tools-to-help-short-term-rental-managers-analyse-operational-data/
+related:
+  rest_api: openapi/guestready-rentalready-openapi.yml
+  crosswalk: mcp/guestready-tool-crosswalk.yml

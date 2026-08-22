@@ -1,0 +1,179 @@
+generated: '2026-08-22'
+method: derived
+source: openapi/guestready-rentalready-openapi.yml
+api: RentalReady API
+summary:
+  component_schemas: 296
+  core_entities: 110
+  enum_schemas: 128
+  paginated_envelopes: 34
+  identifier_style: >-
+    integer surrogate `id` on almost every resource; the two exceptions are the anchors — a rental is keyed
+    by `numero_contrat` (contract number, a string) and an owner by `username`. There are no prefixed,
+    type-carrying identifiers anywhere, so an agent holding a bare integer cannot tell what it identifies.
+entities:
+- name: Rental
+  aka: property
+  key: numero_contrat (string, "Contract number")
+  operations: [rentals_list, rentals_create, rentals_retrieve, rentals_update, rentals_partial_update, rentals_destroy]
+  relationships:
+  - has_many: RentalListing
+    via: listings
+  - has_many: RentalPhoto
+    via: images
+  - has_many: RentalPhoto
+    via: listing_photos
+  - has_many: RentalSmartLock
+    via: smart_locks
+  - has_one: GuestControl
+    via: guest_control
+  note: the hub of the model — bedrooms, bathrooms, subrooms, amenities, descriptions, photos, icals, daily prices and missions all reference a rental
+- name: Reservation
+  key: id (integer)
+  operations: [reservations_list, reservations_create, reservations_retrieve, reservations_partial_update, reservations_cancel_partial_update]
+  relationships:
+  - has_one: GuestInvoice
+    via: guest_invoice
+  - has_many: ReservationExtraFee
+    via: extra_fees
+  - has_many: MidTermPeriodBreakdown
+    via: mid_term_period_breakdown
+  - has_many: PaymentLinkSecurityDeposit
+    via: payment_links_deposits
+  - has_many: VoucherRedemption
+    via: voucher_redemption
+  - belongs_to: Rental
+    via: rental_id
+- name: Bedroom
+  relationships:
+  - has_many: Bed
+    via: beds
+  - belongs_to: Rental
+    via: rental_id
+- name: Subroom
+  relationships:
+  - has_many: Bed
+    via: beds
+  - belongs_to: Rental
+    via: rental_id
+- name: Bathroom
+  relationships:
+  - belongs_to: Rental
+    via: rental_id
+- name: IcalSync
+  key: id (integer)
+  operations: [icals_list, icals_create, icals_retrieve, icals_update, icals_partial_update, icals_destroy]
+  relationships:
+  - belongs_to: Rental
+    via: rental_id
+  - belongs_to: ReservationPlatform
+    via: platform_id
+  note: carries ical_url, is_active and last_sync — the RFC 5545 calendar-exchange surface
+- name: Mission
+  aka: operational task (cleaning, check-in, maintenance)
+  relationships:
+  - has_one: MissionPayoutAdjustment
+    via: payout_adjustment
+  - belongs_to: Agent
+    via: agent
+  - belongs_to: Rental
+    via: rental_id
+- name: Agent
+  operations: [agents_list, agents_retrieve]
+  relationships:
+  - belongs_to: Office
+    via: antenne
+- name: Issue
+  relationships:
+  - has_many: IssueNote
+    via: notes
+  - has_many: IssueFile
+    via: files
+  - belongs_to: IssueCategory
+    via: category
+- name: Incident
+  operations: [incidents_list, incidents_retrieve, incidents_close_partial_update, incidents_archive_partial_update]
+- name: Conversation
+  relationships:
+  - has_many: Message
+    via: messages
+  - has_one: ConversationFlag
+    via: flag_id
+  - belongs_to: Reservation
+    via: reservation_id
+- name: Message
+  relationships:
+  - belongs_to: Conversation
+    via: conversation_id
+- name: GuestReview
+  relationships:
+  - has_many: GuestReviewCriteria
+    via: criteria
+  - has_many: ReviewReply
+    via: replies
+- name: Owner
+  key: username (string)
+  relationships:
+  - has_many: Rental
+    via: rentals
+- name: PropertyManager
+  relationships:
+  - has_many: PropertyManagerPlatformSetting
+    via: platform_settings
+- name: RentalListing
+  relationships:
+  - belongs_to: Rental
+    via: rental
+  - belongs_to: RentalAccount
+    via: account
+  note: one row per OTA channel a property is distributed on
+- name: RentalAccount
+  aka: rental platform account (Airbnb / Booking.com / Vrbo / NextPax credentials)
+  relationships:
+  - has_one: SynchronizationCategoryEnum
+    via: synchronization_category
+- name: DailyPrice
+  relationships:
+  - belongs_to: Rental
+    via: rental_id
+- name: RateRule
+  relationships:
+  - belongs_to: Rental
+    via: rental_id
+- name: PaymentLink
+  relationships:
+  - belongs_to: Reservation
+    via: reservation_id
+- name: PaymentAcceptanceTransaction
+  operations: [payment_acceptance_transactions_list, payment_acceptance_transactions_create, payment_acceptance_transactions_refund_create]
+- name: PayoutAdjustment
+  relationships:
+  - has_many: PayoutAdjustmentAccountingInvoice
+    via: invoices
+- name: Blacklist
+  relationships:
+  - has_many: BlacklistReason
+    via: reasons
+- name: CustomFieldDefinition
+  relationships:
+  - has_one: EntityTypeEnum
+    via: entity_type
+  - has_one: FieldTypeEnum
+    via: field_type
+  note: user-defined fields attachable to rentals and reservations
+- name: RentalHistory
+  relationships:
+  - has_many: RentalHistoryChange
+    via: changes
+  note: the only audit-trail surface in the contract (rentals_history_list)
+observations:
+- >-
+  Enumerations are machine-generated with collision suffixes — CategoryC86Enum, CurrencyD53Enum,
+  Status3eaEnum, Status1a4Enum, StatusFa3Enum, TypeF08Enum. The values are real and constrained, but the
+  NAMES carry no meaning, so a generated client produces types an agent cannot reason about by name.
+- >-
+  Every mutable resource has a Patched<Entity> twin (PatchedRental, PatchedReservationCreate, PatchedBedroom)
+  — the drf-spectacular PATCH shape. That is 34 schemas of the 296 that are shape duplicates, not new concepts.
+- >-
+  Currency and locale are modelled per owner (CreateOwnerDefaultLocaleEnum) and per invoice, matching a
+  multi-country operation across GBP / EUR / AED / CHF markets.

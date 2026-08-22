@@ -1,0 +1,52 @@
+generated: '2026-08-22'
+method: searched
+source: >-
+  registry.npmjs.org search, pypi.org, rubygems.org, crates.io, api.nuget.org, search.maven.org,
+  proxy.golang.org, packagist.org, https://github.com/guestready
+package_count: 0
+official_sdk_count: 0
+packages: []
+note: >-
+  GuestReady Group publishes NO first-party client library for the RentalReady API in any public package
+  registry. Probed 2026-08-22, all unauthenticated: registry.npmjs.org search for "rentalready" and
+  "guestready" returned zero packages; pypi.org/pypi/{rentalready,guestready,rentalready-api,rentalready-client}/json
+  each returned HTTP 404. No SDKs pointer is emitted in apis.yml, because there is no SDK.
+what_exists_instead:
+- kind: example client (not a package)
+  name: rentalready-api-client-examples
+  repository: https://github.com/guestready/rentalready-api-client-examples
+  language: python
+  official: true
+  registry: none
+  version: null
+  published: null
+  last_commit: '2024-04-09'
+  contents: >-
+    A single python/main.py (~70 lines) wrapping the OAuth 2.0 refresh flow with the third-party
+    `oauth2-client` library and exposing three convenience calls — get_pricing(), get_rentals(),
+    get_reservations() — against 3 of the API's 252 operations. Pipfile pins python 3.12.2.
+  note: >-
+    version and published are null because this is source in a git repository, not a published artifact —
+    there is nothing to version-resolve. The currency signal here is the commit date: the only first-party
+    client code GuestReady ships was last touched 2024-04-09, roughly two and a half years before this
+    profile, against an API whose spec is regenerated continuously by drf-spectacular. It covers ~1% of the
+    surface.
+third_party_dependencies_named_by_the_provider:
+- name: oauth2-client
+  registry: pypi
+  official: false
+  role: the OAuth client the provider's own example depends on
+  note: a third-party package, not a GuestReady artifact — recorded only because the provider's example requires it
+mobile_apps:
+- name: RentalReady Agents
+  stores:
+  - App Store
+  - Google Play
+  official: true
+  source: https://support.rentalready.com/hc/en-us/articles/35890635449233-Agent-space
+- name: RentalReady Owners
+  stores:
+  - App Store
+  - Google Play
+  official: true
+  source: https://support.rentalready.com/hc/en-us/articles/35653747159185-Owner-space

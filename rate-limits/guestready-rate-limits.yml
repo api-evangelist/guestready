@@ -1,0 +1,43 @@
+generated: '2026-08-22'
+method: searched
+source: https://pms.rentalready.io/api/v3/schema/
+docs: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+api: RentalReady API
+limit_count: 1
+rate_limits:
+- name: Global API throttle
+  scope: per-key
+  window: 1 minute
+  limit: 400
+  burst: null
+  unit: requests
+  applies_to: all 252 operations
+  evidence: >-
+    info.description of the OpenAPI specification, verbatim: "### Throttling\n\nOur API supports up to 400
+    requests per minute". This is the only published limit; it is stated in the contract itself rather than on
+    a docs page.
+  note: >-
+    The spec does not say whether the 400/min counter is per OAuth client, per user or per property-manager
+    account. Recorded as per-key because the OAuth client is the only credential the API issues, but this is
+    an inference and not a provider statement.
+response_headers:
+  documented: false
+  observed: false
+  candidates_checked:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  - RateLimit-Limit
+  - RateLimit-Remaining
+  - RateLimit-Reset
+  - Retry-After
+  note: >-
+    No rate-limit header is declared on any operation and none could be observed live — every /api/v3/
+    operation requires an OAuth token, so an anonymous probe returns 403 before any throttle header is
+    emitted. This is the practical gap: an agent has a published NUMBER but no runtime SIGNAL, so it cannot
+    back off adaptively and must self-meter against 400/min.
+exhaustion:
+  status_code: unknown
+  declared: false
+  note: no 429 response is declared on any of the 252 operations
+plans_link: plans/guestready-plans-pricing.yml

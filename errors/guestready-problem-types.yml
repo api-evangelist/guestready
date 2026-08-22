@@ -1,0 +1,118 @@
+generated: '2026-08-22'
+method: derived
+source: openapi/guestready-rentalready-openapi.yml
+api: RentalReady API
+format: non-standard
+rfc9457: false
+content_type: application/json
+summary:
+  operations_total: 252
+  operations_declaring_4xx: 11
+  declared_400: 6
+  declared_403: 5
+  declared_5xx: 0
+  note: >-
+    241 of 252 operations declare only their success response. The catalogue below is the complete set of
+    error payloads the contract actually declares — every entry is copied from an `example` in the spec.
+    Undeclared-but-real statuses (401 on a missing/expired token, 404 on an unknown id, 429 on the 400
+    req/min throttle) are listed separately as `undeclared_but_expected` and are marked as inference, not
+    as contract.
+envelopes:
+- shape: '{"detail": "<message>"}'
+  used_by: DRF authentication and permission failures
+  example_source: paths./api/v3/conversations/{id}/set_flag/.patch.responses.403
+- shape: '{"message": "<message>"}'
+  used_by: domain rule violations on payments, payouts and reservation key codes
+  example_source: paths./api/v3/payment_acceptance_transactions/{id}/refund/.post.responses.400
+- shape: '{"<field>": ["<validation message>"]}'
+  used_by: field-level serializer validation
+  example_source: paths./api/v3/conversations/{id}/set_flag/.patch.responses.400
+- shape: '{"non_field_errors": ["<message>"]}'
+  used_by: object-level serializer validation
+  example_source: paths./api/v3/incidents/{id}/archive/.patch.responses.400
+problem_types:
+- status: 400
+  operation: conversations_set_flag_partial_update
+  path: PATCH /api/v3/conversations/{id}/set_flag/
+  payload: '{"flag_id": ["This field is required."]}'
+  title: Missing required field
+  remediation: supply flag_id in the request body; valid ids come from conversation_flags_list
+- status: 403
+  operation: conversations_set_flag_partial_update
+  path: PATCH /api/v3/conversations/{id}/set_flag/
+  payload: '{"detail": "Guest messaging write not allowed, permission missing."}'
+  title: Guest messaging write permission missing
+  remediation: request the conversations:write scope and confirm the user profile grants guest-messaging write
+- status: 400
+  operation: incidents_archive_partial_update
+  path: PATCH /api/v3/incidents/{id}/archive/
+  payload: '{"non_field_errors": ["An archived incident cannot change status."]}'
+  title: Archived incident is terminal
+  remediation: archiving is one-way; do not attempt a further status transition on an archived incident
+- status: 403
+  operation: incidents_archive_partial_update
+  path: PATCH /api/v3/incidents/{id}/archive/
+  payload: '{"detail": "Permission to manage the incident dashboard is required."}'
+  title: Incident dashboard permission missing
+  remediation: request incidents:write and confirm the user has incident-dashboard management rights
+- status: 400
+  operation: incidents_close_partial_update
+  path: PATCH /api/v3/incidents/{id}/close/
+  payload: '{"non_field_errors": ["An archived incident cannot change status."]}'
+  title: Archived incident is terminal
+  remediation: check the incident status before closing; archived incidents cannot be reopened or closed
+- status: 403
+  operation: incidents_close_partial_update
+  path: PATCH /api/v3/incidents/{id}/close/
+  payload: '{"detail": "Permission to manage the incident dashboard is required."}'
+  title: Incident dashboard permission missing
+  remediation: request incidents:write
+- status: 400
+  operation: payment_acceptance_transactions_refund_create
+  path: POST /api/v3/payment_acceptance_transactions/{id}/refund/
+  payload: '{"message": "Refund not allowed for acceptance transaction"}'
+  title: Transaction is not refundable
+  remediation: check the transaction state before refunding; not every acceptance transaction is refundable
+- status: 403
+  operation: payment_acceptance_transactions_refund_create
+  path: POST /api/v3/payment_acceptance_transactions/{id}/refund/
+  payload: '{"message": "Refund allowed only for stripe payment gateway"}'
+  title: Refund unsupported for this gateway
+  remediation: refunds through this API are Stripe-only; other gateways must be reversed at source
+- status: 400
+  operation: payout_adjustments_mark_as_paid_create
+  path: POST /api/v3/payout_adjustments/{id}/mark_as_paid/
+  payload: '{"message": "Payout adjustment is already paid"}'
+  title: Payout adjustment already settled
+  remediation: this call is not idempotent — read the adjustment status before marking it paid
+- status: 403
+  operation: payout_adjustments_mark_as_paid_create
+  path: POST /api/v3/payout_adjustments/{id}/mark_as_paid/
+  payload: '{"message": "Permission to mark payout adjustments as paid is required."}'
+  title: Payout settlement permission missing
+  remediation: request payout_adjustments:write
+- status: 400
+  operation: reservations_update_key_code_partial_update
+  path: PATCH /api/v3/reservations/{id}/update_key_code/
+  payload: '{"message": "invalid key_code"}'
+  title: Invalid key code
+  remediation: key codes must match the smart-lock format configured on the property
+undeclared_but_expected:
+  method: inferred
+  basis: >-
+    Observed live on anonymous probes of the API host, plus Django REST Framework defaults. These are NOT in
+    the contract — they are recorded so an agent does not treat them as impossible.
+  entries:
+  - status: 403
+    payload: '{"detail": "Authentication credentials were not provided."}'
+    evidence: 'GET https://pms.rentalready.io/api/v3/ returned 403 with this exact body on 2026-08-22'
+    note: >-
+      the provider''s own Python example (python/main.py) treats this 401/403 body as the token-expiry
+      signal and refreshes
+  - status: 400
+    payload: '{"detail": "Missing trailing slash. Use /api/v3/<resource>/ instead."}'
+    evidence: 'POST https://pms.rentalready.io/api/mcp returned 400 with this shape on 2026-08-22'
+    note: every collection and detail path in this API ends in a trailing slash; omitting it is a hard 400
+  - status: 429
+    payload: unknown
+    note: the 400 req/min throttle is documented in the spec description but no 429 response or Retry-After header is declared anywhere
