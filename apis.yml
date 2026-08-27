@@ -33,30 +33,878 @@ tags:
 - MCP
 - OAuth
 apis:
-- name: RentalReady API
-  description: >-
-    REST API for the RentalReady property management system built by GuestReady Group. 252 operations
-    across 60 resource groups — rentals and property layout, reservations and quotes, calendar and daily
-    prices, rate rules and pricing algorithms, missions and agents, issues and incidents, conversations,
-    messages and inquiries, reviews, owners and property managers, listings and rental platform accounts,
-    iCal calendar sync, guest registration, city tax rules, payment links, payout adjustments, payment
-    acceptance transactions and accounting invoices. OAuth 2.0 authorization-code flow with per-resource
-    read/write scopes; also accepts a Token header and HTTP basic. Documented throttle of 400 requests
-    per minute.
+- aid: guestready:guestready-accounting-invoices-api
+  name: GuestReady Accounting Invoices API
+  description: The accounting_invoices API from GuestReady — 1 operation(s) for accounting_invoices.
   humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
   baseURL: https://pms.rentalready.io/api/v3/
   tags:
-  - Property Management
-  - Short Term Rentals
-  - Vacation Rentals
-  - Hospitality
-  - Reservations
-  - Channel Management
-  - Revenue Management
-  - PMS
+  - accounting_invoices
   properties:
   - type: OpenAPI
-    url: openapi/guestready-rentalready-openapi.yml
+    url: openapi/guestready-accounting-invoices-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-amenities-api
+  name: GuestReady Amenities API
+  description: The amenities API from GuestReady — 2 operation(s) for amenities.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - amenities
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-amenities-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-bathrooms-api
+  name: GuestReady Bathrooms API
+  description: The bathrooms API from GuestReady — 2 operation(s) for bathrooms.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - bathrooms
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-bathrooms-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-bed-types-api
+  name: GuestReady Bed Types API
+  description: The bed_types API from GuestReady — 2 operation(s) for bed_types.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - bed_types
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-bed-types-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-bedrooms-api
+  name: GuestReady Bedrooms API
+  description: The bedrooms API from GuestReady — 2 operation(s) for bedrooms.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - bedrooms
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-bedrooms-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-blacklist-api
+  name: GuestReady Blacklist API
+  description: The blacklist API from GuestReady — 2 operation(s) for blacklist.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - blacklist
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-blacklist-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-calendar-api
+  name: GuestReady Calendar API
+  description: The calendar API from GuestReady — 2 operation(s) for calendar.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - calendar
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-calendar-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-check-in-steps-api
+  name: GuestReady Check In Steps API
+  description: The check_in_steps API from GuestReady — 3 operation(s) for check_in_steps.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - check_in_steps
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-check-in-steps-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-cities-api
+  name: GuestReady Cities API
+  description: The cities API from GuestReady — 2 operation(s) for cities.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - cities
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-cities-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-city-tax-rules-api
+  name: GuestReady City Tax Rules API
+  description: The city_tax_rules API from GuestReady — 2 operation(s) for city_tax_rules.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - city_tax_rules
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-city-tax-rules-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-conversations-api
+  name: GuestReady Conversations API
+  description: The Conversations API from GuestReady — 5 operation(s) for conversations.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - Conversations
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-conversations-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-countries-api
+  name: GuestReady Countries API
+  description: The countries API from GuestReady — 2 operation(s) for countries.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - countries
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-countries-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-custom-fields-api
+  name: GuestReady Custom Fields API
+  description: The custom_fields API from GuestReady — 3 operation(s) for custom_fields.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - custom_fields
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-custom-fields-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-daily-prices-api
+  name: GuestReady Daily Prices API
+  description: The daily_prices API from GuestReady — 3 operation(s) for daily_prices.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - daily_prices
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-daily-prices-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-descriptions-api
+  name: GuestReady Descriptions API
+  description: The descriptions API from GuestReady — 2 operation(s) for descriptions.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - descriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-descriptions-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-guest-registration-api
+  name: GuestReady Guest Registration API
+  description: The guest_registration API from GuestReady — 1 operation(s) for guest_registration.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - guest_registration
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-guest-registration-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-icals-api
+  name: GuestReady Icals API
+  description: The icals API from GuestReady — 2 operation(s) for icals.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - icals
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-icals-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-incidents-api
+  name: GuestReady Incidents API
+  description: The incidents API from GuestReady — 4 operation(s) for incidents.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - incidents
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-incidents-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-inquiries-api
+  name: GuestReady Inquiries API
+  description: The Inquiries API from GuestReady — 2 operation(s) for inquiries.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - Inquiries
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-inquiries-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-invoicing-api
+  name: GuestReady Invoicing API
+  description: The invoicing API from GuestReady — 2 operation(s) for invoicing.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - invoicing
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-invoicing-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-issue-categories-api
+  name: GuestReady Issue Categories API
+  description: The issue_categories API from GuestReady — 2 operation(s) for issue_categories.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - issue_categories
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-issue-categories-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-issue-files-api
+  name: GuestReady Issue Files API
+  description: The issue_files API from GuestReady — 2 operation(s) for issue_files.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - issue_files
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-issue-files-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-issues-api
+  name: GuestReady Issues API
+  description: The issues API from GuestReady — 6 operation(s) for issues.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - issues
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-issues-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-listing-requests-api
+  name: GuestReady Listing Requests API
+  description: The listing_requests API from GuestReady — 2 operation(s) for listing_requests.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - listing_requests
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-listing-requests-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-listings-api
+  name: GuestReady Listings API
+  description: The listings API from GuestReady — 4 operation(s) for listings.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - listings
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-listings-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-los-api
+  name: GuestReady Los API
+  description: The los API from GuestReady — 2 operation(s) for los.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - los
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-los-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-messages-api
+  name: GuestReady Messages API
+  description: The Messages API from GuestReady — 2 operation(s) for messages.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - Messages
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-messages-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-midterm-contract-files-api
+  name: GuestReady Midterm Contract Files API
+  description: >-
+    The midterm_contract_files API from GuestReady — 2 operation(s) for midterm_contract_files.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - midterm_contract_files
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-midterm-contract-files-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-missions-api
+  name: GuestReady Missions API
+  description: The missions API from GuestReady — 10 operation(s) for missions.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - missions
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-missions-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-multi-units-api
+  name: GuestReady Multi Units API
+  description: The multi_units API from GuestReady — 2 operation(s) for multi_units.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - multi_units
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-multi-units-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-neighbourhoods-api
+  name: GuestReady Neighbourhoods API
+  description: The neighbourhoods API from GuestReady — 2 operation(s) for neighbourhoods.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - neighbourhoods
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-neighbourhoods-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-offices-api
+  name: GuestReady Offices API
+  description: The offices API from GuestReady — 2 operation(s) for offices.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - offices
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-offices-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-onboarding-requests-api
+  name: GuestReady Onboarding Requests API
+  description: The onboarding_requests API from GuestReady — 2 operation(s) for onboarding_requests.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - onboarding_requests
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-onboarding-requests-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-owners-api
+  name: GuestReady Owners API
+  description: The owners API from GuestReady — 2 operation(s) for owners.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - owners
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-owners-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-payment-acceptance-transactions-api
+  name: GuestReady Payment Acceptance Transactions API
+  description: >-
+    The payment_acceptance_transactions API from GuestReady — 3 operation(s) for payment_acceptance_transactions.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - payment_acceptance_transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-payment-acceptance-transactions-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-payment-links-api
+  name: GuestReady Payment Links API
+  description: The payment_links API from GuestReady — 3 operation(s) for payment_links.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - payment_links
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-payment-links-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-payout-adjustments-api
+  name: GuestReady Payout Adjustments API
+  description: The payout_adjustments API from GuestReady — 4 operation(s) for payout_adjustments.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - payout_adjustments
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-payout-adjustments-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-photos-api
+  name: GuestReady Photos API
+  description: The photos API from GuestReady — 2 operation(s) for photos.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - photos
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-photos-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-pricing-api
+  name: GuestReady Pricing API
+  description: The pricing API from GuestReady — 3 operation(s) for pricing.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - pricing
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-pricing-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-property-manager-platform-settings-api
+  name: GuestReady Property Manager Platform Settings API
+  description: >-
+    The property_manager_platform_settings API from GuestReady — 2 operation(s) for property_manager_platform_settings.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - property_manager_platform_settings
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-property-manager-platform-settings-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-property-managers-api
+  name: GuestReady Property Managers API
+  description: The property_managers API from GuestReady — 2 operation(s) for property_managers.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - property_managers
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-property-managers-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-rate-rules-api
+  name: GuestReady Rate Rules API
+  description: The rate_rules API from GuestReady — 2 operation(s) for rate_rules.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - rate_rules
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-rate-rules-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-rental-agreement-signatures-api
+  name: GuestReady Rental Agreement Signatures API
+  description: >-
+    The rental_agreement_signatures API from GuestReady — 2 operation(s) for rental_agreement_signatures.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - rental_agreement_signatures
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-rental-agreement-signatures-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-rental-amenities-api
+  name: GuestReady Rental Amenities API
+  description: The rental_amenities API from GuestReady — 2 operation(s) for rental_amenities.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - rental_amenities
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-rental-amenities-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-rental-platform-accounts-api
+  name: GuestReady Rental Platform Accounts API
+  description: >-
+    The rental_platform_accounts API from GuestReady — 2 operation(s) for rental_platform_accounts.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - rental_platform_accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-rental-platform-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-rental-platform-settings-api
+  name: GuestReady Rental Platform Settings API
+  description: >-
+    The rental_platform_settings API from GuestReady — 2 operation(s) for rental_platform_settings.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - rental_platform_settings
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-rental-platform-settings-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-rentals-api
+  name: GuestReady Rentals API
+  description: The rentals API from GuestReady — 11 operation(s) for rentals.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - rentals
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-rentals-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-reservation-documents-api
+  name: GuestReady Reservation Documents API
+  description: >-
+    The reservation_documents API from GuestReady — 2 operation(s) for reservation_documents.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - reservation_documents
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-reservation-documents-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-reservation-platforms-api
+  name: GuestReady Reservation Platforms API
+  description: >-
+    The reservation_platforms API from GuestReady — 2 operation(s) for reservation_platforms.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - reservation_platforms
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-reservation-platforms-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-reservations-api
+  name: GuestReady Reservations API
+  description: The reservations API from GuestReady — 6 operation(s) for reservations.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - reservations
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-reservations-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-reviews-api
+  name: GuestReady Reviews API
+  description: The reviews API from GuestReady — 2 operation(s) for reviews.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - reviews
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-reviews-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-schema-api
+  name: GuestReady Schema API
+  description: The schema API from GuestReady — 1 operation(s) for schema.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - schema
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-schema-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-smart-locks-api
+  name: GuestReady Smart Locks API
+  description: The smart_locks API from GuestReady — 2 operation(s) for smart_locks.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - smart_locks
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-smart-locks-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-smart-schedulers-api
+  name: GuestReady Smart Schedulers API
+  description: The smart_schedulers API from GuestReady — 2 operation(s) for smart_schedulers.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - smart_schedulers
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-smart-schedulers-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-sub-type-missions-api
+  name: GuestReady Sub Type Missions API
+  description: The sub_type_missions API from GuestReady — 2 operation(s) for sub_type_missions.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - sub_type_missions
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-sub-type-missions-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-subroom-types-api
+  name: GuestReady Subroom Types API
+  description: The subroom_types API from GuestReady — 2 operation(s) for subroom_types.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - subroom_types
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-subroom-types-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-subrooms-api
+  name: GuestReady Subrooms API
+  description: The subrooms API from GuestReady — 2 operation(s) for subrooms.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - subrooms
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-subrooms-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-swikly-deposits-api
+  name: GuestReady Swikly Deposits API
+  description: The swikly_deposits API from GuestReady — 2 operation(s) for swikly_deposits.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - swikly_deposits
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-swikly-deposits-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-tags-api
+  name: GuestReady Tags API
+  description: The tags API from GuestReady — 2 operation(s) for tags.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - tags
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-tags-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-type-missions-api
+  name: GuestReady Type Missions API
+  description: The type_missions API from GuestReady — 2 operation(s) for type_missions.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - type_missions
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-type-missions-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-users-api
+  name: GuestReady Users API
+  description: The users API from GuestReady — 3 operation(s) for users.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - users
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-users-api-openapi.yml
+  - type: APIReference
+    url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  - type: GettingStarted
+    url: https://github.com/guestready/rentalready-api-client-examples
+- aid: guestready:guestready-vouchers-api
+  name: GuestReady Vouchers API
+  description: The Vouchers API from GuestReady — 2 operation(s) for vouchers.
+  humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
+  baseURL: https://pms.rentalready.io/api/v3/
+  tags:
+  - Vouchers
+  properties:
+  - type: OpenAPI
+    url: openapi/guestready-vouchers-api-openapi.yml
   - type: APIReference
     url: https://pms.rentalready.io/api/v3/schema/swagger-ui/
   - type: GettingStarted
