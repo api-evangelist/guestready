@@ -1,0 +1,76 @@
+slug: guestready
+provider: GuestReady
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 6
+edges:
+- tag: pricing
+  spec_file: guestready-pricing-api-openapi.yml
+  capability_id: BC-440
+  capability_id_l1: BC-440
+  capability_name: Pricing Management
+  confidence: 0.75
+  evidence: 'PUT /api/v3/pricing/{rental_id}/ pricing_update; POST /api/v3/pricing/bulk_update/; schemas:
+    PricingConfiguration, PatchedPricingConfiguration, CurrencyD53Enum'
+  reason: Operations set and bulk-update per-rental pricing configuration with currency — genuine price
+    setting/maintenance. L1 Pricing Management is clear; evidence does not distinguish strategy from price-book
+    maintenance, so no L2.
+- tag: reviews
+  spec_file: guestready-reviews-api-openapi.yml
+  capability_id: BC-430.50
+  capability_id_l1: BC-430
+  capability_name: Customer Feedback Management
+  confidence: 0.75
+  evidence: 'schemas: GuestReview, GuestReviewCriteria, ReviewReply, ReviewReplyAuthor'
+  reason: Exposes guest reviews with rating criteria and host replies — voice-of-customer / feedback capture,
+    which maps to Customer Feedback Management. Read-only surface limits confidence slightly.
+- tag: Conversations
+  spec_file: guestready-conversations-api-openapi.yml
+  capability_id: BC-430.10
+  capability_id_l1: BC-430
+  capability_name: Customer Inquiry Management
+  confidence: 0.7
+  evidence: GET /api/v3/conversations/ conversations_list List conversations; PATCH .../set_flag/ Set
+    conversation flag — vendor does "guest communication"
+  reason: Conversation threads with flags in a property-management system represent inbound guest contact
+    handling and routing, i.e. customer inquiry/contact management. Some chance it is better read as generic
+    messaging infrastructure.
+- tag: daily_prices
+  spec_file: guestready-daily-prices-api-openapi.yml
+  capability_id: BC-440.20
+  capability_id_l1: BC-440
+  capability_name: Price List Management
+  confidence: 0.7
+  evidence: GET /api/v3/daily_prices/ daily_prices_list; POST /api/v3/daily_prices/bulk_update/ daily_prices_bulk_update_create;
+    schemas DailyPrice, IsAvailableEnum
+  reason: Maintenance of per-date prices for listings, including bulk price updates, matches price list/rate
+    maintenance. Consistent with the vendor's stated 'dynamic pricing'. Sub-capability choice (price list
+    vs pricing strategy) carries some ambiguity, hence 0.7.
+- tag: invoicing
+  spec_file: guestready-invoicing-api-openapi.yml
+  capability_id: BC-200.30
+  capability_id_l1: BC-200
+  capability_name: Accounts Receivable Management
+  confidence: 0.7
+  evidence: 'schemas: ExtraFee, GuestInvoice, InvoicingReservation, ReservationExtraFee, PaidToEnum'
+  reason: The surface exposes guest invoices with reservation charges and extra fees — customer invoicing
+    data, which is Accounts Receivable Management. Read-only exposure keeps confidence moderate.
+- tag: owners
+  spec_file: guestready-owners-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.7
+  evidence: 'POST /api/v3/owners/ owners_create; PATCH owners_partial_update; schemas: CreateOwner, PatchedOwner,
+    BankCountryEnum, BankAccountCurrencyEnum, OwnerDefaultLocaleEnum'
+  reason: Full CRUD over property-owner master records including bank/locale attributes — these owners
+    are the vendor's clients, so this is customer master data maintenance rather than a technical object.

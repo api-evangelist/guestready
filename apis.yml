@@ -927,6 +927,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/guestready-capability-edges.yml
+  name: GuestReady Business Capability Map
 - type: DomainSecurity
   url: security/guestready-domain-security.yml
 - type: OAuthScopes
