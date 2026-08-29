@@ -12,6 +12,18 @@ description: >-
   conversations, reviews, owners, invoicing and payments, secured with OAuth 2.0 authorization-code
   flow and 50+ granular scopes, plus a Model Context Protocol (MCP) server that connects AI agents to
   live PMS data.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://d1od3nh65mn5zb.cloudfront.net/app/uploads/2024/06/18144540/Template-1-Homepage.png
 url: https://raw.githubusercontent.com/api-evangelist/guestready/refs/heads/main/apis.yml
 x-type: company
