@@ -3,7 +3,7 @@ provider: GuestReady
 generated_by: planning/capability-mapping/scripts/classify_capabilities.py
 model: claude-opus-5
 frame:
-- Software & Technology
+- Travel & Hospitality
 min_confidence: 0.7
 capability_model:
   source: https://github.com/vincentmakes/turbo-ea-capabilities
@@ -11,66 +11,113 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 6
+edge_count: 11
 edges:
-- tag: pricing
-  spec_file: guestready-pricing-api-openapi.yml
-  capability_id: BC-440
-  capability_id_l1: BC-440
-  capability_name: Pricing Management
-  confidence: 0.75
-  evidence: 'PUT /api/v3/pricing/{rental_id}/ pricing_update; POST /api/v3/pricing/bulk_update/; schemas:
-    PricingConfiguration, PatchedPricingConfiguration, CurrencyD53Enum'
-  reason: Operations set and bulk-update per-rental pricing configuration with currency — genuine price
-    setting/maintenance. L1 Pricing Management is clear; evidence does not distinguish strategy from price-book
-    maintenance, so no L2.
-- tag: reviews
-  spec_file: guestready-reviews-api-openapi.yml
-  capability_id: BC-430.50
-  capability_id_l1: BC-430
-  capability_name: Customer Feedback Management
-  confidence: 0.75
-  evidence: 'schemas: GuestReview, GuestReviewCriteria, ReviewReply, ReviewReplyAuthor'
-  reason: Exposes guest reviews with rating criteria and host replies — voice-of-customer / feedback capture,
-    which maps to Customer Feedback Management. Read-only surface limits confidence slightly.
-- tag: Conversations
-  spec_file: guestready-conversations-api-openapi.yml
-  capability_id: BC-430.10
-  capability_id_l1: BC-430
-  capability_name: Customer Inquiry Management
-  confidence: 0.7
-  evidence: GET /api/v3/conversations/ conversations_list List conversations; PATCH .../set_flag/ Set
-    conversation flag — vendor does "guest communication"
-  reason: Conversation threads with flags in a property-management system represent inbound guest contact
-    handling and routing, i.e. customer inquiry/contact management. Some chance it is better read as generic
-    messaging infrastructure.
 - tag: daily_prices
   spec_file: guestready-daily-prices-api-openapi.yml
-  capability_id: BC-440.20
-  capability_id_l1: BC-440
-  capability_name: Price List Management
+  capability_id: BC-4030.20
+  capability_id_l1: BC-4030
+  capability_name: Pricing & Rate Strategy Management
+  confidence: 0.8
+  evidence: 'GET /api/v3/daily_prices/, POST /api/v3/daily_prices/bulk_update/; schemas: DailyPrice, IsAvailableEnum'
+  reason: Setting per-date nightly prices and availability for rental listings, with bulk update — this
+    is rate/price strategy execution for lodging inventory, consistent with the vendor's stated 'dynamic
+    pricing' service.
+- tag: reservations
+  spec_file: guestready-reservations-api-openapi.yml
+  capability_id: BC-4020.10
+  capability_id_l1: BC-4020
+  capability_name: Reservation Capture
+  confidence: 0.8
+  evidence: POST /api/v3/reservations/ reservations_create; PATCH /api/v3/reservations/{id}/cancel/; PATCH
+    .../update_arrival_time/; schemas ReservationCreate, Reservation, GuestInvoice
+  reason: Operations plainly create, retrieve, amend and cancel reservations for a lodging PMS — reservation
+    lifecycle. Capture is the dominant sub-capability though cancel/modify also appears.
+- tag: photos
+  spec_file: guestready-photos-api-openapi.yml
+  capability_id: BC-4000.70
+  capability_id_l1: BC-4000
+  capability_name: Travel Content & Imagery Management
+  confidence: 0.78
+  evidence: photos_create / photos_update / photos_destroy ; schemas Photo, CategoryC86Enum
+  reason: CRUD over categorised photo assets in a short-term rental property management system is management
+    of descriptive imagery for the travel product, matching Travel Content & Imagery Management.
+- tag: missions
+  spec_file: guestready-missions-api-openapi.yml
+  capability_id: BC-4060
+  capability_id_l1: BC-4060
+  capability_name: Property Operations Management
+  confidence: 0.75
+  evidence: PATCH /api/v3/missions/{id}/mark_mission_as_done/ ; .../update_agent/ ; .../update_start_time/
+    ; schemas Agent, RequestedMaintenanceJobEnum, MissionPayoutAdjustment, KeyCollectionCode
+  reason: Dispatch and completion tracking of field tasks (agents, start/end times, maintenance job types,
+    key collection) for managed rental properties — day-to-day property operations. Left at L1 because
+    the missions span housekeeping/cleaning, maintenance and guest key handover rather than one sub-capability.
+- tag: pricing
+  spec_file: guestready-pricing-api-openapi.yml
+  capability_id: BC-4030.20
+  capability_id_l1: BC-4030
+  capability_name: Pricing & Rate Strategy Management
+  confidence: 0.75
+  evidence: GET /api/v3/pricing/{rental_id}/ ; POST /api/v3/pricing/bulk_update/ ; schema PricingConfiguration
+  reason: Per-rental pricing configuration with bulk update is setting and adjusting rate strategy for
+    lodging products, consistent with the vendor's stated dynamic pricing service.
+- tag: rentals
+  spec_file: guestready-rentals-api-openapi.yml
+  capability_id: BC-4000.10
+  capability_id_l1: BC-4000
+  capability_name: Lodging Product Management
+  confidence: 0.75
+  evidence: 'schemas: RentalListing, RentalPhoto, PropertyTypeEnum, RentalUpsellingConfiguration, CleaningFeeInvoicedToEnum;
+    POST /api/v3/rentals/ rentals_create'
+  reason: The rentals resource is the master definition of a bookable accommodation unit (property type,
+    listing attributes, photos, fees, blocking/enable-disable), i.e. lodging product/inventory master
+    rather than a reservation or channel wiring. Some ambiguity with inventory allocation given the block
+    endpoint, hence not maximal confidence.
+- tag: guest_registration
+  spec_file: guestready-guest-registration-api-openapi.yml
+  capability_id: BC-4040.60
+  capability_id_l1: BC-4040
+  capability_name: Traveller Document & Compliance Data Management
+  confidence: 0.72
+  evidence: 'GET /api/v3/guest_registration/{id}/; schemas: PortugalRegisteredGuestData, IdTypeEnum'
+  reason: Retrieval of registered-guest data in a country-specific (Portugal) format with identity-document
+    type — guest identity/document data captured to satisfy statutory lodging registration with authorities.
+- tag: rate_rules
+  spec_file: guestready-rate-rules-api-openapi.yml
+  capability_id: BC-4030.20
+  capability_id_l1: BC-4030
+  capability_name: Pricing & Rate Strategy Management
+  confidence: 0.72
+  evidence: rate_rules_create / rate_rules_update ; schema RateRule
+  reason: CRUD over rate rules in a rental PMS is definition and adjustment of rate strategy for accommodation
+    products, matching Pricing & Rate Strategy Management; could also touch restrictions, hence not higher.
+- tag: descriptions
+  spec_file: guestready-descriptions-api-openapi.yml
+  capability_id: BC-4000.70
+  capability_id_l1: BC-4000
+  capability_name: Travel Content & Imagery Management
   confidence: 0.7
-  evidence: GET /api/v3/daily_prices/ daily_prices_list; POST /api/v3/daily_prices/bulk_update/ daily_prices_bulk_update_create;
-    schemas DailyPrice, IsAvailableEnum
-  reason: Maintenance of per-date prices for listings, including bulk price updates, matches price list/rate
-    maintenance. Consistent with the vendor's stated 'dynamic pricing'. Sub-capability choice (price list
-    vs pricing strategy) carries some ambiguity, hence 0.7.
-- tag: invoicing
-  spec_file: guestready-invoicing-api-openapi.yml
-  capability_id: BC-200.30
-  capability_id_l1: BC-200
-  capability_name: Accounts Receivable Management
+  evidence: 'schemas: Description, UpdateDescription, PaginatedDescriptionList; vendor does ''listing
+    optimisation'''
+  reason: CRUD over descriptive listing content for rental properties — authoring of descriptive product
+    content. Slightly thin (no imagery/multimedia evidence) so moderate confidence.
+- tag: subrooms
+  spec_file: guestready-subrooms-api-openapi.yml
+  capability_id: BC-4000.10
+  capability_id_l1: BC-4000
+  capability_name: Lodging Product Management
   confidence: 0.7
-  evidence: 'schemas: ExtraFee, GuestInvoice, InvoicingReservation, ReservationExtraFee, PaidToEnum'
-  reason: The surface exposes guest invoices with reservation charges and extra fees — customer invoicing
-    data, which is Accounts Receivable Management. Read-only exposure keeps confidence moderate.
-- tag: owners
-  spec_file: guestready-owners-api-openapi.yml
-  capability_id: BC-420.10
-  capability_id_l1: BC-420
-  capability_name: Customer Data Management
+  evidence: 'schemas: Subroom, Bed, SubroomWindowCoverageEnum, PrivacyEnum, LocationEnum'
+  reason: CRUD on rooms within a rental including beds, privacy and window coverage defines the accommodation
+    product configuration, matching lodging product/room-type definition.
+- tag: swikly_deposits
+  spec_file: guestready-swikly-deposits-api-openapi.yml
+  capability_id: BC-4020.60
+  capability_id_l1: BC-4020
+  capability_name: Booking Payment & Settlement
   confidence: 0.7
-  evidence: 'POST /api/v3/owners/ owners_create; PATCH owners_partial_update; schemas: CreateOwner, PatchedOwner,
-    BankCountryEnum, BankAccountCurrencyEnum, OwnerDefaultLocaleEnum'
-  reason: Full CRUD over property-owner master records including bank/locale attributes — these owners
-    are the vendor's clients, so this is customer master data maintenance rather than a technical object.
+  evidence: GET /api/v3/swikly_deposits/ swikly_deposits_list; schemas SwiklyDeposit, and reservations
+    exposes PaymentLinkSecurityDeposit
+  reason: Swikly is a security-deposit payment provider; these records represent booking-level deposit
+    capture, which is booking payment/deposit handling. Read-only surface tempers confidence.
