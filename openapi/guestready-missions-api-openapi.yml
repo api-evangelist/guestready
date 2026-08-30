@@ -1,0 +1,1329 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Missions API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: missions
+paths:
+  /api/v3/agents/:
+    get:
+      operationId: agents_list
+      description: Retrieve the agents working for the offices you have access to. Their ids are what the mission agent field takes. An agent can only take a mission of an office they belong to and of a type they are qualified for; assignment does not check whether they are still ACTIVE, so filter on status.
+      summary: List agents
+      parameters:
+      - in: query
+        name: antenne
+        schema:
+          type: integer
+        description: Office
+      - in: query
+        name: first_name
+        schema:
+          type: string
+        description: First name
+      - in: query
+        name: last_name
+        schema:
+          type: string
+        description: Last name
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+        description: '* `ACTIVE` - Active
+
+          * `INACTIVE` - Inactive'
+      - in: query
+        name: type_mission
+        schema:
+          type: integer
+        description: Mission type
+      tags:
+      - missions
+      security:
+      - oauth2:
+        - agents:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAgentList'
+          description: ''
+  /api/v3/agents/{id}/:
+    get:
+      operationId: agents_retrieve
+      description: Retrieve a single agent by ID.
+      summary: Retrieve agent
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this agent.
+        required: true
+      tags:
+      - missions
+      security:
+      - oauth2:
+        - agents:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+          description: ''
+  /api/v3/missions/:
+    get:
+      operationId: missions_list
+      parameters:
+      - name: cursor
+        required: false
+        in: query
+        description: 'Opt-in cursor pagination: pass an empty value to get the first page, then follow the `next` links. While paginating with a cursor, `offset` is ignored, the response contains no `count`, and only primary-key orderings are supported.'
+        schema:
+          type: string
+      - in: query
+        name: end_after
+        schema:
+          type: string
+          format: date
+        description: Start date
+      - in: query
+        name: end_before
+        schema:
+          type: string
+          format: date
+        description: Start date
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: start_after
+        schema:
+          type: string
+          format: date
+        description: Start date
+      - in: query
+        name: start_before
+        schema:
+          type: string
+          format: date
+        description: Start date
+      - in: query
+        name: updated_at_after
+        schema:
+          type: string
+          format: date
+        description: Updated at
+      - in: query
+        name: updated_at_before
+        schema:
+          type: string
+          format: date
+        description: Updated at
+      tags:
+      - missions
+      security:
+      - oauth2:
+        - missions:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMissionList'
+          description: ''
+    post:
+      operationId: missions_create
+      tags:
+      - missions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Mission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Mission'
+        required: true
+      security:
+      - oauth2:
+        - missions:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+  /api/v3/missions/{id}/:
+    get:
+      operationId: missions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission.
+        required: true
+      tags:
+      - missions
+      security:
+      - oauth2:
+        - missions:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+    patch:
+      operationId: missions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission.
+        required: true
+      tags:
+      - missions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+      security:
+      - oauth2:
+        - missions:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+  /api/v3/missions/{id}/cancel/:
+    patch:
+      operationId: missions_cancel_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission.
+        required: true
+      tags:
+      - missions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+      security:
+      - oauth2:
+        - missions:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+  /api/v3/missions/{id}/mark_mission_as_done/:
+    patch:
+      operationId: missions_mark_mission_as_done_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission.
+        required: true
+      tags:
+      - missions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+      security:
+      - oauth2:
+        - missions:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+  /api/v3/missions/{id}/update_agent/:
+    patch:
+      operationId: missions_update_agent_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission.
+        required: true
+      tags:
+      - missions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+      security:
+      - oauth2:
+        - missions:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+  /api/v3/missions/{id}/update_end_time/:
+    patch:
+      operationId: missions_update_end_time_partial_update
+      description: Update the mission end time. Both end and edit_comment are required, and the new end cannot precede the mission start.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission.
+        required: true
+      tags:
+      - missions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateMissionEndTime'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateMissionEndTime'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateMissionEndTime'
+      security:
+      - oauth2:
+        - missions:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+  /api/v3/missions/{id}/update_external_comment/:
+    patch:
+      operationId: missions_update_external_comment_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission.
+        required: true
+      tags:
+      - missions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMission'
+      security:
+      - oauth2:
+        - missions:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+  /api/v3/missions/{id}/update_start_time/:
+    patch:
+      operationId: missions_update_start_time_partial_update
+      description: Update the mission start time, keeping its duration. Both start and edit_comment are required.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission.
+        required: true
+      tags:
+      - missions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateMissionStartTime'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateMissionStartTime'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateMissionStartTime'
+      security:
+      - oauth2:
+        - missions:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mission'
+          description: ''
+components:
+  schemas:
+    KeyCollectionCode:
+      type: object
+      properties:
+        key_name:
+          type: string
+          readOnly: true
+        store_name:
+          type: string
+          readOnly: true
+        store_address:
+          type: string
+          readOnly: true
+        store_time:
+          type: string
+          readOnly: true
+        code:
+          type: string
+          maxLength: 50
+        access_link:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+      required:
+      - code
+      - key_name
+      - store_address
+      - store_name
+      - store_time
+    BlankEnum:
+      enum:
+      - ''
+    ActiveStatusEnum:
+      enum:
+      - PENDING
+      - DOING
+      - DONE
+      type: string
+      description: '* `PENDING` - PENDING
+
+        * `DOING` - DOING
+
+        * `DONE` - DONE'
+    PaginatedAgentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agent'
+        limit:
+          type: integer
+          example: 50
+    PatchedUpdateMissionStartTime:
+      type: object
+      description: 'Base for the update_start_time / update_end_time actions.
+
+
+        Subclasses declare their own datetime field and move it onto the mission in
+
+        ``_apply_new_time``; the audit comment and the write are shared. Both pin
+
+        ``default_timezone`` to UTC so the parsed value carries a fixed offset:
+
+        ``_apply_new_time`` adds the mission duration to it, and adding to a
+
+        zone-aware datetime shifts the wall clock without renormalising, so a
+
+        dynamic zone would drift across a DST transition.'
+      properties:
+        edit_comment:
+          type: string
+          description: Reason for the change, recorded on the mission.
+        start:
+          type: string
+          format: date-time
+          description: New mission start date and time. The UTC offset is required, e.g. 2026-07-04T09:00:00+00:00 or 2026-07-04T11:00:00+02:00.
+    RequestedMaintenanceJobEnum:
+      type: string
+      enum:
+      - Handyman
+      - Plumber
+      - Gas Engineer
+      - A/C and HIU Specialist
+      - Locksmith
+      - Pest Control
+      - Window Cleaner
+      - Roofing
+      - Gardening
+      - Painter / Decorator
+      - Electrician
+      - Appliance Engineer
+      - Compliance (EICR,GSC,EPC,PAT)
+      - Boiler Service
+      - Drainage Specialist
+      - General Builder
+      - Disposals / Collections
+    MissionPayoutAdjustmentCategoryEnum:
+      enum:
+      - cleaning
+      - maintenance
+      - improvement
+      - quality_check
+      - issue_resolution
+      - onboarding_fee
+      - utility_bill
+      - unit_permits
+      - reservation_cancellation
+      - advance_payment_for_decoration_project
+      - decoration_project
+      - commission_offer
+      - fin_ops
+      - pest_control
+      - deep_cleaning
+      - guest_request
+      - tpl_insurance
+      - service_charge
+      - local_tax
+      - termination_fee
+      - others
+      type: string
+      description: '* `cleaning` - cleaning
+
+        * `maintenance` - maintenance
+
+        * `improvement` - improvement
+
+        * `quality_check` - quality_check
+
+        * `issue_resolution` - issue_resolution
+
+        * `onboarding_fee` - onboarding_fee
+
+        * `utility_bill` - utility_bill
+
+        * `unit_permits` - unit_permits
+
+        * `reservation_cancellation` - reservation_cancellation
+
+        * `advance_payment_for_decoration_project` - advance_payment_for_decoration_project
+
+        * `decoration_project` - decoration_project
+
+        * `commission_offer` - commission_offer
+
+        * `fin_ops` - fin_ops
+
+        * `pest_control` - pest_control
+
+        * `deep_cleaning` - deep_cleaning
+
+        * `guest_request` - guest_request
+
+        * `tpl_insurance` - tpl_insurance
+
+        * `service_charge` - service_charge
+
+        * `local_tax` - local_tax
+
+        * `termination_fee` - termination_fee
+
+        * `others` - others'
+    AgentStatusEnum:
+      enum:
+      - ACTIVE
+      - INACTIVE
+      type: string
+      description: '* `ACTIVE` - Active
+
+        * `INACTIVE` - Inactive'
+    Mission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        start:
+          type: string
+          format: date-time
+          title: Mission start
+          description: Mission start date and time (ISO 8601, e.g. 2026-07-04T09:00:00+00:00).
+        end:
+          type: string
+          format: date-time
+          title: Mission end
+          description: Mission end date and time (ISO 8601, e.g. 2026-07-04T11:00:00+00:00).
+        is_unsynchronised:
+          type: boolean
+          title: Is unsynchronised?
+          description: Unsynchronise this mission from all automation
+        type:
+          type: integer
+          description: Id of the mission type, such as cleaning or maintenance. Any mission type except check-in can be selected.
+        sub_type:
+          type:
+          - integer
+          - 'null'
+          description: Id of the mission subtype. Must be a subtype of the selected mission type.
+        add_notification_on_checklist_submit:
+          type: boolean
+          description: Whether to show a notification badge on the Checklists tab once the mission checklist is submitted, until it is reviewed.
+        mission_paid:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Mission price
+          description: 'The mission price. Stored exactly as sent, but four later paths recompute it: editing the property''s check-out price, editing its check-in price, the nightly host-mission pass, which reprices a cleaning mission around an owner stay, and the daily check-in form penalty job, which drops an uncompleted check-in mission to 5 and sets its final agent earnings, after which a new price no longer changes what the agent is paid, and reaches the owner charge only on an unbilled owner-stay mission.'
+        charged_to:
+          description: 'This will help us to reconcile the payment but this is not an automated flow.
+
+
+            * `PROPERTY_MANAGER` - Property Manager
+
+            * `OWNER` - Owner
+
+            * `GUEST` - Guest
+
+            * `PROVIDERS` - Providers'
+          oneOf:
+          - $ref: '#/components/schemas/ChargedToEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        payment_status:
+          allOf:
+          - $ref: '#/components/schemas/PaymentStatusEnum'
+          description: 'Set to Paid when the agent has been paid. Updated automatically to Paid when a split to agent happens.
+
+
+            * `NOT_PAID` - Not paid
+
+            * `PAID` - Paid'
+        appartement:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) the mission is for. On creation, exactly one of appartement, reservation, or issue must be set.
+        reservation:
+          type:
+          - integer
+          - 'null'
+          description: Id of the reservation (booking) the mission is for.
+        issue:
+          type:
+          - integer
+          - 'null'
+          title: Ticket
+          description: Id of the ticket the mission is for.
+        summary:
+          type:
+          - string
+          - 'null'
+          title: Summary as displayed on owner invoice
+          description: Summary of the mission as shown on the owner invoice.
+        internal_comment:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Staff-only internal comment for the mission. Writable on create and PATCH; stored on the mission's reservation (in the type-scoped column) when the mission has one and is not of type EXTRA.
+        external_comment:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: External-facing comment for the mission. Writable on create and PATCH; stored on the mission's reservation (in the type-scoped column) when the mission has one and is not of type EXTRA. Writing it on PATCH requires the can_api_update_mission_external_comment permission.
+        edit_comment:
+          type:
+          - string
+          - 'null'
+          title: Editing comment
+          description: Comment explaining the edit made to the mission.
+        payout_adjustment:
+          $ref: '#/components/schemas/MissionPayoutAdjustment'
+        done:
+          type: boolean
+          title: Mission has been completed
+          description: Whether the mission has been completed.
+        agent:
+          type:
+          - integer
+          - 'null'
+          description: Id of the agent assigned to the mission. The agent must be qualified for the mission type and belong to the office of the mission's property.
+        status:
+          allOf:
+          - $ref: '#/components/schemas/MissionStatusEnum'
+          description: 'Lifecycle status of the mission. Defaults to NEW and is set to ASSIGNED automatically when an agent is assigned; PENDING_CH means it is awaiting validation after a change.
+
+
+            * `NEW` - New
+
+            * `ASSIGNED` - Assigned
+
+            * `PENDING_CH` - Awaiting validation after a change
+
+            * `CANCELLED` - Cancelled
+
+            * `ARCHIVED` - Archived'
+        active_status:
+          allOf:
+          - $ref: '#/components/schemas/ActiveStatusEnum'
+          readOnly: true
+          description: 'Progress status of the mission, computed from its checklist execution: PENDING (to do), DOING (in progress), or DONE.
+
+
+            * `PENDING` - PENDING
+
+            * `DOING` - DOING
+
+            * `DONE` - DONE'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        collection_code:
+          allOf:
+          - $ref: '#/components/schemas/KeyCollectionCode'
+          readOnly: true
+        next_reservation_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: Arrival date-time (UTC) of the next reservation at the property, or null if there is none.
+        is_midterm:
+          type: boolean
+          readOnly: true
+          description: Whether the mission relates to a mid-term stay.
+        requested_maintenance_job:
+          allOf:
+          - $ref: '#/components/schemas/RequestedMaintenanceJobEnum'
+          readOnly: true
+        reservation_check_out:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: Check-out date-time (UTC) of the mission's reservation, or null if the mission has no reservation.
+        user:
+          type: string
+          readOnly: true
+      required:
+      - active_status
+      - collection_code
+      - created_at
+      - end
+      - external_comment
+      - id
+      - internal_comment
+      - is_midterm
+      - next_reservation_date
+      - requested_maintenance_job
+      - reservation_check_out
+      - start
+      - updated_at
+      - user
+    NullEnum:
+      enum:
+      - null
+    PatchedMission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        start:
+          type: string
+          format: date-time
+          title: Mission start
+          description: Mission start date and time (ISO 8601, e.g. 2026-07-04T09:00:00+00:00).
+        end:
+          type: string
+          format: date-time
+          title: Mission end
+          description: Mission end date and time (ISO 8601, e.g. 2026-07-04T11:00:00+00:00).
+        is_unsynchronised:
+          type: boolean
+          title: Is unsynchronised?
+          description: Unsynchronise this mission from all automation
+        type:
+          type: integer
+          description: Id of the mission type, such as cleaning or maintenance. Any mission type except check-in can be selected.
+        sub_type:
+          type:
+          - integer
+          - 'null'
+          description: Id of the mission subtype. Must be a subtype of the selected mission type.
+        add_notification_on_checklist_submit:
+          type: boolean
+          description: Whether to show a notification badge on the Checklists tab once the mission checklist is submitted, until it is reviewed.
+        mission_paid:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Mission price
+          description: 'The mission price. Stored exactly as sent, but four later paths recompute it: editing the property''s check-out price, editing its check-in price, the nightly host-mission pass, which reprices a cleaning mission around an owner stay, and the daily check-in form penalty job, which drops an uncompleted check-in mission to 5 and sets its final agent earnings, after which a new price no longer changes what the agent is paid, and reaches the owner charge only on an unbilled owner-stay mission.'
+        charged_to:
+          description: 'This will help us to reconcile the payment but this is not an automated flow.
+
+
+            * `PROPERTY_MANAGER` - Property Manager
+
+            * `OWNER` - Owner
+
+            * `GUEST` - Guest
+
+            * `PROVIDERS` - Providers'
+          oneOf:
+          - $ref: '#/components/schemas/ChargedToEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        payment_status:
+          allOf:
+          - $ref: '#/components/schemas/PaymentStatusEnum'
+          description: 'Set to Paid when the agent has been paid. Updated automatically to Paid when a split to agent happens.
+
+
+            * `NOT_PAID` - Not paid
+
+            * `PAID` - Paid'
+        appartement:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) the mission is for. On creation, exactly one of appartement, reservation, or issue must be set.
+        reservation:
+          type:
+          - integer
+          - 'null'
+          description: Id of the reservation (booking) the mission is for.
+        issue:
+          type:
+          - integer
+          - 'null'
+          title: Ticket
+          description: Id of the ticket the mission is for.
+        summary:
+          type:
+          - string
+          - 'null'
+          title: Summary as displayed on owner invoice
+          description: Summary of the mission as shown on the owner invoice.
+        internal_comment:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Staff-only internal comment for the mission. Writable on create and PATCH; stored on the mission's reservation (in the type-scoped column) when the mission has one and is not of type EXTRA.
+        external_comment:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: External-facing comment for the mission. Writable on create and PATCH; stored on the mission's reservation (in the type-scoped column) when the mission has one and is not of type EXTRA. Writing it on PATCH requires the can_api_update_mission_external_comment permission.
+        edit_comment:
+          type:
+          - string
+          - 'null'
+          title: Editing comment
+          description: Comment explaining the edit made to the mission.
+        payout_adjustment:
+          $ref: '#/components/schemas/MissionPayoutAdjustment'
+        done:
+          type: boolean
+          title: Mission has been completed
+          description: Whether the mission has been completed.
+        agent:
+          type:
+          - integer
+          - 'null'
+          description: Id of the agent assigned to the mission. The agent must be qualified for the mission type and belong to the office of the mission's property.
+        status:
+          allOf:
+          - $ref: '#/components/schemas/MissionStatusEnum'
+          description: 'Lifecycle status of the mission. Defaults to NEW and is set to ASSIGNED automatically when an agent is assigned; PENDING_CH means it is awaiting validation after a change.
+
+
+            * `NEW` - New
+
+            * `ASSIGNED` - Assigned
+
+            * `PENDING_CH` - Awaiting validation after a change
+
+            * `CANCELLED` - Cancelled
+
+            * `ARCHIVED` - Archived'
+        active_status:
+          allOf:
+          - $ref: '#/components/schemas/ActiveStatusEnum'
+          readOnly: true
+          description: 'Progress status of the mission, computed from its checklist execution: PENDING (to do), DOING (in progress), or DONE.
+
+
+            * `PENDING` - PENDING
+
+            * `DOING` - DOING
+
+            * `DONE` - DONE'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        collection_code:
+          allOf:
+          - $ref: '#/components/schemas/KeyCollectionCode'
+          readOnly: true
+        next_reservation_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: Arrival date-time (UTC) of the next reservation at the property, or null if there is none.
+        is_midterm:
+          type: boolean
+          readOnly: true
+          description: Whether the mission relates to a mid-term stay.
+        requested_maintenance_job:
+          allOf:
+          - $ref: '#/components/schemas/RequestedMaintenanceJobEnum'
+          readOnly: true
+        reservation_check_out:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          description: Check-out date-time (UTC) of the mission's reservation, or null if the mission has no reservation.
+        user:
+          type: string
+          readOnly: true
+    PaymentStatusEnum:
+      enum:
+      - NOT_PAID
+      - PAID
+      type: string
+      description: '* `NOT_PAID` - Not paid
+
+        * `PAID` - Paid'
+    MissionStatusEnum:
+      enum:
+      - NEW
+      - ASSIGNED
+      - PENDING_CH
+      - CANCELLED
+      - ARCHIVED
+      type: string
+      description: '* `NEW` - New
+
+        * `ASSIGNED` - Assigned
+
+        * `PENDING_CH` - Awaiting validation after a change
+
+        * `CANCELLED` - Cancelled
+
+        * `ARCHIVED` - Archived'
+    Agent:
+      type: object
+      description: 'Read-only lookup: who the caller may put on a mission, and their id.
+
+
+        An allowlist, not the model: no phone, address, date of birth or identity
+
+        document. ``antennes`` renders whatever ``AgentsViewSet`` prefetched, which is
+
+        where its scoping lives.'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/AgentStatusEnum'
+          description: 'Whether the agent is still working: ACTIVE or INACTIVE. Assigning a mission does NOT check this, so an INACTIVE agent must be filtered out here rather than relied on to be refused.
+
+
+            * `ACTIVE` - Active
+
+            * `INACTIVE` - Inactive'
+        antennes:
+          type: array
+          items:
+            type: integer
+            title: Offices
+          title: Offices
+          description: Ids of the offices the agent works for, restricted to the offices you have access to. A mission can only be assigned to an agent of the mission's own office.
+        type_mission:
+          type: array
+          items:
+            type: integer
+            title: Mission types
+          title: Mission types
+          description: Ids of the mission types the agent is qualified for (list them with the type_missions resource). A mission can only be assigned to an agent qualified for its type.
+      required:
+      - antennes
+      - first_name
+      - id
+      - last_name
+    MissionPayoutAdjustment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        category:
+          allOf:
+          - $ref: '#/components/schemas/MissionPayoutAdjustmentCategoryEnum'
+          description: 'Category of the payout adjustment, such as maintenance, cleaning, or improvement.
+
+
+            * `cleaning` - cleaning
+
+            * `maintenance` - maintenance
+
+            * `improvement` - improvement
+
+            * `quality_check` - quality_check
+
+            * `issue_resolution` - issue_resolution
+
+            * `onboarding_fee` - onboarding_fee
+
+            * `utility_bill` - utility_bill
+
+            * `unit_permits` - unit_permits
+
+            * `reservation_cancellation` - reservation_cancellation
+
+            * `advance_payment_for_decoration_project` - advance_payment_for_decoration_project
+
+            * `decoration_project` - decoration_project
+
+            * `commission_offer` - commission_offer
+
+            * `fin_ops` - fin_ops
+
+            * `pest_control` - pest_control
+
+            * `deep_cleaning` - deep_cleaning
+
+            * `guest_request` - guest_request
+
+            * `tpl_insurance` - tpl_insurance
+
+            * `service_charge` - service_charge
+
+            * `local_tax` - local_tax
+
+            * `termination_fee` - termination_fee
+
+            * `others` - others'
+        price_of_purchase:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: Purchase price of the item or service being charged.
+        price_of_purchase_note:
+          type: string
+          description: Note describing the purchase price.
+          maxLength: 500
+        service_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: Service fee charged on top of the purchase price.
+        service_fee_note:
+          type: string
+          description: Note describing the service fee.
+          maxLength: 500
+        receipt_file:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: Receipt file supporting the payout adjustment.
+        supplier_name:
+          type:
+          - string
+          - 'null'
+          description: Name of the supplier the purchase was made from.
+          maxLength: 250
+        assign_to_am:
+          type: boolean
+          description: Whether to assign the payout adjustment to the account manager.
+        internal_note:
+          type: string
+          description: Free-text internal note about the payout adjustment.
+          maxLength: 500
+        send_invoice_to_finance_team:
+          type: boolean
+          description: Whether to send the related invoice to the finance team.
+        property:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) the payout adjustment is for.
+      required:
+      - category
+      - id
+      - price_of_purchase
+      - price_of_purchase_note
+      - property
+      - service_fee
+    PatchedUpdateMissionEndTime:
+      type: object
+      description: 'Base for the update_start_time / update_end_time actions.
+
+
+        Subclasses declare their own datetime field and move it onto the mission in
+
+        ``_apply_new_time``; the audit comment and the write are shared. Both pin
+
+        ``default_timezone`` to UTC so the parsed value carries a fixed offset:
+
+        ``_apply_new_time`` adds the mission duration to it, and adding to a
+
+        zone-aware datetime shifts the wall clock without renormalising, so a
+
+        dynamic zone would drift across a DST transition.'
+      properties:
+        edit_comment:
+          type: string
+          description: Reason for the change, recorded on the mission.
+        end:
+          type: string
+          format: date-time
+          description: New mission end date and time. The UTC offset is required, e.g. 2026-07-04T11:00:00+00:00 or 2026-07-04T13:00:00+02:00.
+    ChargedToEnum:
+      enum:
+      - PROPERTY_MANAGER
+      - OWNER
+      - GUEST
+      - PROVIDERS
+      type: string
+      description: '* `PROPERTY_MANAGER` - Property Manager
+
+        * `OWNER` - Owner
+
+        * `GUEST` - Guest
+
+        * `PROVIDERS` - Providers'
+    PaginatedMissionList:
+      type: object
+      required:
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mission'
+        limit:
+          type: integer
+          example: 50
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

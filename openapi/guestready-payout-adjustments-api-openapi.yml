@@ -1,0 +1,597 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Payout Adjustments API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: payout_adjustments
+paths:
+  /api/v3/payout_adjustments/:
+    get:
+      operationId: payout_adjustments_list
+      description: Retrieve a list of payout adjustments. Note that PDFs expire in 24h
+      summary: List Payout Adjustments
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - payout_adjustments
+      security:
+      - oauth2:
+        - payout_adjustments:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPayoutAdjustmentList'
+          description: ''
+  /api/v3/payout_adjustments/{id}/:
+    get:
+      operationId: payout_adjustments_retrieve
+      description: Retrieve a specific payout adjustment by ID. Note that PDFs expire in 24h
+      summary: Retrieve Payout Adjustment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this payout adjustment.
+        required: true
+      tags:
+      - payout_adjustments
+      security:
+      - oauth2:
+        - payout_adjustments:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayoutAdjustment'
+          description: ''
+  /api/v3/payout_adjustments/{id}/invoice_request/:
+    get:
+      operationId: payout_adjustments_invoice_request_retrieve
+      description: Get the data for the invoice request
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this payout adjustment.
+        required: true
+      tags:
+      - payout_adjustments
+      security:
+      - oauth2:
+        - payout_adjustments:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  sender:
+                    name: string
+                    tax_number: string
+                    business_name: string
+                    phone: string
+                    iban: string
+                    logo: string
+                    address_line_1: string
+                    address_line_2: string
+                    postal_code: string
+                    city: string
+                    country: string
+                    country_code: string
+                  recipient:
+                    name: string
+                    tax_number: string
+                    business_name: string
+                    phone: string
+                    iban: string
+                    logo: string
+                    address_line_1: string
+                    address_line_2: string
+                    postal_code: string
+                    city: string
+                    country: string
+                    country_code: string
+                  items:
+                  - category: string
+                    category_description: string
+                    amount: number (gross amount)
+                    vat_rate: number
+                    quantity: number
+          description: ''
+  /api/v3/payout_adjustments/{id}/mark_as_paid/:
+    post:
+      operationId: payout_adjustments_mark_as_paid_create
+      description: Mark a payout adjustment as paid. Requires the 'Can mark payout adjustments as paid' permission.
+      summary: Mark Payout Adjustment As Paid
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this payout adjustment.
+        required: true
+      tags:
+      - payout_adjustments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayoutAdjustment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PayoutAdjustment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PayoutAdjustment'
+        required: true
+      security:
+      - oauth2:
+        - payout_adjustments:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  message: Payout adjustment marked as paid
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                example:
+                  message: Payout adjustment is already paid
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                example:
+                  message: Permission to mark payout adjustments as paid is required.
+          description: ''
+components:
+  schemas:
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
+    BlankEnum:
+      enum:
+      - ''
+    PaginatedPayoutAdjustmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayoutAdjustment'
+        limit:
+          type: integer
+          example: 100
+    PayoutAdjustmentCategoryEnum:
+      enum:
+      - cleaning
+      - maintenance
+      - improvement
+      - quality_check
+      - issue_resolution
+      - onboarding_fee
+      - utility_bill
+      - unit_permits
+      - reservation_cancellation
+      - advance_payment_for_decoration_project
+      - decoration_project
+      - commission_offer
+      - fin_ops
+      - pest_control
+      - deep_cleaning
+      - guest_request
+      - tpl_insurance
+      - service_charge
+      - local_tax
+      - termination_fee
+      - others
+      type: string
+      description: '* `cleaning` - Cleaning
+
+        * `maintenance` - Maintenance
+
+        * `improvement` - Improvement/Furniture
+
+        * `quality_check` - Quality Check
+
+        * `issue_resolution` - Resolution adjustment
+
+        * `onboarding_fee` - Onboarding fee
+
+        * `utility_bill` - Utility bill
+
+        * `unit_permits` - Unit permits
+
+        * `reservation_cancellation` - Reservation cancellation
+
+        * `advance_payment_for_decoration_project` - Advance Payment for Decoration Project/Equipment
+
+        * `decoration_project` - Decoration Project/Equipment
+
+        * `commission_offer` - Commission Offer
+
+        * `fin_ops` - FinOps
+
+        * `pest_control` - Pest control
+
+        * `deep_cleaning` - Deep cleaning
+
+        * `guest_request` - Guest Request
+
+        * `tpl_insurance` - TPL Insurance
+
+        * `service_charge` - Service Charge
+
+        * `local_tax` - Local Tax
+
+        * `termination_fee` - Termination Fee
+
+        * `others` - Others'
+    PayoutAdjustment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/PayoutAdjustmentTypeEnum'
+        category:
+          $ref: '#/components/schemas/PayoutAdjustmentCategoryEnum'
+        price_of_purchase:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        service_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        price_of_purchase_note:
+          type: string
+          maxLength: 500
+        internal_note:
+          type: string
+          maxLength: 500
+        service_fee_note:
+          type: string
+          maxLength: 500
+        author:
+          type:
+          - integer
+          - 'null'
+        supplier_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        send_invoice_to_finance_team:
+          type: boolean
+        vat:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        total_gross:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        owner:
+          type: integer
+        property:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        mission:
+          type:
+          - integer
+          - 'null'
+        reservation:
+          type:
+          - integer
+          - 'null'
+        status:
+          $ref: '#/components/schemas/PayoutAdjustmentStatusEnum'
+        receipt_file:
+          type:
+          - string
+          - 'null'
+          format: uri
+        internal_category:
+          oneOf:
+          - $ref: '#/components/schemas/InternalCategoryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        recurrent_payout_adjustment:
+          type:
+          - integer
+          - 'null'
+        reviewed:
+          type: boolean
+        assignee:
+          type:
+          - integer
+          - 'null'
+        original:
+          type:
+          - integer
+          - 'null'
+          description: When credit note PA is created we assign original PA to it.
+        activation_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        invoice_to_host_name:
+          type: boolean
+          title: Invoice under owner's name?
+          description: <b>(if yes, please submit invoice)</b>
+        void_reason:
+          type: string
+          maxLength: 128
+        credit_note_reason:
+          type: string
+          maxLength: 128
+        voided_by:
+          type:
+          - integer
+          - 'null'
+        voided_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        review_required:
+          type: boolean
+        currency:
+          allOf:
+          - $ref: '#/components/schemas/CurrencyD53Enum'
+          readOnly: true
+        invoices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayoutAdjustmentAccountingInvoice'
+          readOnly: true
+      required:
+      - currency
+      - id
+      - invoices
+      - owner
+      - property
+    NullEnum:
+      enum:
+      - null
+    PayoutAdjustmentTypeEnum:
+      enum:
+      - CHARGE
+      - REFUND
+      type: string
+      description: '* `CHARGE` - Charge
+
+        * `REFUND` - Refund'
+    PayoutAdjustmentStatusEnum:
+      enum:
+      - inactive
+      - paid
+      - not_paid
+      type: string
+      description: '* `inactive` - Inactive
+
+        * `paid` - Paid
+
+        * `not_paid` - Not Paid'
+    InternalCategoryEnum:
+      enum:
+      - airbnb_resolution
+      - mission_charge
+      type: string
+      description: '* `airbnb_resolution` - airbnb_resolution
+
+        * `mission_charge` - mission_charge'
+    PayoutAdjustmentAccountingInvoice:
+      type: object
+      properties:
+        serie:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        emmission_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        category:
+          type: integer
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        pdf:
+          type:
+          - string
+          - 'null'
+          format: uri
+      required:
+      - category
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

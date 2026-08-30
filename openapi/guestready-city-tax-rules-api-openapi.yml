@@ -1,0 +1,453 @@
+openapi: 3.2.0
+info:
+  title: RentalReady City Tax Rules API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: city_tax_rules
+paths:
+  /api/v3/city_tax_rules/:
+    get:
+      operationId: city_tax_rules_list
+      parameters:
+      - in: query
+        name: charge_type
+        schema:
+          type: string
+          enum:
+          - PER_ADULT
+          - PER_NIGHT
+          - PER_ROOM
+        description: '* `PER_ADULT` - Per adult / per night
+
+          * `PER_ROOM` - Per room / per night
+
+          * `PER_NIGHT` - Per night'
+      - in: query
+        name: charge_with
+        schema:
+          type: string
+          enum:
+          - FIXED
+          - PERCENTAGE
+        description: '* `FIXED` - Fixed
+
+          * `PERCENTAGE` - Percentage'
+      - in: query
+        name: city
+        schema:
+          type: integer
+      - in: query
+        name: is_default
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: rental_id
+        schema:
+          type: array
+          items:
+            type: string
+            title: Contract number
+        description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        explode: true
+        style: form
+      tags:
+      - city_tax_rules
+      security:
+      - oauth2:
+        - city_tax_rules:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCityRuleList'
+          description: ''
+  /api/v3/city_tax_rules/{id}/:
+    get:
+      operationId: city_tax_rules_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this city rule.
+        required: true
+      tags:
+      - city_tax_rules
+      security:
+      - oauth2:
+        - city_tax_rules:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityRule'
+          description: ''
+components:
+  schemas:
+    CityRule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Name of rule
+          description: Name of the tax rule.
+          maxLength: 250
+        city:
+          type: integer
+          description: Id of the city this tax rule applies to.
+        charge_type:
+          allOf:
+          - $ref: '#/components/schemas/ChargeTypeEnum'
+          description: 'Basis the tax is charged on per night: per adult, per bedroom, or a single flat charge per night.
+
+
+            * `PER_ADULT` - Per adult / per night
+
+            * `PER_ROOM` - Per room / per night
+
+            * `PER_NIGHT` - Per night'
+        charge_with:
+          allOf:
+          - $ref: '#/components/schemas/ChargeWithEnum'
+          description: 'How the amount is interpreted: FIXED means a fixed money amount, PERCENTAGE means a share of the reservation price.
+
+
+            * `FIXED` - Fixed
+
+            * `PERCENTAGE` - Percentage'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
+          description: Tax amount. When charge_with is FIXED, a fixed money amount (in the rule's currency) charged per unit per night; when charge_with is PERCENTAGE, a fraction of the reservation price between 0 and 1 (e.g. 0.05 for 5%).
+        taxable_base:
+          title: Calculate percentage on
+          description: 'For percentage rules, the amount the percentage is applied to: RENTAL_INCOME for the rental income only, or ACCOMMODATION for the rental income plus the cleaning fee.
+
+
+            * `RENTAL_INCOME` - Rental income only
+
+            * `ACCOMMODATION` - Rental income + cleaning fee'
+          oneOf:
+          - $ref: '#/components/schemas/TaxableBaseEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        currency:
+          readOnly: true
+          description: 'Currency the fixed amount and cap are expressed in, taken from the property manager''s branch. Null when no branch currency is set.
+
+
+            * `AED` - AED
+
+            * `AUD` - AUD
+
+            * `BRL` - BRL
+
+            * `CAD` - CAD
+
+            * `CHF` - CHF
+
+            * `CZK` - CZK
+
+            * `EUR` - EUR
+
+            * `GBP` - GBP
+
+            * `HKD` - HKD
+
+            * `IDR` - IDR
+
+            * `ILS` - ILS
+
+            * `JPY` - JPY
+
+            * `KRW` - KRW
+
+            * `MAD` - MAD
+
+            * `MYR` - MYR
+
+            * `PLN` - PLN
+
+            * `RUB` - RUB
+
+            * `SAR` - SAR
+
+            * `THB` - THB
+
+            * `USD` - USD'
+          oneOf:
+          - $ref: '#/components/schemas/CurrencyD53Enum'
+          - $ref: '#/components/schemas/NullEnum'
+        max_cap:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Maximum cap per night
+          description: Upper limit on the tax, per charge unit per night, in the rule's currency; applies to percentage rules only. Null means no cap.
+        max_number_of_nights:
+          type:
+          - integer
+          - 'null'
+          maximum: 32767
+          minimum: 0
+          title: Maximum number of nights
+          description: Maximum number of nights the tax is charged for in a single stay; longer stays are charged as if they lasted this many nights. Null means every night is charged.
+        affected_months:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+          description: Months, as numbers 1-12, during which the rule applies; the rule is used when the stay's month falls in this set.
+        from_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Start date for when this rule applies
+        until_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: End date for when this rule applies
+        is_default:
+          type: boolean
+          title: Set as default
+          description: If enabled, it will be assigned automatically to new properties of the City
+      required:
+      - affected_months
+      - amount
+      - charge_type
+      - charge_with
+      - city
+      - currency
+      - id
+      - name
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
+    BlankEnum:
+      enum:
+      - ''
+    PaginatedCityRuleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CityRule'
+        limit:
+          type: integer
+          example: 50
+    ChargeWithEnum:
+      enum:
+      - FIXED
+      - PERCENTAGE
+      type: string
+      description: '* `FIXED` - Fixed
+
+        * `PERCENTAGE` - Percentage'
+    TaxableBaseEnum:
+      enum:
+      - RENTAL_INCOME
+      - ACCOMMODATION
+      type: string
+      description: '* `RENTAL_INCOME` - Rental income only
+
+        * `ACCOMMODATION` - Rental income + cleaning fee'
+    ChargeTypeEnum:
+      enum:
+      - PER_ADULT
+      - PER_ROOM
+      - PER_NIGHT
+      type: string
+      description: '* `PER_ADULT` - Per adult / per night
+
+        * `PER_ROOM` - Per room / per night
+
+        * `PER_NIGHT` - Per night'
+    NullEnum:
+      enum:
+      - null
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

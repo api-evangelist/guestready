@@ -1,0 +1,1644 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Owners API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: owners
+paths:
+  /api/v3/owners/:
+    get:
+      operationId: owners_list
+      parameters:
+      - in: query
+        name: email
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - owners
+      security:
+      - oauth2:
+        - owners:read
+      - oauth2:
+        - hosts:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOwnerList'
+          description: ''
+    post:
+      operationId: owners_create
+      description: Create an owner
+      tags:
+      - owners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOwner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateOwner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateOwner'
+        required: true
+      security:
+      - oauth2:
+        - owners:write
+      - oauth2:
+        - hosts:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOwner'
+          description: ''
+  /api/v3/owners/{username}/:
+    get:
+      operationId: owners_retrieve
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+          pattern: ^[^/]+$
+        required: true
+      tags:
+      - owners
+      security:
+      - oauth2:
+        - owners:read
+      - oauth2:
+        - hosts:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+          description: ''
+    patch:
+      operationId: owners_partial_update
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+          pattern: ^[^/]+$
+        required: true
+      tags:
+      - owners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOwner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOwner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOwner'
+      security:
+      - oauth2:
+        - owners:write
+      - oauth2:
+        - hosts:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+          description: ''
+    delete:
+      operationId: owners_destroy
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+          pattern: ^[^/]+$
+        required: true
+      tags:
+      - owners
+      security:
+      - oauth2:
+        - owners:write
+      - oauth2:
+        - hosts:write
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    BlankEnum:
+      enum:
+      - ''
+    CreateOwner:
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        user_name:
+          type: string
+        phone:
+          type: string
+        property_manager:
+          type: string
+        default_locale:
+          $ref: '#/components/schemas/CreateOwnerDefaultLocaleEnum'
+        type:
+          $ref: '#/components/schemas/TypeF08Enum'
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        nationality:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        date_of_birth:
+          type:
+          - string
+          - 'null'
+          format: date
+        job:
+          type:
+          - string
+          - 'null'
+          title: Occupation
+          maxLength: 30
+        managed_by:
+          type:
+          - integer
+          - 'null'
+        address_line1:
+          type: string
+          title: Address line  1
+        address_line2:
+          type:
+          - string
+          - 'null'
+          title: Address line  2
+        post_code:
+          type:
+          - string
+          - 'null'
+          title: Postcode
+          maxLength: 10
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        region:
+          type:
+          - string
+          - 'null'
+          maxLength: 40
+        country_of_residence:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        bank_account_iban:
+          type: string
+          title: Bank account (IBAN)
+          maxLength: 500
+        bic:
+          type:
+          - string
+          - 'null'
+          pattern: ^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$
+          maxLength: 50
+        bank_account_number:
+          type: string
+          maxLength: 100
+        bank_account_routing_number:
+          type: string
+          title: Bank account sort code / routing number
+          maxLength: 100
+        bank_account_currency:
+          oneOf:
+          - $ref: '#/components/schemas/BankAccountCurrencyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        bank_account_name:
+          type:
+          - string
+          - 'null'
+          title: Bank account holder name
+          maxLength: 100
+        bank_account_holder_address:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        bank_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        bank_branch_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        bank_country:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        business_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        company_id:
+          type:
+          - string
+          - 'null'
+          title: VAT number
+          maxLength: 50
+        company_number:
+          type:
+          - string
+          - 'null'
+          title: Company number / SIREN number
+          maxLength: 50
+        company_address:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        tax_identification_number:
+          type:
+          - string
+          - 'null'
+          title: Tax identification number (TIN)
+          maxLength: 250
+        host_created_notification:
+          type: boolean
+          title: Owner creation notification
+          description: When the owner account is created, this will send the owner a notification containing their login credentials
+        property_validation:
+          type: boolean
+          title: Property validation notification
+          description: Once a property is validated, this will automatically send the owner a validation notification for the property and a link to their Airbnb listing.
+        deactivation_property_email:
+          type: boolean
+          title: Property deactivation notification
+          description: Once a property is deactivated, this will automatically send the owner a notification of deactivation. It will say to contact the property manager to reopen dates / reactivate the property in the future.
+        open_dates_notification:
+          type: boolean
+          description: Periodically send a notification to the owner if not enough dates are open
+      required:
+      - default_locale
+      - email
+      - first_name
+      - last_name
+      - name
+      - phone
+      - property_manager
+      - user_name
+    TypeF08Enum:
+      enum:
+      - NATURAL
+      - BUSINESS
+      - ORGANIZATION
+      - SOLETRADER
+      type: string
+      description: '* `NATURAL` - Individual owner
+
+        * `BUSINESS` - Business entity
+
+        * `ORGANIZATION` - Organization entity
+
+        * `SOLETRADER` - Soletrader entity'
+    GenderEnum:
+      enum:
+      - M
+      - F
+      type: string
+      description: '* `M` - Male
+
+        * `F` - Female'
+    PatchedOwner:
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+          readOnly: true
+        user_name:
+          type: string
+          readOnly: true
+        phone:
+          type: string
+          title: Phone number
+          pattern: ^\+\d{8,15}$
+          maxLength: 160
+        property_manager:
+          type: string
+        default_locale:
+          allOf:
+          - $ref: '#/components/schemas/OwnerDefaultLocaleEnum'
+          title: Default language
+        type:
+          $ref: '#/components/schemas/TypeF08Enum'
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        nationality:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        date_of_birth:
+          type:
+          - string
+          - 'null'
+          format: date
+        job:
+          type:
+          - string
+          - 'null'
+          title: Occupation
+          maxLength: 30
+        managed_by:
+          type:
+          - integer
+          - 'null'
+        address_line1:
+          type: string
+          title: Address line  1
+        address_line2:
+          type:
+          - string
+          - 'null'
+          title: Address line  2
+        post_code:
+          type:
+          - string
+          - 'null'
+          title: Postcode
+          maxLength: 10
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        region:
+          type:
+          - string
+          - 'null'
+          maxLength: 40
+        country_of_residence:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        bank_account_iban:
+          type: string
+          title: Bank account (IBAN)
+          maxLength: 500
+        bic:
+          type:
+          - string
+          - 'null'
+          pattern: ^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$
+          maxLength: 50
+        bank_account_number:
+          type: string
+          maxLength: 100
+        bank_account_routing_number:
+          type: string
+          title: Bank account sort code / routing number
+          maxLength: 100
+        bank_account_currency:
+          oneOf:
+          - $ref: '#/components/schemas/BankAccountCurrencyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        bank_account_name:
+          type:
+          - string
+          - 'null'
+          title: Bank account holder name
+          maxLength: 100
+        bank_account_holder_address:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        bank_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        bank_branch_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        bank_country:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        business_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        company_id:
+          type:
+          - string
+          - 'null'
+          title: VAT number
+          maxLength: 50
+        company_number:
+          type:
+          - string
+          - 'null'
+          title: Company number / SIREN number
+          maxLength: 50
+        company_address:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        tax_identification_number:
+          type:
+          - string
+          - 'null'
+          title: Tax identification number (TIN)
+          maxLength: 250
+        host_created_notification:
+          type: boolean
+          title: Owner creation notification
+          description: When the owner account is created, this will send the owner a notification containing their login credentials
+        property_validation:
+          type: boolean
+          title: Property validation notification
+          description: Once a property is validated, this will automatically send the owner a validation notification for the property and a link to their Airbnb listing.
+        deactivation_property_email:
+          type: boolean
+          title: Property deactivation notification
+          description: Once a property is deactivated, this will automatically send the owner a notification of deactivation. It will say to contact the property manager to reopen dates / reactivate the property in the future.
+        open_dates_notification:
+          type: boolean
+          description: Periodically send a notification to the owner if not enough dates are open
+    BankCountryEnum:
+      enum:
+      - AF
+      - AX
+      - AL
+      - DZ
+      - AS
+      - AD
+      - AO
+      - AI
+      - AQ
+      - AG
+      - AR
+      - AM
+      - AW
+      - AU
+      - AT
+      - AZ
+      - BS
+      - BH
+      - BD
+      - BB
+      - BY
+      - BE
+      - BZ
+      - BJ
+      - BM
+      - BT
+      - BO
+      - BQ
+      - BA
+      - BW
+      - BV
+      - BR
+      - IO
+      - BN
+      - BG
+      - BF
+      - BI
+      - CV
+      - KH
+      - CM
+      - CA
+      - KY
+      - CF
+      - TD
+      - CL
+      - CN
+      - CX
+      - CC
+      - CO
+      - KM
+      - CG
+      - CK
+      - CR
+      - CI
+      - HR
+      - CU
+      - CW
+      - CY
+      - CZ
+      - CD
+      - DK
+      - DJ
+      - DM
+      - DO
+      - EC
+      - EG
+      - SV
+      - GQ
+      - ER
+      - EE
+      - SZ
+      - ET
+      - FK
+      - FO
+      - FJ
+      - FI
+      - FR
+      - GF
+      - PF
+      - TF
+      - GA
+      - GM
+      - GE
+      - DE
+      - GH
+      - GI
+      - GR
+      - GL
+      - GD
+      - GP
+      - GU
+      - GT
+      - GG
+      - GN
+      - GW
+      - GY
+      - HT
+      - HM
+      - HN
+      - HK
+      - HU
+      - IS
+      - IN
+      - ID
+      - IR
+      - IQ
+      - IE
+      - IM
+      - IL
+      - IT
+      - JM
+      - JP
+      - JE
+      - JO
+      - KZ
+      - KE
+      - KI
+      - KW
+      - KG
+      - LA
+      - LV
+      - LB
+      - LS
+      - LR
+      - LY
+      - LI
+      - LT
+      - LU
+      - MO
+      - MG
+      - MW
+      - MY
+      - MV
+      - ML
+      - MT
+      - MH
+      - MQ
+      - MR
+      - MU
+      - YT
+      - MX
+      - FM
+      - MD
+      - MC
+      - MN
+      - ME
+      - MS
+      - MA
+      - MZ
+      - MM
+      - NA
+      - NR
+      - NP
+      - NL
+      - NC
+      - NZ
+      - NI
+      - NE
+      - NG
+      - NU
+      - NF
+      - KP
+      - MK
+      - MP
+      - 'NO'
+      - OM
+      - PK
+      - PW
+      - PS
+      - PA
+      - PG
+      - PY
+      - PE
+      - PH
+      - PN
+      - PL
+      - PT
+      - PR
+      - QA
+      - RE
+      - RO
+      - RU
+      - RW
+      - BL
+      - SH
+      - KN
+      - LC
+      - MF
+      - PM
+      - VC
+      - WS
+      - SM
+      - ST
+      - SA
+      - SN
+      - RS
+      - SC
+      - SL
+      - SG
+      - SX
+      - SK
+      - SI
+      - SB
+      - SO
+      - ZA
+      - GS
+      - KR
+      - SS
+      - ES
+      - LK
+      - SD
+      - SR
+      - SJ
+      - SE
+      - CH
+      - SY
+      - TW
+      - TJ
+      - TZ
+      - TH
+      - TL
+      - TG
+      - TK
+      - TO
+      - TT
+      - TN
+      - TR
+      - TM
+      - TC
+      - TV
+      - UG
+      - UA
+      - AE
+      - GB
+      - UM
+      - US
+      - UY
+      - UZ
+      - VU
+      - VA
+      - VE
+      - VN
+      - VG
+      - VI
+      - WF
+      - EH
+      - YE
+      - ZM
+      - ZW
+      type: string
+      description: '* `AF` - Afghanistan
+
+        * `AX` - Åland Islands
+
+        * `AL` - Albania
+
+        * `DZ` - Algeria
+
+        * `AS` - American Samoa
+
+        * `AD` - Andorra
+
+        * `AO` - Angola
+
+        * `AI` - Anguilla
+
+        * `AQ` - Antarctica
+
+        * `AG` - Antigua and Barbuda
+
+        * `AR` - Argentina
+
+        * `AM` - Armenia
+
+        * `AW` - Aruba
+
+        * `AU` - Australia
+
+        * `AT` - Austria
+
+        * `AZ` - Azerbaijan
+
+        * `BS` - Bahamas (The)
+
+        * `BH` - Bahrain
+
+        * `BD` - Bangladesh
+
+        * `BB` - Barbados
+
+        * `BY` - Belarus
+
+        * `BE` - Belgium
+
+        * `BZ` - Belize
+
+        * `BJ` - Benin
+
+        * `BM` - Bermuda
+
+        * `BT` - Bhutan
+
+        * `BO` - Bolivia
+
+        * `BQ` - Bonaire, Sint Eustatius and Saba
+
+        * `BA` - Bosnia and Herzegovina
+
+        * `BW` - Botswana
+
+        * `BV` - Bouvet Island
+
+        * `BR` - Brazil
+
+        * `IO` - British Indian Ocean Territory
+
+        * `BN` - Brunei
+
+        * `BG` - Bulgaria
+
+        * `BF` - Burkina Faso
+
+        * `BI` - Burundi
+
+        * `CV` - Cabo Verde
+
+        * `KH` - Cambodia
+
+        * `CM` - Cameroon
+
+        * `CA` - Canada
+
+        * `KY` - Cayman Islands
+
+        * `CF` - Central African Republic
+
+        * `TD` - Chad
+
+        * `CL` - Chile
+
+        * `CN` - China
+
+        * `CX` - Christmas Island
+
+        * `CC` - Cocos (Keeling) Islands
+
+        * `CO` - Colombia
+
+        * `KM` - Comoros
+
+        * `CG` - Congo
+
+        * `CK` - Cook Islands
+
+        * `CR` - Costa Rica
+
+        * `CI` - Côte d''Ivoire
+
+        * `HR` - Croatia
+
+        * `CU` - Cuba
+
+        * `CW` - Curaçao
+
+        * `CY` - Cyprus
+
+        * `CZ` - Czechia
+
+        * `CD` - Democratic Republic of the Congo
+
+        * `DK` - Denmark
+
+        * `DJ` - Djibouti
+
+        * `DM` - Dominica
+
+        * `DO` - Dominican Republic
+
+        * `EC` - Ecuador
+
+        * `EG` - Egypt
+
+        * `SV` - El Salvador
+
+        * `GQ` - Equatorial Guinea
+
+        * `ER` - Eritrea
+
+        * `EE` - Estonia
+
+        * `SZ` - Eswatini
+
+        * `ET` - Ethiopia
+
+        * `FK` - Falkland Islands (Malvinas)
+
+        * `FO` - Faroe Islands
+
+        * `FJ` - Fiji
+
+        * `FI` - Finland
+
+        * `FR` - France
+
+        * `GF` - French Guiana
+
+        * `PF` - French Polynesia
+
+        * `TF` - French Southern Territories
+
+        * `GA` - Gabon
+
+        * `GM` - Gambia
+
+        * `GE` - Georgia
+
+        * `DE` - Germany
+
+        * `GH` - Ghana
+
+        * `GI` - Gibraltar
+
+        * `GR` - Greece
+
+        * `GL` - Greenland
+
+        * `GD` - Grenada
+
+        * `GP` - Guadeloupe
+
+        * `GU` - Guam
+
+        * `GT` - Guatemala
+
+        * `GG` - Guernsey
+
+        * `GN` - Guinea
+
+        * `GW` - Guinea-Bissau
+
+        * `GY` - Guyana
+
+        * `HT` - Haiti
+
+        * `HM` - Heard Island and McDonald Islands
+
+        * `HN` - Honduras
+
+        * `HK` - Hong Kong
+
+        * `HU` - Hungary
+
+        * `IS` - Iceland
+
+        * `IN` - India
+
+        * `ID` - Indonesia
+
+        * `IR` - Iran
+
+        * `IQ` - Iraq
+
+        * `IE` - Ireland
+
+        * `IM` - Isle of Man
+
+        * `IL` - Israel
+
+        * `IT` - Italy
+
+        * `JM` - Jamaica
+
+        * `JP` - Japan
+
+        * `JE` - Jersey
+
+        * `JO` - Jordan
+
+        * `KZ` - Kazakhstan
+
+        * `KE` - Kenya
+
+        * `KI` - Kiribati
+
+        * `KW` - Kuwait
+
+        * `KG` - Kyrgyzstan
+
+        * `LA` - Laos
+
+        * `LV` - Latvia
+
+        * `LB` - Lebanon
+
+        * `LS` - Lesotho
+
+        * `LR` - Liberia
+
+        * `LY` - Libya
+
+        * `LI` - Liechtenstein
+
+        * `LT` - Lithuania
+
+        * `LU` - Luxembourg
+
+        * `MO` - Macao
+
+        * `MG` - Madagascar
+
+        * `MW` - Malawi
+
+        * `MY` - Malaysia
+
+        * `MV` - Maldives
+
+        * `ML` - Mali
+
+        * `MT` - Malta
+
+        * `MH` - Marshall Islands
+
+        * `MQ` - Martinique
+
+        * `MR` - Mauritania
+
+        * `MU` - Mauritius
+
+        * `YT` - Mayotte
+
+        * `MX` - Mexico
+
+        * `FM` - Micronesia
+
+        * `MD` - Moldova
+
+        * `MC` - Monaco
+
+        * `MN` - Mongolia
+
+        * `ME` - Montenegro
+
+        * `MS` - Montserrat
+
+        * `MA` - Morocco
+
+        * `MZ` - Mozambique
+
+        * `MM` - Myanmar
+
+        * `NA` - Namibia
+
+        * `NR` - Nauru
+
+        * `NP` - Nepal
+
+        * `NL` - Netherlands
+
+        * `NC` - New Caledonia
+
+        * `NZ` - New Zealand
+
+        * `NI` - Nicaragua
+
+        * `NE` - Niger
+
+        * `NG` - Nigeria
+
+        * `NU` - Niue
+
+        * `NF` - Norfolk Island
+
+        * `KP` - North Korea
+
+        * `MK` - North Macedonia
+
+        * `MP` - Northern Mariana Islands
+
+        * `NO` - Norway
+
+        * `OM` - Oman
+
+        * `PK` - Pakistan
+
+        * `PW` - Palau
+
+        * `PS` - Palestine
+
+        * `PA` - Panama
+
+        * `PG` - Papua New Guinea
+
+        * `PY` - Paraguay
+
+        * `PE` - Peru
+
+        * `PH` - Philippines
+
+        * `PN` - Pitcairn
+
+        * `PL` - Poland
+
+        * `PT` - Portugal
+
+        * `PR` - Puerto Rico
+
+        * `QA` - Qatar
+
+        * `RE` - Réunion
+
+        * `RO` - Romania
+
+        * `RU` - Russia
+
+        * `RW` - Rwanda
+
+        * `BL` - Saint Barthélemy
+
+        * `SH` - Saint Helena
+
+        * `KN` - Saint Kitts and Nevis
+
+        * `LC` - Saint Lucia
+
+        * `MF` - Saint Martin (French part)
+
+        * `PM` - Saint Pierre and Miquelon
+
+        * `VC` - Saint Vincent and the Grenadines
+
+        * `WS` - Samoa
+
+        * `SM` - San Marino
+
+        * `ST` - Sao Tome and Principe
+
+        * `SA` - Saudi Arabia
+
+        * `SN` - Senegal
+
+        * `RS` - Serbia
+
+        * `SC` - Seychelles
+
+        * `SL` - Sierra Leone
+
+        * `SG` - Singapore
+
+        * `SX` - Sint Maarten (Dutch part)
+
+        * `SK` - Slovakia
+
+        * `SI` - Slovenia
+
+        * `SB` - Solomon Islands
+
+        * `SO` - Somalia
+
+        * `ZA` - South Africa
+
+        * `GS` - South Georgia
+
+        * `KR` - South Korea
+
+        * `SS` - South Sudan
+
+        * `ES` - Spain
+
+        * `LK` - Sri Lanka
+
+        * `SD` - Sudan
+
+        * `SR` - Suriname
+
+        * `SJ` - Svalbard and Jan Mayen
+
+        * `SE` - Sweden
+
+        * `CH` - Switzerland
+
+        * `SY` - Syria
+
+        * `TW` - Taiwan
+
+        * `TJ` - Tajikistan
+
+        * `TZ` - Tanzania
+
+        * `TH` - Thailand
+
+        * `TL` - Timor-Leste
+
+        * `TG` - Togo
+
+        * `TK` - Tokelau
+
+        * `TO` - Tonga
+
+        * `TT` - Trinidad and Tobago
+
+        * `TN` - Tunisia
+
+        * `TR` - Turkey
+
+        * `TM` - Turkmenistan
+
+        * `TC` - Turks and Caicos Islands
+
+        * `TV` - Tuvalu
+
+        * `UG` - Uganda
+
+        * `UA` - Ukraine
+
+        * `AE` - United Arab Emirates
+
+        * `GB` - United Kingdom
+
+        * `UM` - United States Minor Outlying Islands
+
+        * `US` - United States of America
+
+        * `UY` - Uruguay
+
+        * `UZ` - Uzbekistan
+
+        * `VU` - Vanuatu
+
+        * `VA` - Vatican City
+
+        * `VE` - Venezuela
+
+        * `VN` - Vietnam
+
+        * `VG` - Virgin Islands (British)
+
+        * `VI` - Virgin Islands (U.S.)
+
+        * `WF` - Wallis and Futuna
+
+        * `EH` - Western Sahara
+
+        * `YE` - Yemen
+
+        * `ZM` - Zambia
+
+        * `ZW` - Zimbabwe'
+    CreateOwnerDefaultLocaleEnum:
+      enum:
+      - en
+      - fr
+      - pt
+      - es
+      - it
+      - ar
+      - de
+      - pl
+      - nl
+      type: string
+      description: '* `en` - en
+
+        * `fr` - fr
+
+        * `pt` - pt
+
+        * `es` - es
+
+        * `it` - it
+
+        * `ar` - ar
+
+        * `de` - de
+
+        * `pl` - pl
+
+        * `nl` - nl'
+    OwnerDefaultLocaleEnum:
+      enum:
+      - en
+      - fr
+      - pt
+      - es
+      - it
+      - ar
+      - de
+      - pl
+      - nl
+      type: string
+      description: '* `en` - English
+
+        * `fr` - French
+
+        * `pt` - Portuguese
+
+        * `es` - Spanish
+
+        * `it` - Italian
+
+        * `ar` - Arabic
+
+        * `de` - German
+
+        * `pl` - Polish
+
+        * `nl` - Dutch'
+    NullEnum:
+      enum:
+      - null
+    BankAccountCurrencyEnum:
+      enum:
+      - EUR
+      - GBP
+      - USD
+      - AED
+      - SAR
+      - INR
+      - QAR
+      type: string
+      description: '* `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `USD` - USD
+
+        * `AED` - AED
+
+        * `SAR` - SAR
+
+        * `INR` - INR
+
+        * `QAR` - QAR'
+    PaginatedOwnerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Owner'
+        limit:
+          type: integer
+          example: 10
+    Owner:
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+          readOnly: true
+        user_name:
+          type: string
+          readOnly: true
+        phone:
+          type: string
+          title: Phone number
+          pattern: ^\+\d{8,15}$
+          maxLength: 160
+        property_manager:
+          type: string
+        default_locale:
+          allOf:
+          - $ref: '#/components/schemas/OwnerDefaultLocaleEnum'
+          title: Default language
+        type:
+          $ref: '#/components/schemas/TypeF08Enum'
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        nationality:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        date_of_birth:
+          type:
+          - string
+          - 'null'
+          format: date
+        job:
+          type:
+          - string
+          - 'null'
+          title: Occupation
+          maxLength: 30
+        managed_by:
+          type:
+          - integer
+          - 'null'
+        address_line1:
+          type: string
+          title: Address line  1
+        address_line2:
+          type:
+          - string
+          - 'null'
+          title: Address line  2
+        post_code:
+          type:
+          - string
+          - 'null'
+          title: Postcode
+          maxLength: 10
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        region:
+          type:
+          - string
+          - 'null'
+          maxLength: 40
+        country_of_residence:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        bank_account_iban:
+          type: string
+          title: Bank account (IBAN)
+          maxLength: 500
+        bic:
+          type:
+          - string
+          - 'null'
+          pattern: ^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$
+          maxLength: 50
+        bank_account_number:
+          type: string
+          maxLength: 100
+        bank_account_routing_number:
+          type: string
+          title: Bank account sort code / routing number
+          maxLength: 100
+        bank_account_currency:
+          oneOf:
+          - $ref: '#/components/schemas/BankAccountCurrencyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        bank_account_name:
+          type:
+          - string
+          - 'null'
+          title: Bank account holder name
+          maxLength: 100
+        bank_account_holder_address:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        bank_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        bank_branch_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        bank_country:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        business_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        company_id:
+          type:
+          - string
+          - 'null'
+          title: VAT number
+          maxLength: 50
+        company_number:
+          type:
+          - string
+          - 'null'
+          title: Company number / SIREN number
+          maxLength: 50
+        company_address:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        tax_identification_number:
+          type:
+          - string
+          - 'null'
+          title: Tax identification number (TIN)
+          maxLength: 250
+        host_created_notification:
+          type: boolean
+          title: Owner creation notification
+          description: When the owner account is created, this will send the owner a notification containing their login credentials
+        property_validation:
+          type: boolean
+          title: Property validation notification
+          description: Once a property is validated, this will automatically send the owner a validation notification for the property and a link to their Airbnb listing.
+        deactivation_property_email:
+          type: boolean
+          title: Property deactivation notification
+          description: Once a property is deactivated, this will automatically send the owner a notification of deactivation. It will say to contact the property manager to reopen dates / reactivate the property in the future.
+        open_dates_notification:
+          type: boolean
+          description: Periodically send a notification to the owner if not enough dates are open
+      required:
+      - default_locale
+      - email
+      - name
+      - phone
+      - user_name
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

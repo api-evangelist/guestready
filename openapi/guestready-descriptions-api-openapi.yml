@@ -1,0 +1,461 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Descriptions API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: descriptions
+paths:
+  /api/v3/descriptions/:
+    get:
+      operationId: descriptions_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: rental_id
+        schema:
+          type: array
+          items:
+            type: string
+            title: Contract number
+        description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        explode: true
+        style: form
+      tags:
+      - descriptions
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDescriptionList'
+          description: ''
+    post:
+      operationId: descriptions_create
+      tags:
+      - descriptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Description'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Description'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Description'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Description'
+          description: ''
+  /api/v3/descriptions/{id}/:
+    get:
+      operationId: descriptions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this description appartement.
+        required: true
+      tags:
+      - descriptions
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Description'
+          description: ''
+    put:
+      operationId: descriptions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this description appartement.
+        required: true
+      tags:
+      - descriptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDescription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateDescription'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateDescription'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDescription'
+          description: ''
+    patch:
+      operationId: descriptions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this description appartement.
+        required: true
+      tags:
+      - descriptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateDescription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateDescription'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateDescription'
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDescription'
+          description: ''
+    delete:
+      operationId: descriptions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this description appartement.
+        required: true
+      tags:
+      - descriptions
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    UpdateDescription:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) the description belongs to.
+        headline:
+          type:
+          - string
+          - 'null'
+          description: Short listing headline shown as the property's title on booking platforms. Single line, up to 75 characters.
+          maxLength: 75
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Brief overview of the property, shown near the top of the listing. Up to 500 characters.
+          maxLength: 500
+        space:
+          type:
+          - string
+          - 'null'
+          description: 'Description of the space itself: the layout, rooms and what guests will find inside the property.'
+        access:
+          type:
+          - string
+          - 'null'
+          description: Description of how guests access the property and which areas they are free to use.
+        interaction:
+          type:
+          - string
+          - 'null'
+          description: Description of the level of contact and interaction guests can expect during their stay.
+        neighborhood:
+          type:
+          - string
+          - 'null'
+          title: Neighbourhood
+          description: Description of the surrounding neighbourhood, such as nearby attractions, amenities and the character of the area.
+        transit:
+          type:
+          - string
+          - 'null'
+          description: Description of how to get around and reach the property, such as public transport and parking.
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Any other useful details about the property not covered by the other sections.
+      required:
+      - id
+      - rental_id
+    Description:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) the description belongs to.
+        headline:
+          type:
+          - string
+          - 'null'
+          description: Short listing headline shown as the property's title on booking platforms. Single line, up to 75 characters.
+          maxLength: 75
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Brief overview of the property, shown near the top of the listing. Up to 500 characters.
+          maxLength: 500
+        space:
+          type:
+          - string
+          - 'null'
+          description: 'Description of the space itself: the layout, rooms and what guests will find inside the property.'
+        access:
+          type:
+          - string
+          - 'null'
+          description: Description of how guests access the property and which areas they are free to use.
+        interaction:
+          type:
+          - string
+          - 'null'
+          description: Description of the level of contact and interaction guests can expect during their stay.
+        neighborhood:
+          type:
+          - string
+          - 'null'
+          title: Neighbourhood
+          description: Description of the surrounding neighbourhood, such as nearby attractions, amenities and the character of the area.
+        transit:
+          type:
+          - string
+          - 'null'
+          description: Description of how to get around and reach the property, such as public transport and parking.
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Any other useful details about the property not covered by the other sections.
+        language:
+          type:
+          - string
+          - 'null'
+          description: Two-letter code of the language this description is written in (e.g. 'en'). A property can have only one description per language.
+      required:
+      - id
+      - language
+      - rental_id
+    PatchedUpdateDescription:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) the description belongs to.
+        headline:
+          type:
+          - string
+          - 'null'
+          description: Short listing headline shown as the property's title on booking platforms. Single line, up to 75 characters.
+          maxLength: 75
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Brief overview of the property, shown near the top of the listing. Up to 500 characters.
+          maxLength: 500
+        space:
+          type:
+          - string
+          - 'null'
+          description: 'Description of the space itself: the layout, rooms and what guests will find inside the property.'
+        access:
+          type:
+          - string
+          - 'null'
+          description: Description of how guests access the property and which areas they are free to use.
+        interaction:
+          type:
+          - string
+          - 'null'
+          description: Description of the level of contact and interaction guests can expect during their stay.
+        neighborhood:
+          type:
+          - string
+          - 'null'
+          title: Neighbourhood
+          description: Description of the surrounding neighbourhood, such as nearby attractions, amenities and the character of the area.
+        transit:
+          type:
+          - string
+          - 'null'
+          description: Description of how to get around and reach the property, such as public transport and parking.
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Any other useful details about the property not covered by the other sections.
+    PaginatedDescriptionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Description'
+        limit:
+          type: integer
+          example: 50
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

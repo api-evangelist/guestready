@@ -1,0 +1,466 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Incidents API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: incidents
+paths:
+  /api/v3/incidents/:
+    get:
+      operationId: incidents_list
+      description: Retrieve a list of mission incidents.
+      summary: List Incidents
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - CHECK_IN
+            - CLEANING
+            - MAINTENANCE
+            - QUALITY
+        description: '* `CLEANING` - Cleaning
+
+          * `MAINTENANCE` - Maintenance
+
+          * `CHECK_IN` - Check-in
+
+          * `QUALITY` - Quality'
+        explode: true
+        style: form
+      - in: query
+        name: created_at_after
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at_before
+        schema:
+          type: string
+          format: date-time
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: mission_id
+        schema:
+          type: array
+          items:
+            type: integer
+        explode: true
+        style: form
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - CLOSED
+            - IGNORED
+            - ISSUE_CREATED
+            - NEW
+        description: '* `NEW` - New
+
+          * `ISSUE_CREATED` - Ticket
+
+          * `IGNORED` - Archived
+
+          * `CLOSED` - Closed'
+        explode: true
+        style: form
+      tags:
+      - incidents
+      security:
+      - oauth2:
+        - incidents:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedIncidentList'
+          description: ''
+  /api/v3/incidents/{id}/:
+    get:
+      operationId: incidents_retrieve
+      description: Retrieve a specific mission incident by ID.
+      summary: Retrieve Incident
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission incident.
+        required: true
+      tags:
+      - incidents
+      security:
+      - oauth2:
+        - incidents:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+          description: ''
+  /api/v3/incidents/{id}/archive/:
+    patch:
+      operationId: incidents_archive_partial_update
+      description: Archive a mission incident, optionally recording why. Archiving never records a closing user. Only a non-empty comment overwrites the existing status comment. Archived is terminal, so an already archived incident cannot be archived again (400).
+      summary: Archive Incident
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission incident.
+        required: true
+      tags:
+      - incidents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedArchiveIncident'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedArchiveIncident'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedArchiveIncident'
+      security:
+      - oauth2:
+        - incidents:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                example:
+                  non_field_errors:
+                  - An archived incident cannot change status.
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                example:
+                  detail: Permission to manage the incident dashboard is required.
+          description: ''
+  /api/v3/incidents/{id}/close/:
+    patch:
+      operationId: incidents_close_partial_update
+      description: Close a mission incident, optionally recording why. The calling user is saved as the closing user. Archived is terminal, so an archived incident cannot be closed (400). Re-closing an already closed incident is allowed and only overwrites the status comment when a non-empty comment is given.
+      summary: Close Incident
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this mission incident.
+        required: true
+      tags:
+      - incidents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCloseIncident'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCloseIncident'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCloseIncident'
+      security:
+      - oauth2:
+        - incidents:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                example:
+                  non_field_errors:
+                  - An archived incident cannot change status.
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                example:
+                  detail: Permission to manage the incident dashboard is required.
+          description: ''
+components:
+  schemas:
+    PaginatedIncidentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Incident'
+        limit:
+          type: integer
+          example: 100
+    IncidentStatusEnum:
+      enum:
+      - NEW
+      - ISSUE_CREATED
+      - IGNORED
+      - CLOSED
+      type: string
+      description: '* `NEW` - New
+
+        * `ISSUE_CREATED` - Ticket
+
+        * `IGNORED` - Archived
+
+        * `CLOSED` - Closed'
+    PatchedCloseIncident:
+      type: object
+      description: "Base write serializer for the incident ``close`` / ``archive`` actions.\n\nBound to the incident instance (like\n``MarkPayoutAdjustmentAsPaidSerializer``): transition rules are checked in\n``validate`` against ``self.instance`` and the mutation happens in\n``update``.\n\nModelled on the incident dashboard's Close / Archive buttons, but it does\nNOT reproduce ``authentification.views.MarkIncidentAsClosed`` /\n``MarkIncidentAsIgnored`` line for line. Three deliberate divergences:\n\n1. **Only a non-empty comment overwrites** ``status_change_comment``. The\n   views assign ``request.POST.get(\"comment\", None)`` UNCONDITIONALLY, so a\n   no-comment post wipes the existing reason -- including the note\n   ``issue_manager.signals.close_incident_when_all_tickets_closed`` writes\n   (\"All tickets are closed.\"). An API caller re-closing without a comment\n   must not silently destroy that provenance.\n2. **Transitions out of IGNORED are rejected.** The views themselves accept\n   any transition; it is the dashboard TEMPLATES that make IGNORED terminal\n   (``staffing/templates/staffing/mission_incidents.html`` and\n   ``authentification/templates/authentification/table_actions.html`` both\n   disable the whole action menu on an archived incident). The API mirrors\n   what the interface can actually produce, not what the views would let\n   through -- otherwise the API could re-archive an incident, overwriting a\n   human's archive note and bumping ``status_updated_at`` in a way no user\n   can.\n3. **Idempotent re-close is allowed** even though the template hides Close\n   on a CLOSED incident: re-closing changes nothing a caller cares about\n   (same target status, ``status_updated_at`` keeps the original transition\n   time), and an agent retrying a call it cannot tell succeeded must not\n   get a spurious 400. CLOSED -> IGNORED stays allowed too, because the\n   templates do offer Archive on a closed incident."
+      properties:
+        comment:
+          type:
+          - string
+          - 'null'
+          description: Optional free-text reason recorded on the incident for this status change. Left out, blank, or null, the previous status comment is kept -- notably the automatic 'All tickets are closed.' note.
+    Incident:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the incident was reported.
+        category:
+          allOf:
+          - $ref: '#/components/schemas/IncidentCategoryEnum'
+          description: 'The kind of mission the incident was reported on (cleaning, maintenance, check-in, or quality).
+
+
+            * `CLEANING` - Cleaning
+
+            * `MAINTENANCE` - Maintenance
+
+            * `CHECK_IN` - Check-in
+
+            * `QUALITY` - Quality'
+        status:
+          allOf:
+          - $ref: '#/components/schemas/IncidentStatusEnum'
+          description: 'Lifecycle status of the incident (new, ticket created, archived, or closed).
+
+
+            * `NEW` - New
+
+            * `ISSUE_CREATED` - Ticket
+
+            * `IGNORED` - Archived
+
+            * `CLOSED` - Closed'
+        mission:
+          type: integer
+          description: Id of the mission the incident was reported on.
+        property:
+          type:
+          - string
+          - 'null'
+          title: Property
+          description: Id of the property (Appartement) the mission for this incident belongs to.
+          readOnly: true
+        comment:
+          type: string
+          description: Free-text description of the incident.
+        status_change_comment:
+          type:
+          - string
+          - 'null'
+          description: Comment recorded the last time the status changed.
+        status_updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the status was last changed, if ever.
+        closed_by:
+          type: integer
+          readOnly: true
+          description: Id of the user who closed the incident. Null on an incident that is not closed AND on one closed automatically (the system closes an incident once all the tickets created from it are closed), so a CLOSED incident with no closed_by was closed automatically, never by a person. Archiving never sets it.
+        issues:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+          description: Ids of the tickets (issues) created from this incident.
+      required:
+      - category
+      - closed_by
+      - comment
+      - created_at
+      - id
+      - issues
+      - mission
+      - property
+    PatchedArchiveIncident:
+      type: object
+      description: "Base write serializer for the incident ``close`` / ``archive`` actions.\n\nBound to the incident instance (like\n``MarkPayoutAdjustmentAsPaidSerializer``): transition rules are checked in\n``validate`` against ``self.instance`` and the mutation happens in\n``update``.\n\nModelled on the incident dashboard's Close / Archive buttons, but it does\nNOT reproduce ``authentification.views.MarkIncidentAsClosed`` /\n``MarkIncidentAsIgnored`` line for line. Three deliberate divergences:\n\n1. **Only a non-empty comment overwrites** ``status_change_comment``. The\n   views assign ``request.POST.get(\"comment\", None)`` UNCONDITIONALLY, so a\n   no-comment post wipes the existing reason -- including the note\n   ``issue_manager.signals.close_incident_when_all_tickets_closed`` writes\n   (\"All tickets are closed.\"). An API caller re-closing without a comment\n   must not silently destroy that provenance.\n2. **Transitions out of IGNORED are rejected.** The views themselves accept\n   any transition; it is the dashboard TEMPLATES that make IGNORED terminal\n   (``staffing/templates/staffing/mission_incidents.html`` and\n   ``authentification/templates/authentification/table_actions.html`` both\n   disable the whole action menu on an archived incident). The API mirrors\n   what the interface can actually produce, not what the views would let\n   through -- otherwise the API could re-archive an incident, overwriting a\n   human's archive note and bumping ``status_updated_at`` in a way no user\n   can.\n3. **Idempotent re-close is allowed** even though the template hides Close\n   on a CLOSED incident: re-closing changes nothing a caller cares about\n   (same target status, ``status_updated_at`` keeps the original transition\n   time), and an agent retrying a call it cannot tell succeeded must not\n   get a spurious 400. CLOSED -> IGNORED stays allowed too, because the\n   templates do offer Archive on a closed incident."
+      properties:
+        comment:
+          type:
+          - string
+          - 'null'
+          description: Optional free-text reason recorded on the incident for this status change. Left out, blank, or null, the previous status comment is kept -- notably the automatic 'All tickets are closed.' note.
+    IncidentCategoryEnum:
+      enum:
+      - CLEANING
+      - MAINTENANCE
+      - CHECK_IN
+      - QUALITY
+      type: string
+      description: '* `CLEANING` - Cleaning
+
+        * `MAINTENANCE` - Maintenance
+
+        * `CHECK_IN` - Check-in
+
+        * `QUALITY` - Quality'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

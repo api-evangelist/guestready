@@ -1,0 +1,334 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Tags API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: tags
+paths:
+  /api/v3/tags/:
+    get:
+      operationId: tags_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - tags
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRentalTagList'
+          description: ''
+    post:
+      operationId: tags_create
+      description: Create a new tag for the account.
+      tags:
+      - tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalTag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RentalTag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RentalTag'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalTag'
+          description: ''
+  /api/v3/tags/{id}/:
+    get:
+      operationId: tags_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property tag.
+        required: true
+      tags:
+      - tags
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalTag'
+          description: ''
+    patch:
+      operationId: tags_partial_update
+      description: Partially update a tag's name or color.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property tag.
+        required: true
+      tags:
+      - tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRentalTag'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRentalTag'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRentalTag'
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalTag'
+          description: ''
+    delete:
+      operationId: tags_destroy
+      description: Delete a tag. Automatically unassigns it from all rentals.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this property tag.
+        required: true
+      tags:
+      - tags
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    ColorEnum:
+      enum:
+      - orange
+      - red
+      - pink
+      - violet
+      - blue
+      - green
+      - gray
+      type: string
+      description: '* `orange` - Orange
+
+        * `red` - Red
+
+        * `pink` - Pink
+
+        * `violet` - Violet
+
+        * `blue` - Blue
+
+        * `green` - Green
+
+        * `gray` - Gray'
+    RentalTag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        color:
+          allOf:
+          - $ref: '#/components/schemas/ColorEnum'
+          default: gray
+          description: 'Tag color. Defaults to `gray` if omitted. Valid choices: orange, red, pink, violet, blue, green, gray.
+
+
+            * `orange` - Orange
+
+            * `red` - Red
+
+            * `pink` - Pink
+
+            * `violet` - Violet
+
+            * `blue` - Blue
+
+            * `green` - Green
+
+            * `gray` - Gray'
+      required:
+      - id
+      - name
+    PatchedRentalTag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        color:
+          allOf:
+          - $ref: '#/components/schemas/ColorEnum'
+          default: gray
+          description: 'Tag color. Defaults to `gray` if omitted. Valid choices: orange, red, pink, violet, blue, green, gray.
+
+
+            * `orange` - Orange
+
+            * `red` - Red
+
+            * `pink` - Pink
+
+            * `violet` - Violet
+
+            * `blue` - Blue
+
+            * `green` - Green
+
+            * `gray` - Gray'
+    PaginatedRentalTagList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalTag'
+        limit:
+          type: integer
+          example: 50
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

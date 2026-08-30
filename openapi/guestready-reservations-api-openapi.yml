@@ -1,0 +1,1718 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Reservations API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: reservations
+paths:
+  /api/v3/reservations/:
+    get:
+      operationId: reservations_list
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: query
+        name: checkin_date_after
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: checkin_date_before
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: checkout_date_after
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: checkout_date_before
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: created_after
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_before
+        schema:
+          type: string
+          format: date-time
+      - name: cursor
+        required: false
+        in: query
+        description: 'Opt-in cursor pagination: pass an empty value to get the first page, then follow the `next` links. While paginating with a cursor, `offset` is ignored, the response contains no `count`, and only primary-key orderings are supported.'
+        schema:
+          type: string
+      - in: query
+        name: is_extension
+        schema:
+          type: boolean
+      - in: query
+        name: is_relocation
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: modified_after
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: modified_before
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      - in: query
+        name: reservation_type
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: array
+          items:
+            type: string
+        explode: true
+        style: form
+      tags:
+      - reservations
+      security:
+      - oauth2:
+        - reservations:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReservationList'
+          description: ''
+    post:
+      operationId: reservations_create
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      tags:
+      - reservations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReservationCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReservationCreate'
+        required: true
+      security:
+      - oauth2:
+        - reservations:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationCreate'
+          description: ''
+  /api/v3/reservations/{id}/:
+    get:
+      operationId: reservations_retrieve
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reservation.
+        required: true
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      tags:
+      - reservations
+      security:
+      - oauth2:
+        - reservations:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+          description: ''
+    patch:
+      operationId: reservations_partial_update
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reservation.
+        required: true
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      tags:
+      - reservations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReservationCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReservationCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReservationCreate'
+      security:
+      - oauth2:
+        - reservations:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationCreate'
+          description: ''
+  /api/v3/reservations/{id}/cancel/:
+    patch:
+      operationId: reservations_cancel_partial_update
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reservation.
+        required: true
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      tags:
+      - reservations
+      security:
+      - oauth2:
+        - reservations:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  message: Reservation cancelled
+          description: ''
+  /api/v3/reservations/{id}/custom_fields/:
+    get:
+      operationId: reservations_custom_fields_retrieve
+      description: Get the custom-field values set on this object, as a mapping of custom field key to value.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reservation.
+        required: true
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      tags:
+      - reservations
+      security:
+      - oauth2:
+        - reservations:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+          description: ''
+    post:
+      operationId: reservations_custom_fields_create
+      description: Set custom-field values on this object. Send a mapping of custom field key to value; keys left out keep their current value, and a key with no definition on this account is rejected.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reservation.
+        required: true
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      tags:
+      - reservations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReservationCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReservationCreate'
+        required: true
+      security:
+      - oauth2:
+        - reservations:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationCreate'
+          description: ''
+  /api/v3/reservations/{id}/update_arrival_time/:
+    patch:
+      operationId: reservations_update_arrival_time_partial_update
+      description: 'Update the expected guest arrival time. The check-in mission is rescheduled and its assigned agent asked to re-confirm. No guest notification is sent: when late_checkin_payment_pending comes back true, the late check-in fee still has to be collected.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reservation.
+        required: true
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      tags:
+      - reservations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReservationArrivalTimeUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReservationArrivalTimeUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReservationArrivalTimeUpdate'
+      security:
+      - oauth2:
+        - reservations:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  message: reservation updated
+                  arrival_time: '23:00:00'
+                  late_checkin_payment_pending: true
+          description: ''
+  /api/v3/reservations/{id}/update_key_code/:
+    patch:
+      operationId: reservations_update_key_code_partial_update
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reservation.
+        required: true
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+        description: 'Multiple rental_id parameters are accepted. Example: rental_id=0000&rental_id=0001'
+      tags:
+      - reservations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key_code:
+                  type: string
+                  example: 1234abc
+                  description: A string representing the key code.
+              required:
+              - key_code
+      security:
+      - oauth2:
+        - reservations:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  message: key_code updated
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                example:
+                  message: invalid key_code
+          description: ''
+components:
+  schemas:
+    Status3eaEnum:
+      enum:
+      - TENTATIVE
+      - NEW
+      - ARCHIVED
+      - CANCELLED
+      - CANCELLED_FEE
+      type: string
+      description: '* `TENTATIVE` - Tentative
+
+        * `NEW` - New
+
+        * `ARCHIVED` - Archived
+
+        * `CANCELLED` - Cancelled
+
+        * `CANCELLED_FEE` - Cancelled with fee'
+    SwiklyDepositEmbedded:
+      type: object
+      properties:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status6f9Enum'
+          readOnly: true
+          description: 'Swikly security-deposit status. Possible values: `NOT_PAID` — not yet paid; `PAID` — paid.
+
+
+            * `NOT_PAID` - NOT_PAID
+
+            * `PAID` - PAID'
+        amount:
+          type: number
+          format: double
+      required:
+      - amount
+      - status
+    BlockedReasonEnum:
+      enum:
+      - HOST_STAY
+      - MAINTENANCE
+      - OTHER
+      - PARTIAL_OCCUPANCY
+      - FULL_OCCUPANCY
+      - BLOCKED_BY_HOST
+      - UPSELLING_REQUEST
+      type: string
+      description: '* `HOST_STAY` - Owner stay
+
+        * `MAINTENANCE` - Maintenance
+
+        * `OTHER` - Other
+
+        * `PARTIAL_OCCUPANCY` - Partially occupied
+
+        * `FULL_OCCUPANCY` - Fully occupied
+
+        * `BLOCKED_BY_HOST` - Blocked by owner
+
+        * `UPSELLING_REQUEST` - Upselling request'
+    Status1a4Enum:
+      enum:
+      - AUTHORIZED
+      - NOT_PAID
+      - PAID
+      - FAILED
+      - VOIDED
+      - PROCESSED
+      type: string
+      description: '* `AUTHORIZED` - Authorized
+
+        * `NOT_PAID` - Not paid
+
+        * `PAID` - Paid
+
+        * `FAILED` - Failed
+
+        * `VOIDED` - Voided
+
+        * `PROCESSED` - Processed'
+    PaidToEnum:
+      enum:
+      - HOST
+      - PROPERTY_MANAGER
+      type: string
+      description: '* `HOST` - Owner
+
+        * `PROPERTY_MANAGER` - Property manager'
+    PaginatedReservationList:
+      type: object
+      required:
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+        limit:
+          type: integer
+          example: 100
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+    ReservationCreate:
+      type: object
+      properties:
+        guest_preferred_language:
+          type:
+          - string
+          - 'null'
+        currency:
+          oneOf:
+          - $ref: '#/components/schemas/CurrencyD53Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        payment_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: 'Deprecated: any submitted value is ignored. The payment fee is computed from the platform/property-level rate configured in RentalReady.'
+        reservation_type:
+          allOf:
+          - $ref: '#/components/schemas/ReservationTypeEnum'
+          default: CLASSIQUE
+        check_in_internal_comment:
+          type: string
+          description: Visible to staff only
+        platform_reservation_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          description: Id of the property (rental) the reservation is for.
+        booked_at:
+          type: string
+          readOnly: true
+          description: Timestamp when the booking was originally placed on the source platform (ISO 8601, e.g. 2026-07-04T09:00:00Z); falls back to when the reservation was first created in the system.
+        reservation_platform_id:
+          type: integer
+          description: Id of the reservation platform (the booking channel) the reservation belongs to.
+        checkin_date:
+          type: string
+          format: date
+          description: Check-in date, the first night of the stay (YYYY-MM-DD).
+        checkout_date:
+          type: string
+          format: date
+          description: Check-out date, the day the guest leaves (YYYY-MM-DD); falls after the check-in date.
+        rental_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        invoiced_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        guest_first_name:
+          type: string
+          maxLength: 90
+        guest_last_name:
+          type: string
+          maxLength: 150
+        guest_email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 254
+        guest_phone_number:
+          type: string
+        guest_personal_email:
+          type: string
+        arrival_time:
+          type: string
+          format: time
+          description: Expected guest arrival time on the check-in date (e.g. 15:00:00).
+        departure_time:
+          type: string
+          format: time
+          description: Expected guest departure time on the check-out date (e.g. 11:00:00).
+        number_of_adults:
+          type: integer
+          description: Number of adults staying on the reservation.
+        number_of_children:
+          type: integer
+          description: Number of children staying on the reservation.
+        number_of_infants:
+          type: integer
+          description: Number of infants staying on the reservation (at most 5).
+        number_of_pets:
+          type: integer
+          description: Number of pets on the reservation.
+        city_tax:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        status:
+          $ref: '#/components/schemas/Status3eaEnum'
+        is_stay_relocation:
+          type:
+          - boolean
+          - 'null'
+          title: Is this a stay relocation?
+        is_stay_extension:
+          type:
+          - boolean
+          - 'null'
+          title: Is this a stay extension?
+        blocked_reason:
+          oneOf:
+          - $ref: '#/components/schemas/BlockedReasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        blocked_notes:
+          type:
+          - string
+          - 'null'
+        internal_comment:
+          type: string
+          description: Visible to staff only
+        return_cleaning:
+          title: Owner return cleaning
+          oneOf:
+          - $ref: '#/components/schemas/ReturnCleaningEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        departure_cleaning:
+          title: Owner departure cleaning
+          oneOf:
+          - $ref: '#/components/schemas/DepartureCleaningEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        platform_payment_fees:
+          type: string
+          readOnly: true
+        passport_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        guest_invoice:
+          $ref: '#/components/schemas/GuestInvoice'
+        guidebook_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        user:
+          type: string
+          readOnly: true
+      required:
+      - booked_at
+      - checkin_date
+      - checkout_date
+      - city_tax
+      - guest_personal_email
+      - guest_phone_number
+      - id
+      - invoiced_cleaning_fee
+      - number_of_adults
+      - number_of_children
+      - platform_cleaning_fee
+      - platform_fee
+      - platform_payment_fees
+      - rental_amount
+      - rental_id
+      - reservation_platform_id
+      - user
+    MidTermPeriodBreakdown:
+      type: object
+      properties:
+        period_start_date:
+          type: string
+          format: date
+        period_end_date:
+          type: string
+          format: date
+        payment_due_date:
+          type: string
+          format: date
+        total_guest_payment:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        rental_income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_fees:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        city_tax:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        cleaning_fee_share:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        pm_commission:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        owner_net_payout:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+      required:
+      - city_tax
+      - cleaning_fee_share
+      - owner_net_payout
+      - payment_due_date
+      - period_end_date
+      - period_start_date
+      - platform_fees
+      - pm_commission
+      - rental_income
+      - total_guest_payment
+    GuestInvoice:
+      type: object
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          title: Recipient email
+          maxLength: 254
+        country_name:
+          type: string
+          readOnly: true
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 75
+        company:
+          type:
+          - string
+          - 'null'
+          title: Company name
+          maxLength: 255
+        tax_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        address:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+      required:
+      - country_name
+    VoucherRedemption:
+      type: object
+      properties:
+        code:
+          type: string
+        voucher_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+      required:
+      - code
+      - voucher_amount
+    Reservation:
+      type: object
+      description: Renders custom-field values under `custom_fields`, skipped on list actions.
+      properties:
+        number:
+          type: string
+          description: Guest-facing booking reference generated by the system and shared with the guest, distinct from the platform's own reservation id.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the reservation record was created in the system (ISO 8601, e.g. 2026-07-04T09:00:00Z).
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the reservation was last modified (ISO 8601, e.g. 2026-07-04T09:00:00Z).
+        source:
+          type: string
+          description: Name of the platform (booking channel) the reservation came from, e.g. the connected OTA or a direct booking.
+        currency:
+          description: 'ISO 4217 currency code of the reservation''s monetary amounts, e.g. EUR.
+
+
+            * `AED` - AED
+
+            * `AUD` - AUD
+
+            * `BRL` - BRL
+
+            * `CAD` - CAD
+
+            * `CHF` - CHF
+
+            * `CZK` - CZK
+
+            * `EUR` - EUR
+
+            * `GBP` - GBP
+
+            * `HKD` - HKD
+
+            * `IDR` - IDR
+
+            * `ILS` - ILS
+
+            * `JPY` - JPY
+
+            * `KRW` - KRW
+
+            * `MAD` - MAD
+
+            * `MYR` - MYR
+
+            * `PLN` - PLN
+
+            * `RUB` - RUB
+
+            * `SAR` - SAR
+
+            * `THB` - THB
+
+            * `USD` - USD'
+          oneOf:
+          - $ref: '#/components/schemas/CurrencyD53Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        reservation_status:
+          allOf:
+          - $ref: '#/components/schemas/ReservationStatusEnum'
+          readOnly: true
+          description: 'Reservation lifecycle status. Possible values: `pending` — a tentative/held reservation (e.g. an unconfirmed manual quote hold); `accepted` — a confirmed booking; `cancelled` — a cancelled booking. Note: guest inquiries never appear here. An inquiry is not a reservation — read inquiry state from the inquiries endpoint or a conversation''s `inquiry_ids`. A reservation (and therefore this field) only exists once a booking is confirmed or created as an internal tentative hold.
+
+
+            * `pending` - pending
+
+            * `accepted` - accepted
+
+            * `cancelled` - cancelled'
+        reservation_type:
+          allOf:
+          - $ref: '#/components/schemas/ReservationTypeEnum'
+          readOnly: true
+          description: 'Kind of reservation, distinguishing a real guest booking from an owner (blocking) stay or a placeholder booking.
+
+
+            * `CLASSIQUE` - CLASSIQUE
+
+            * `FAUSSE` - FAUSSE
+
+            * `PROPRIETAIRE` - PROPRIETAIRE'
+        is_owner:
+          type: boolean
+          description: True when the reservation is an owner stay that blocks the property for the owner's own use rather than a paying guest booking.
+        property_manager_commission:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        pms_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        payment_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        guest_preferred_language:
+          type: string
+          description: Name of the guest's preferred language, e.g. English.
+        total_paid_by_guest:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        payment_links_deposits:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentLinkSecurityDeposit'
+          readOnly: true
+          description: This field is deprecated and will be removed in the v4. Use the payment_links endpoint instead.
+        swikly_deposit:
+          allOf:
+          - $ref: '#/components/schemas/SwiklyDepositEmbedded'
+          readOnly: true
+          description: This field is deprecated and will be removed in the v4. Use the swikly_deposits endpoint instead.
+        keynest_code:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: KeyNest collection code for the check-in, or null if none.
+        keynest_access_link:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: KeyNest access link for the check-in, or null if none.
+        igloohome_code:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Igloohome lock code for the check-in, or null if none.
+        key_code:
+          type: string
+        cancellation_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Timestamp when the reservation was cancelled (ISO 8601, e.g. 2026-07-04T09:00:00Z); set once a cancellation takes place.
+        guest_reservation_id:
+          type: string
+          description: Guest-facing booking reference; the same value as `number`.
+        platform_reservation_id:
+          type: string
+          description: Identifier of the reservation on the external booking platform, as assigned by that platform.
+        cleaning_internal_comment:
+          type: string
+          description: Cleaning note for the reservation, visible to staff only.
+        cleaning_external_comment:
+          type: string
+          description: Cleaning note for the reservation, visible to staff and the assigned agent.
+        check_in_internal_comment:
+          type: string
+          description: Check-in note for the reservation, visible to staff only.
+        check_in_external_comment:
+          type: string
+          description: Check-in note for the reservation, visible to staff and the assigned agent.
+        check_out_internal_comment:
+          type: string
+          description: Check-out note for the reservation, visible to staff only.
+        check_out_external_comment:
+          type: string
+          description: Check-out note for the reservation, visible to staff and the assigned agent.
+        is_stay_extension:
+          type:
+          - boolean
+          - 'null'
+          title: Is this a stay extension?
+          description: Flag marking the reservation as an extension of an earlier stay.
+        relocated_from_id:
+          type: integer
+          description: Id of the reservation this one was relocated from, when the stay was moved over from another property.
+        voucher_redemption:
+          type: array
+          items:
+            $ref: '#/components/schemas/VoucherRedemption'
+          readOnly: true
+        branch_name:
+          type: string
+          description: Name of the branch the reservation's office belongs to.
+        office_name:
+          type: string
+          description: Name of the office managing the reservation's property.
+        owner_net_earnings:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        guest_total_to_pay:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          readOnly: true
+          title: Total to pay
+          description: Total amount to be paid by the guest.
+        extra_fees:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReservationExtraFee'
+        id_verification_status:
+          allOf:
+          - $ref: '#/components/schemas/IdVerificationStatusEnum'
+          readOnly: true
+          description: 'Status of the guest''s identity verification: not verified, pending, verified, or failed.
+
+
+            * `NOT_VERIFIED` - NOT_VERIFIED
+
+            * `PENDING` - PENDING
+
+            * `VERIFIED` - VERIFIED
+
+            * `FAILED` - FAILED'
+        reviewed_by:
+          type: string
+          readOnly: true
+          description: Username of the staff member who reviewed the guest's identity document.
+        rate_plan_name:
+          type:
+          - string
+          - 'null'
+          description: Name of the rate plan applied to the reservation; rate_plan_display_name gives its human-friendly label.
+          maxLength: 255
+        rate_plan_display_name:
+          type: string
+          readOnly: true
+          description: Human-friendly display name of the rate plan applied to the reservation.
+        mid_term_period_breakdown:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MidTermPeriodBreakdown'
+          readOnly: true
+          description: Per-period rent breakdown for a mid-term stay, or null when the reservation is not mid-term.
+        id:
+          type: integer
+          readOnly: true
+          description: Id of the reservation (booking) in the system.
+        rental_id:
+          type: string
+          description: Id of the property (rental) the reservation is for.
+        booked_at:
+          type: string
+          readOnly: true
+          description: Timestamp when the booking was originally placed on the source platform (ISO 8601, e.g. 2026-07-04T09:00:00Z); falls back to when the reservation was first created in the system.
+        reservation_platform_id:
+          type: integer
+          description: Id of the reservation platform (the booking channel) the reservation belongs to.
+        checkin_date:
+          type: string
+          format: date
+          description: Check-in date, the first night of the stay (YYYY-MM-DD).
+        checkout_date:
+          type: string
+          format: date
+          description: Check-out date, the day the guest leaves (YYYY-MM-DD); falls after the check-in date.
+        rental_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        invoiced_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        guest_first_name:
+          type: string
+          description: Guest's first name.
+          maxLength: 90
+        guest_last_name:
+          type: string
+          description: Guest's last name.
+          maxLength: 150
+        guest_email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 254
+        guest_phone_number:
+          type: string
+        guest_personal_email:
+          type: string
+        arrival_time:
+          type: string
+          format: time
+          description: Expected guest arrival time on the check-in date (e.g. 15:00:00).
+        departure_time:
+          type: string
+          format: time
+          description: Expected guest departure time on the check-out date (e.g. 11:00:00).
+        number_of_adults:
+          type: integer
+          description: Number of adults staying on the reservation.
+        number_of_children:
+          type: integer
+          description: Number of children staying on the reservation.
+        number_of_infants:
+          type: integer
+          description: Number of infants staying on the reservation (at most 5).
+        number_of_pets:
+          type: integer
+          description: Number of pets on the reservation.
+        city_tax:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status3eaEnum'
+          description: 'Internal reservation status. The simplified pending/accepted/cancelled view is exposed separately as reservation_status.
+
+
+            * `TENTATIVE` - Tentative
+
+            * `NEW` - New
+
+            * `ARCHIVED` - Archived
+
+            * `CANCELLED` - Cancelled
+
+            * `CANCELLED_FEE` - Cancelled with fee'
+        is_stay_relocation:
+          type:
+          - boolean
+          - 'null'
+          title: Is this a stay relocation?
+          description: Flag tagging the reservation as a stay relocation, for callers that mark relocations through the API while keeping the reservation on its current property.
+        blocked_reason:
+          description: 'Reason the dates are blocked on an owner (blocking) reservation, such as an owner stay or maintenance.
+
+
+            * `HOST_STAY` - Owner stay
+
+            * `MAINTENANCE` - Maintenance
+
+            * `OTHER` - Other
+
+            * `PARTIAL_OCCUPANCY` - Partially occupied
+
+            * `FULL_OCCUPANCY` - Fully occupied
+
+            * `BLOCKED_BY_HOST` - Blocked by owner
+
+            * `UPSELLING_REQUEST` - Upselling request'
+          oneOf:
+          - $ref: '#/components/schemas/BlockedReasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        blocked_notes:
+          type:
+          - string
+          - 'null'
+          description: Free-text notes explaining a calendar block.
+        internal_comment:
+          type: string
+          description: Free-text internal note about the reservation, visible to staff only.
+        return_cleaning:
+          title: Owner return cleaning
+          description: 'Cleaning arrangement for the owner''s return on an owner (blocking) reservation, setting who provides the bedding.
+
+
+            * `FULL_OWNER` - Full cleaning + Owner bedding
+
+            * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding'
+          oneOf:
+          - $ref: '#/components/schemas/ReturnCleaningEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        departure_cleaning:
+          title: Owner departure cleaning
+          description: 'Cleaning arrangement for the owner''s departure on an owner (blocking) reservation, setting the cleaning level and who provides the bedding.
+
+
+            * `FULL_OWNER` - Full cleaning + Owner bedding
+
+            * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding
+
+            * `DELIVERY` - Delivery (No cleaning + Property manager bedding)
+
+            * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
+
+            * `NO_CLEANING` - No cleaning'
+          oneOf:
+          - $ref: '#/components/schemas/DepartureCleaningEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        platform_payment_fees:
+          type: string
+          readOnly: true
+        passport_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        guest_invoice:
+          $ref: '#/components/schemas/GuestInvoice'
+        guidebook_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        user:
+          type: string
+          readOnly: true
+      required:
+      - booked_at
+      - branch_name
+      - checkin_date
+      - checkout_date
+      - city_tax
+      - created_at
+      - extra_fees
+      - guest_personal_email
+      - guest_phone_number
+      - guest_preferred_language
+      - guest_reservation_id
+      - guest_total_to_pay
+      - id
+      - id_verification_status
+      - igloohome_code
+      - invoiced_cleaning_fee
+      - is_owner
+      - key_code
+      - keynest_access_link
+      - keynest_code
+      - mid_term_period_breakdown
+      - modified_at
+      - number
+      - number_of_adults
+      - number_of_children
+      - office_name
+      - owner_net_earnings
+      - payment_fee
+      - payment_links_deposits
+      - platform_cleaning_fee
+      - platform_fee
+      - platform_payment_fees
+      - platform_reservation_id
+      - pms_fee
+      - property_manager_commission
+      - rate_plan_display_name
+      - rental_amount
+      - rental_id
+      - reservation_platform_id
+      - reservation_status
+      - reservation_type
+      - reviewed_by
+      - source
+      - swikly_deposit
+      - total_paid_by_guest
+      - user
+      - voucher_redemption
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
+    ExtraFee:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 256
+      required:
+      - id
+      - name
+    ReturnCleaningEnum:
+      enum:
+      - FULL_OWNER
+      - FULL_PROPERTY_MANAGER
+      type: string
+      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
+
+        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding'
+    ReservationTypeEnum:
+      enum:
+      - CLASSIQUE
+      - FAUSSE
+      - PROPRIETAIRE
+      type: string
+      description: '* `CLASSIQUE` - CLASSIQUE
+
+        * `FAUSSE` - FAUSSE
+
+        * `PROPRIETAIRE` - PROPRIETAIRE'
+    PatchedReservationCreate:
+      type: object
+      properties:
+        guest_preferred_language:
+          type:
+          - string
+          - 'null'
+        currency:
+          oneOf:
+          - $ref: '#/components/schemas/CurrencyD53Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        payment_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: 'Deprecated: any submitted value is ignored. The payment fee is computed from the platform/property-level rate configured in RentalReady.'
+        reservation_type:
+          allOf:
+          - $ref: '#/components/schemas/ReservationTypeEnum'
+          default: CLASSIQUE
+        check_in_internal_comment:
+          type: string
+          description: Visible to staff only
+        platform_reservation_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          description: Id of the property (rental) the reservation is for.
+        booked_at:
+          type: string
+          readOnly: true
+          description: Timestamp when the booking was originally placed on the source platform (ISO 8601, e.g. 2026-07-04T09:00:00Z); falls back to when the reservation was first created in the system.
+        reservation_platform_id:
+          type: integer
+          description: Id of the reservation platform (the booking channel) the reservation belongs to.
+        checkin_date:
+          type: string
+          format: date
+          description: Check-in date, the first night of the stay (YYYY-MM-DD).
+        checkout_date:
+          type: string
+          format: date
+          description: Check-out date, the day the guest leaves (YYYY-MM-DD); falls after the check-in date.
+        rental_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        invoiced_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        guest_first_name:
+          type: string
+          maxLength: 90
+        guest_last_name:
+          type: string
+          maxLength: 150
+        guest_email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 254
+        guest_phone_number:
+          type: string
+        guest_personal_email:
+          type: string
+        arrival_time:
+          type: string
+          format: time
+          description: Expected guest arrival time on the check-in date (e.g. 15:00:00).
+        departure_time:
+          type: string
+          format: time
+          description: Expected guest departure time on the check-out date (e.g. 11:00:00).
+        number_of_adults:
+          type: integer
+          description: Number of adults staying on the reservation.
+        number_of_children:
+          type: integer
+          description: Number of children staying on the reservation.
+        number_of_infants:
+          type: integer
+          description: Number of infants staying on the reservation (at most 5).
+        number_of_pets:
+          type: integer
+          description: Number of pets on the reservation.
+        city_tax:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        status:
+          $ref: '#/components/schemas/Status3eaEnum'
+        is_stay_relocation:
+          type:
+          - boolean
+          - 'null'
+          title: Is this a stay relocation?
+        is_stay_extension:
+          type:
+          - boolean
+          - 'null'
+          title: Is this a stay extension?
+        blocked_reason:
+          oneOf:
+          - $ref: '#/components/schemas/BlockedReasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        blocked_notes:
+          type:
+          - string
+          - 'null'
+        internal_comment:
+          type: string
+          description: Visible to staff only
+        return_cleaning:
+          title: Owner return cleaning
+          oneOf:
+          - $ref: '#/components/schemas/ReturnCleaningEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        departure_cleaning:
+          title: Owner departure cleaning
+          oneOf:
+          - $ref: '#/components/schemas/DepartureCleaningEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        platform_payment_fees:
+          type: string
+          readOnly: true
+        passport_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        guest_invoice:
+          $ref: '#/components/schemas/GuestInvoice'
+        guidebook_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        user:
+          type: string
+          readOnly: true
+    BlankEnum:
+      enum:
+      - ''
+    Status6f9Enum:
+      enum:
+      - NOT_PAID
+      - PAID
+      type: string
+      description: '* `NOT_PAID` - NOT_PAID
+
+        * `PAID` - PAID'
+    PaymentLinkSecurityDeposit:
+      type: object
+      properties:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status1a4Enum'
+          description: 'Payment-link security-deposit status. Possible values: `NOT_PAID` — not yet paid; `AUTHORIZED` — pre-authorization hold placed; `PAID` — paid; `FAILED` — payment failed; `VOIDED` — payment voided; `PROCESSED` — pre-authorization released/processed.
+
+
+            * `AUTHORIZED` - Authorized
+
+            * `NOT_PAID` - Not paid
+
+            * `PAID` - Paid
+
+            * `FAILED` - Failed
+
+            * `VOIDED` - Voided
+
+            * `PROCESSED` - Processed'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        pre_authorization:
+          type: boolean
+      required:
+      - amount
+    DepartureCleaningEnum:
+      enum:
+      - FULL_OWNER
+      - FULL_PROPERTY_MANAGER
+      - DELIVERY
+      - CLEANING_ONLY
+      - NO_CLEANING
+      type: string
+      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
+
+        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding
+
+        * `DELIVERY` - Delivery (No cleaning + Property manager bedding)
+
+        * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
+
+        * `NO_CLEANING` - No cleaning'
+    NullEnum:
+      enum:
+      - null
+    ReservationStatusEnum:
+      enum:
+      - pending
+      - accepted
+      - cancelled
+      type: string
+      description: '* `pending` - pending
+
+        * `accepted` - accepted
+
+        * `cancelled` - cancelled'
+    PatchedReservationArrivalTimeUpdate:
+      type: object
+      description: Set the expected guest arrival time, and nothing else.
+      properties:
+        arrival_time:
+          type: string
+          format: time
+          description: New expected guest arrival time on the check-in date, in the property's local time (e.g. 15:00:00).
+    IdVerificationStatusEnum:
+      enum:
+      - NOT_VERIFIED
+      - PENDING
+      - VERIFIED
+      - FAILED
+      type: string
+      description: '* `NOT_VERIFIED` - NOT_VERIFIED
+
+        * `PENDING` - PENDING
+
+        * `VERIFIED` - VERIFIED
+
+        * `FAILED` - FAILED'
+    ReservationExtraFee:
+      type: object
+      properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        paid_to:
+          $ref: '#/components/schemas/PaidToEnum'
+        extra_fee:
+          $ref: '#/components/schemas/ExtraFee'
+        vat_rate:
+          type: number
+          format: double
+          readOnly: true
+      required:
+      - amount
+      - extra_fee
+      - vat_rate
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

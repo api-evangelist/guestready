@@ -1,0 +1,398 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Inquiries API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Inquiries
+paths:
+  /api/v3/inquiries/:
+    get:
+      operationId: inquiries_list
+      description: Retrieve a list of inquiries accessible to the current user.
+      summary: List inquiries
+      parameters:
+      - in: query
+        name: conversation_id
+        schema:
+          type: integer
+      - in: query
+        name: created_after
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_before
+        schema:
+          type: string
+          format: date-time
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: rental_id
+        schema:
+          type: string
+          title: Contract number
+        description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+      - in: query
+        name: status
+        schema:
+          type: string
+      tags:
+      - Inquiries
+      security:
+      - oauth2:
+        - inquiries:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInquiryList'
+          description: ''
+  /api/v3/inquiries/{id}/:
+    get:
+      operationId: inquiries_retrieve
+      description: Retrieve a specific inquiry by ID.
+      summary: Retrieve inquiry
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this inquiry.
+        required: true
+      tags:
+      - Inquiries
+      security:
+      - oauth2:
+        - inquiries:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inquiry'
+          description: ''
+components:
+  schemas:
+    InquiryOriginEnum:
+      enum:
+      - channel_manager
+      - bookingsync_inbox
+      - airbnb_message
+      - airbnb_email
+      - airbnb_tentative
+      - booking-com
+      - homeaway
+      - homeaway_tentative
+      - tripadvisor
+      - email
+      - messenger
+      - whatsapp
+      - sms
+      - notification
+      - event
+      - airbnb_review
+      - guestspace
+      - twilio
+      - booking_widget
+      - support
+      type: string
+      description: '* `channel_manager` - Platform
+
+        * `bookingsync_inbox` - BookingSync
+
+        * `airbnb_message` - Airbnb
+
+        * `airbnb_email` - Airbnb
+
+        * `airbnb_tentative` - Airbnb
+
+        * `booking-com` - Booking.com
+
+        * `homeaway` - HomeAway
+
+        * `homeaway_tentative` - HomeAway
+
+        * `tripadvisor` - TripAdvisor
+
+        * `email` - Email
+
+        * `messenger` - Messenger
+
+        * `whatsapp` - WhatsApp
+
+        * `sms` - SMS
+
+        * `notification` - Email
+
+        * `event` - Email
+
+        * `airbnb_review` - Airbnb
+
+        * `guestspace` - Guest space
+
+        * `twilio` - SMS
+
+        * `booking_widget` - Direct booking widget
+
+        * `support` - Support'
+    InquiryStatusEnum:
+      enum:
+      - inquiry
+      - pending
+      - preapproved
+      - denied
+      - not_possible
+      - accepted
+      - cancelled
+      - special_offer
+      - not_found
+      type: string
+      description: '* `inquiry` - Inquiry
+
+        * `pending` - Pending
+
+        * `preapproved` - Pre-approved
+
+        * `denied` - Refused
+
+        * `not_possible` - Not possible
+
+        * `accepted` - Accepted
+
+        * `cancelled` - Cancelled
+
+        * `special_offer` - Special offer
+
+        * `not_found` - Not found'
+    PaginatedInquiryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Inquiry'
+        limit:
+          type: integer
+          example: 50
+    Inquiry:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/InquiryStatusEnum'
+          readOnly: true
+          description: 'Inquiry state. Currently produced: inquiry (guest info request, no booking), pending (reservation request awaiting host accept/decline), preapproved (host pre-approved; not yet a confirmed booking), denied (host declined), cancelled (request voided/withdrawn). Legacy / not currently emitted: accepted, not_possible, special_offer, not_found. A confirmed booking is read from the conversation''s reservation_ids, not from an inquiry status.
+
+
+            * `inquiry` - Inquiry
+
+            * `pending` - Pending
+
+            * `preapproved` - Pre-approved
+
+            * `denied` - Refused
+
+            * `not_possible` - Not possible
+
+            * `accepted` - Accepted
+
+            * `cancelled` - Cancelled
+
+            * `special_offer` - Special offer
+
+            * `not_found` - Not found'
+        checkin_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          readOnly: true
+          description: Requested check-in date for the prospective stay (YYYY-MM-DD).
+        checkout_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          readOnly: true
+          description: Requested check-out date for the prospective stay (YYYY-MM-DD).
+        origin:
+          allOf:
+          - $ref: '#/components/schemas/InquiryOriginEnum'
+          readOnly: true
+          description: 'Source the inquiry came from, i.e. the platform or channel that originated it (e.g. Airbnb, Booking.com, direct email).
+
+
+            * `channel_manager` - Platform
+
+            * `bookingsync_inbox` - BookingSync
+
+            * `airbnb_message` - Airbnb
+
+            * `airbnb_email` - Airbnb
+
+            * `airbnb_tentative` - Airbnb
+
+            * `booking-com` - Booking.com
+
+            * `homeaway` - HomeAway
+
+            * `homeaway_tentative` - HomeAway
+
+            * `tripadvisor` - TripAdvisor
+
+            * `email` - Email
+
+            * `messenger` - Messenger
+
+            * `whatsapp` - WhatsApp
+
+            * `sms` - SMS
+
+            * `notification` - Email
+
+            * `event` - Email
+
+            * `airbnb_review` - Airbnb
+
+            * `guestspace` - Guest space
+
+            * `twilio` - SMS
+
+            * `booking_widget` - Direct booking widget
+
+            * `support` - Support'
+        rental_id:
+          type: string
+          readOnly: true
+          description: Id of the property (rental) the inquiry is about.
+      required:
+      - checkin_date
+      - checkout_date
+      - id
+      - origin
+      - rental_id
+      - status
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

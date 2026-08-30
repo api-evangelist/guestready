@@ -1,0 +1,3568 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Rentals API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: rentals
+paths:
+  /api/v3/rentals/:
+    get:
+      operationId: rentals_list
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: query
+        name: country
+        schema:
+          type: integer
+      - in: query
+        name: created_after
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_before
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: date_after
+        schema:
+          type: string
+          format: date
+        description: Dates
+      - in: query
+        name: date_before
+        schema:
+          type: string
+          format: date
+        description: Dates
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: modified_after
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: modified_before
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: multi_unit_id
+        schema:
+          type: integer
+      - in: query
+        name: name
+        schema:
+          type: string
+      - in: query
+        name: numero_contrat
+        schema:
+          type: string
+      - in: query
+        name: office
+        schema:
+          type: integer
+        description: Office
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: owner_user_name
+        schema:
+          type: string
+      - in: query
+        name: rental_category
+        schema:
+          type: string
+          enum:
+          - LONG-TERM
+          - MID-TERM
+          - SHORT-TERM
+        description: '* `SHORT-TERM` - Short-term
+
+          * `MID-TERM` - Mid-term
+
+          * `LONG-TERM` - Long-term'
+      - in: query
+        name: sleeps_max
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type:
+          - string
+          - 'null'
+          title: Property status
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - PENDING_DEACTIVATION
+          - PRE_ONBOARDING
+        description: '* `ACTIVE` - Active
+
+          * `INACTIVE` - Inactive
+
+          * `PENDING_DEACTIVATION` - Pending deactivation
+
+          * `PRE_ONBOARDING` - Onboarding in progress'
+      - in: query
+        name: tags
+        schema:
+          type: array
+          items:
+            type: integer
+        explode: true
+        style: form
+      - in: query
+        name: travellers_count
+        schema:
+          type: integer
+      - in: query
+        name: with_inactive
+        schema:
+          type: boolean
+      tags:
+      - rentals
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRentalList'
+          description: ''
+    post:
+      operationId: rentals_create
+      description: Create a rental in status onboarding, to fill it with all required data
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRental'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateRental'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateRental'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRental'
+          description: ''
+  /api/v3/rentals/{numero_contrat}/:
+    get:
+      operationId: rentals_retrieve
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+          description: ''
+    put:
+      operationId: rentals_update
+      description: Update a rental
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rental'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Rental'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Rental'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+          description: ''
+    patch:
+      operationId: rentals_partial_update
+      description: Update a rental
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRental'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRental'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRental'
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+          description: ''
+    delete:
+      operationId: rentals_destroy
+      description: Mixin that adds custom-fields GET/POST actions to entity ViewSets.
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '204':
+          description: No response body
+  /api/v3/rentals/{numero_contrat}/block/:
+    patch:
+      operationId: rentals_block_partial_update
+      description: Block calendar
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBlockRentalCalendar'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBlockRentalCalendar'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBlockRentalCalendar'
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockRentalCalendar'
+          description: ''
+  /api/v3/rentals/{numero_contrat}/custom_fields/:
+    get:
+      operationId: rentals_custom_fields_retrieve
+      description: Get the custom-field values set on this object, as a mapping of custom field key to value.
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+          description: ''
+    post:
+      operationId: rentals_custom_fields_create
+      description: Set custom-field values on this object. Send a mapping of custom field key to value; keys left out keep their current value, and a key with no definition on this account is rejected.
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rental'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Rental'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Rental'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+          description: ''
+  /api/v3/rentals/{numero_contrat}/disable/:
+    post:
+      operationId: rentals_disable_create
+      description: Disable property
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisableProperty'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DisableProperty'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DisableProperty'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisableProperty'
+          description: ''
+  /api/v3/rentals/{numero_contrat}/enable/:
+    post:
+      operationId: rentals_enable_create
+      description: Disable property
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisableProperty'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DisableProperty'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DisableProperty'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisableProperty'
+          description: ''
+  /api/v3/rentals/{numero_contrat}/history/:
+    get:
+      operationId: rentals_history_list
+      description: Get property change history
+      parameters:
+      - in: query
+        name: field
+        schema:
+          type: string
+        description: Filter by field name (matches field key or display name)
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - rentals
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRentalHistoryList'
+          description: ''
+  /api/v3/rentals/{numero_contrat}/smart-locks/:
+    post:
+      operationId: rentals_smart_locks_create
+      description: Assign a smart lock to a property
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmartLockAssign'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SmartLockAssign'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SmartLockAssign'
+        required: true
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalSmartLock'
+          description: ''
+  /api/v3/rentals/{numero_contrat}/smart-locks/{smart_lock_id}/:
+    delete:
+      operationId: rentals_smart_locks_destroy
+      description: Remove a smart lock from a property
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      - in: path
+        name: smart_lock_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - rentals
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '204':
+          description: No response body
+  /api/v3/rentals/{numero_contrat}/unblock/:
+    patch:
+      operationId: rentals_unblock_partial_update
+      description: Unblock calendar
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUnblockRentalCalendar'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUnblockRentalCalendar'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUnblockRentalCalendar'
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  message: Calendar was unblocked
+          description: ''
+  /api/v3/rentals/{numero_contrat}/upselling_configuration/:
+    get:
+      operationId: rentals_upselling_configuration_retrieve
+      description: Get the upselling configuration assigned to the property.
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      security:
+      - oauth2:
+        - rentals:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalUpsellingConfiguration'
+          description: ''
+    patch:
+      operationId: rentals_upselling_configuration_partial_update
+      description: Update the upselling configuration assigned to the property. The configuration must be one of those connected to the property's office; pass null to clear the assignment.
+      parameters:
+      - in: path
+        name: numero_contrat
+        schema:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        required: true
+      tags:
+      - rentals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRentalUpsellingConfiguration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRentalUpsellingConfiguration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRentalUpsellingConfiguration'
+      security:
+      - oauth2:
+        - rentals:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalUpsellingConfiguration'
+          description: ''
+components:
+  schemas:
+    RentalPhoto:
+      type: object
+      properties:
+        picture:
+          type: string
+          readOnly: true
+      required:
+      - picture
+    RentalInvoiceDetails:
+      type: object
+      properties:
+        business_name:
+          type: string
+          maxLength: 250
+        tax_number:
+          type: string
+          maxLength: 250
+        address_line_1:
+          type: string
+          maxLength: 250
+        address_line_2:
+          type: string
+          maxLength: 250
+        city:
+          type: string
+          maxLength: 250
+        postal_code:
+          type: string
+          maxLength: 10
+        country:
+          type: integer
+        logo:
+          type:
+          - string
+          - 'null'
+          format: uri
+      required:
+      - address_line_1
+      - address_line_2
+      - business_name
+      - city
+      - postal_code
+      - tax_number
+    BuildingConstructionPeriodEnum:
+      enum:
+      - BEFORE_1949
+      - FROM_1949_TO_1974
+      - FROM_1975_TO_1989
+      - FROM_1989_TO_2005
+      - AFTER_2005
+      type: string
+      description: '* `BEFORE_1949` - before 1949
+
+        * `FROM_1949_TO_1974` - from 1949 to 1974
+
+        * `FROM_1975_TO_1989` - from 1975 to 1989
+
+        * `FROM_1989_TO_2005` - from 1989 to 2005
+
+        * `AFTER_2005` - after 2005'
+    RentalCategoryEnum:
+      enum:
+      - SHORT-TERM
+      - MID-TERM
+      - LONG-TERM
+      type: string
+      description: '* `SHORT-TERM` - Short-term
+
+        * `MID-TERM` - Mid-term
+
+        * `LONG-TERM` - Long-term'
+    SecurityDepositChargingMethodEnum:
+      enum:
+      - NONE
+      - SWIKLY
+      - STRIPE
+      type: string
+      description: '* `NONE` - No security deposit
+
+        * `SWIKLY` - Swikly
+
+        * `STRIPE` - Stripe'
+    RentalUpsellingConfiguration:
+      type: object
+      properties:
+        managed_upselling_configuration:
+          type:
+          - integer
+          - 'null'
+          description: ID of the upselling configuration to assign to the property. Must be one of the configurations connected to the property's office. Pass null to clear the assignment.
+    DisableProperty:
+      type: object
+      properties:
+        reason:
+          type: string
+      required:
+      - reason
+    PaginatedRentalHistoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalHistory'
+        limit:
+          type: integer
+          example: 50
+    BuildingLegalStatusEnum:
+      enum:
+      - INDIVIDUAL
+      - CONDOMINIUM
+      type: string
+      description: '* `INDIVIDUAL` - Individual ownership
+
+        * `CONDOMINIUM` - Condominium regime'
+    PropertyTypeEnum:
+      enum:
+      - PRIMARY
+      - OTHER
+      - SECONDARY
+      - UNKNOWN
+      type: string
+      description: '* `PRIMARY` - Primary residence
+
+        * `OTHER` - Non-residential property (commercial/guest-room)
+
+        * `SECONDARY` - Secondary residence
+
+        * `UNKNOWN` - Unknown'
+    RentalListing:
+      type: object
+      properties:
+        language:
+          type: string
+          readOnly: true
+        headline:
+          type:
+          - string
+          - 'null'
+          maxLength: 75
+        summary:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        space:
+          type:
+          - string
+          - 'null'
+        neighborhood:
+          type:
+          - string
+          - 'null'
+          title: Neighbourhood
+      required:
+      - language
+    RentalHistoryTypeEnum:
+      enum:
+      - +
+      - '~'
+      - '-'
+      type: string
+      description: '* `+` - +
+
+        * `~` - ~
+
+        * `-` - -'
+    TypeD5dEnum:
+      type: string
+      enum:
+      - akiles
+      - nuki
+      - ttlock
+      - omnitec
+      - salto_space
+    InstantBookingChoicesEnum:
+      enum:
+      - 'OFF'
+      - EVERYONE
+      type: string
+      description: '* `OFF` - No one
+
+        * `EVERYONE` - Everyone'
+    KeyStrategyEnum:
+      enum:
+      - PADLOCK
+      - KEYNEST
+      - IGLOOHOME_KEYBOX
+      - IGLOOHOME_LOCK
+      - OFFICE
+      - NUKI_LOCK
+      - SEAM_INTEGRATED_LOCK
+      - KEY_STORAGE
+      - PERSONAL_CHECK_IN
+      - SMART_LOCK
+      - DUBAI_KEYLESS
+      - REMOTELOCK
+      - YACAN_LOCK
+      - MANAGED_SMART_LOCK
+      - OTHER
+      type: string
+      description: '* `PADLOCK` - Lockbox/Padlock
+
+        * `KEYNEST` - Keynest
+
+        * `IGLOOHOME_KEYBOX` - Igloohome KeyBox
+
+        * `IGLOOHOME_LOCK` - Igloohome Lock
+
+        * `OFFICE` - Office pick-up
+
+        * `NUKI_LOCK` - Nuki lock
+
+        * `SEAM_INTEGRATED_LOCK` - Integrated lock
+
+        * `KEY_STORAGE` - Key storage
+
+        * `PERSONAL_CHECK_IN` - Personal check-in
+
+        * `SMART_LOCK` - Smart lock (not synchronised with RentalReady)
+
+        * `DUBAI_KEYLESS` - Dubai Keyless
+
+        * `REMOTELOCK` - RemoteLock
+
+        * `YACAN_LOCK` - Yacan lock
+
+        * `MANAGED_SMART_LOCK` - Managed smart lock
+
+        * `OTHER` - Other'
+    Status075Enum:
+      enum:
+      - ACTIVE
+      - INACTIVE
+      - PENDING_DEACTIVATION
+      - PRE_ONBOARDING
+      type: string
+      description: '* `ACTIVE` - ACTIVE
+
+        * `INACTIVE` - INACTIVE
+
+        * `PENDING_DEACTIVATION` - PENDING_DEACTIVATION
+
+        * `PRE_ONBOARDING` - PRE_ONBOARDING'
+    CommissionCalculationEnum:
+      enum:
+      - PROPERTY_MANAGER
+      - OWNER
+      type: string
+      description: '* `PROPERTY_MANAGER` - Property Manager commission
+
+        * `OWNER` - Owner commission'
+    RentalHistoryChange:
+      type: object
+      properties:
+        field:
+          type: string
+        field_name:
+          type: string
+        old:
+          type:
+          - string
+          - 'null'
+        new:
+          type:
+          - string
+          - 'null'
+      required:
+      - field
+      - field_name
+      - new
+      - old
+    CreateRental:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          title: Property name
+          description: Use practical name for owners such as street name, do not use abbreviation or contract number. Name is displayed on invoices and owner profile.
+          maxLength: 100
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status075Enum'
+          readOnly: true
+        office_name:
+          type: string
+          title: Office name
+          description: 'Should be the name of the property manager + city (example: GUESTREADY-PARIS)'
+        owner_name:
+          type: string
+        city:
+          type: integer
+        city_name:
+          type: string
+          readOnly: true
+        country:
+          type: integer
+        country_name:
+          type: string
+          readOnly: true
+        address:
+          type: string
+          description: 'Name and street number only. Example: 2 rue Volta'
+        postal_code:
+          type: string
+        geoposition:
+          type: string
+        key_strategy:
+          description: 'Is used to define how to work with Keys.
+
+
+            * `PADLOCK` - Lockbox/Padlock
+
+            * `KEYNEST` - Keynest
+
+            * `IGLOOHOME_KEYBOX` - Igloohome KeyBox
+
+            * `IGLOOHOME_LOCK` - Igloohome Lock
+
+            * `OFFICE` - Office pick-up
+
+            * `NUKI_LOCK` - Nuki lock
+
+            * `SEAM_INTEGRATED_LOCK` - Integrated lock
+
+            * `KEY_STORAGE` - Key storage
+
+            * `PERSONAL_CHECK_IN` - Personal check-in
+
+            * `SMART_LOCK` - Smart lock (not synchronised with RentalReady)
+
+            * `DUBAI_KEYLESS` - Dubai Keyless
+
+            * `REMOTELOCK` - RemoteLock
+
+            * `YACAN_LOCK` - Yacan lock
+
+            * `MANAGED_SMART_LOCK` - Managed smart lock
+
+            * `OTHER` - Other'
+          oneOf:
+          - $ref: '#/components/schemas/KeyStrategyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        wifi_name:
+          type: string
+          maxLength: 200
+        wifi_password:
+          type: string
+          maxLength: 200
+        checkout_instructions:
+          type: string
+        trash_can_area_local:
+          type: string
+        trash_can_area_en:
+          type: string
+        key_deposit_local:
+          type: string
+        key_deposit_en:
+          type: string
+        key_box_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        lockbox_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        self_checkin_instructions_local:
+          type: string
+        self_checkin_instructions_en:
+          type: string
+        property_access_en:
+          type: string
+        property_access_local:
+          type: string
+        owner_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: '0.00'
+        platform_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: '0.00'
+      required:
+      - address
+      - city
+      - city_name
+      - country
+      - country_name
+      - geoposition
+      - id
+      - office_name
+      - owner_name
+      - postal_code
+      - status
+    CleaningFeeInvoicedToEnum:
+      enum:
+      - GUEST
+      - HOST
+      type: string
+      description: '* `GUEST` - Guest
+
+        * `HOST` - Owner'
+    PublishedStatusEnum:
+      enum:
+      - NEW
+      - PENDING
+      - APPROVED
+      type: string
+      description: '* `NEW` - New
+
+        * `PENDING` - Pending activation
+
+        * `APPROVED` - Activated'
+    CancellationPolicyCategoryEnum:
+      enum:
+      - flexible
+      - moderate
+      - strict
+      - firm
+      type: string
+      description: '* `flexible` - Flexible
+
+        * `moderate` - Moderate
+
+        * `strict` - Strict
+
+        * `firm` - Firm'
+    RentalHistory:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        user:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        type:
+          allOf:
+          - $ref: '#/components/schemas/RentalHistoryTypeEnum'
+          readOnly: true
+          description: 'Kind of history change: `+` created, `~` changed, `-` deleted.
+
+
+            * `+` - +
+
+            * `~` - ~
+
+            * `-` - -'
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalHistoryChange'
+          readOnly: true
+      required:
+      - changes
+      - date
+      - type
+      - user
+    StarsEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      type: integer
+      description: '* `0` - No Stars
+
+        * `1` - 1 Star
+
+        * `2` - 2 Stars
+
+        * `3` - 3 Stars
+
+        * `4` - 4 Stars
+
+        * `5` - 5 Stars'
+    MultiUnitRoleEnum:
+      enum:
+      - ROOM_TYPE
+      - INVENTORY
+      - PARENT
+      - CHILD
+      type: string
+      description: '* `ROOM_TYPE` - Room type
+
+        * `INVENTORY` - Inventory
+
+        * `PARENT` - Parent
+
+        * `CHILD` - Child'
+    RentalCheckoutOptionTypes:
+      type: object
+      properties:
+        return_keys:
+          type: boolean
+        return_keys_text:
+          type:
+          - string
+          - 'null'
+          title: Return keys to a specific place/person on checking out
+        turn_things_off:
+          type: boolean
+        throw_trash:
+          type: boolean
+        lock_up:
+          type: boolean
+        gather_towels:
+          type: boolean
+        gather_towels_text:
+          type:
+          - string
+          - 'null'
+          title: Keep the towels in a specified place
+        additional_requests:
+          type: boolean
+        additional_requests_text:
+          type:
+          - string
+          - 'null'
+          title: Other requests on/before checking out
+    PaginatedRentalList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rental'
+        limit:
+          type: integer
+          example: 50
+    SmartLockAssign:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the smart lock to assign.
+      required:
+      - id
+    CurrencyValueEnum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
+    SecurityDepositChargingRuleEnum:
+      enum:
+      - NEVER
+      - HIGH_RISK
+      - ALWAYS
+      type: string
+      description: '* `NEVER` - Never charge a security deposit
+
+        * `HIGH_RISK` - Only charge a security deposit in high-risk bookings
+
+        * `ALWAYS` - Always charge a security deposit'
+    GuestControl:
+      type: object
+      properties:
+        allows_children_as_host:
+          type: boolean
+          description: Is listing suitable for children (2-12 years)? If you selected false, this field is required to provide details about why the place is not suitable for children.
+        allows_infants_as_host:
+          type: boolean
+          description: Is listing suitable for infants (under 2 years)? If you selected false, this field is required to provide details about why the place is not suitable for infants.
+        allows_smoking_as_host:
+          type: boolean
+          description: Is smoking allowed in the property?
+        allows_pets_as_host:
+          type: boolean
+          description: Are pets allowed?
+        allows_events_as_host:
+          type: boolean
+          description: Are parties or events allowed?
+        children_not_allowed_details:
+          type:
+          - string
+          - 'null'
+          title: Why are children/infants not allowed?
+        pet_capacity:
+          type:
+          - integer
+          - 'null'
+          maximum: 5
+          minimum: 0
+        standard_phrases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            maxLength: 255
+        require_guest_address:
+          type:
+          - boolean
+          - 'null'
+        require_guest_contact_number:
+          type:
+          - boolean
+          - 'null'
+    BlankEnum:
+      enum:
+      - ''
+    SelfCheckinEnum:
+      enum:
+      - FORBIDDEN
+      - POSSIBLE
+      - ALWAYS
+      - RECEPTION
+      type: string
+      description: '* `FORBIDDEN` - FORBIDDEN
+
+        * `POSSIBLE` - POSSIBLE
+
+        * `ALWAYS` - ALWAYS
+
+        * `RECEPTION` - RECEPTION'
+    Rental:
+      type: object
+      description: Renders custom-field values under `custom_fields`, skipped on list actions.
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          title: Property name
+          description: Use practical name for owners such as street name, do not use abbreviation or contract number. Name is displayed on invoices and owner profile.
+          maxLength: 100
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status075Enum'
+          readOnly: true
+        office_name:
+          type: string
+          title: Office name
+          description: 'Should be the name of the property manager + city (example: GUESTREADY-PARIS)'
+        owner_name:
+          type: string
+        city:
+          type: integer
+        city_name:
+          type: string
+          readOnly: true
+        country:
+          type: integer
+        country_name:
+          type: string
+          readOnly: true
+        address:
+          type: string
+          description: 'Name and street number only. Example: 2 rue Volta'
+        postal_code:
+          type: string
+        geoposition:
+          type: string
+        key_strategy:
+          description: 'Is used to define how to work with Keys.
+
+
+            * `PADLOCK` - Lockbox/Padlock
+
+            * `KEYNEST` - Keynest
+
+            * `IGLOOHOME_KEYBOX` - Igloohome KeyBox
+
+            * `IGLOOHOME_LOCK` - Igloohome Lock
+
+            * `OFFICE` - Office pick-up
+
+            * `NUKI_LOCK` - Nuki lock
+
+            * `SEAM_INTEGRATED_LOCK` - Integrated lock
+
+            * `KEY_STORAGE` - Key storage
+
+            * `PERSONAL_CHECK_IN` - Personal check-in
+
+            * `SMART_LOCK` - Smart lock (not synchronised with RentalReady)
+
+            * `DUBAI_KEYLESS` - Dubai Keyless
+
+            * `REMOTELOCK` - RemoteLock
+
+            * `YACAN_LOCK` - Yacan lock
+
+            * `MANAGED_SMART_LOCK` - Managed smart lock
+
+            * `OTHER` - Other'
+          oneOf:
+          - $ref: '#/components/schemas/KeyStrategyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        wifi_name:
+          type: string
+          maxLength: 200
+        wifi_password:
+          type: string
+          maxLength: 200
+        checkout_instructions:
+          type: string
+        trash_can_area_local:
+          type: string
+        trash_can_area_en:
+          type: string
+        key_deposit_local:
+          type: string
+        key_deposit_en:
+          type: string
+        key_box_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        lockbox_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        self_checkin_instructions_local:
+          type: string
+        self_checkin_instructions_en:
+          type: string
+        property_access_en:
+          type: string
+        property_access_local:
+          type: string
+        owner_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: '0.00'
+        platform_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: '0.00'
+        stars:
+          minimum: 0
+          maximum: 5
+          oneOf:
+          - $ref: '#/components/schemas/StarsEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        host_id:
+          type: integer
+          readOnly: true
+        emergency_contact:
+          type:
+          - string
+          - 'null'
+        property_setup:
+          type: string
+          description: "Valid choices: \n- apartment\n- bed-in-dormitory\n- boat\n- bungalow\n- cabin\n- castle\n- cave\n- chalet\n- condominium\n- cottage\n- dormitory\n- double-room\n- earth-house\n- family-room\n- farmhouse\n- holiday-home\n- hotel\n- house\n- hut\n- igloo\n- island\n- lighthouse\n- loft\n- plane\n- quad-room\n- recreational-vehicle\n- single-room\n- studio\n- suite\n- tent\n- tipi\n- townhouse\n- train\n- treehouse\n- triple-room\n- twin-room\n- villa\n- yurt"
+        property_type:
+          $ref: '#/components/schemas/PropertyTypeEnum'
+        building_construction_period:
+          oneOf:
+          - $ref: '#/components/schemas/BuildingConstructionPeriodEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        building_construction_year:
+          type:
+          - integer
+          - 'null'
+          maximum: 2999
+          minimum: 0
+        license_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        temporary_comment:
+          type: string
+        surface_area:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+          description: in m2
+        published_status:
+          oneOf:
+          - $ref: '#/components/schemas/PublishedStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        sleeps:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        sleeps_max:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        classic_rental_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Classic property expected price
+        land_registration_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        minimum_commission:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Minimum rate
+        fixed_rent:
+          type: boolean
+          description: When true, Property manager receives full payments from reservations. The owner payments should be done manually.
+        fixed_rent_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: This field data will be only used for analytics, it will not affect payment splits.
+        key_sets_total:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        keys_observation:
+          type:
+          - string
+          - 'null'
+        internal_notes:
+          type:
+          - string
+          - 'null'
+        office_id:
+          type: string
+          readOnly: true
+        multi_unit_id:
+          type: integer
+          readOnly: true
+          description: ID of the multi-unit the property is associated to, or null if the property is not part of a multi-unit.
+        multi_unit_role:
+          allOf:
+          - $ref: '#/components/schemas/MultiUnitRoleEnum'
+          readOnly: true
+          description: 'Role of the property within its multi-unit. Null when the property is not part of a multi-unit.
+
+
+            * `ROOM_TYPE` - Room type
+
+            * `INVENTORY` - Inventory
+
+            * `PARENT` - Parent
+
+            * `CHILD` - Child'
+        igloohome_lock_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        rental_category:
+          $ref: '#/components/schemas/RentalCategoryEnum'
+        can_receive_mid_term_reservations:
+          type: boolean
+        contract_started_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        contract_terminated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        short_term_commission_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
+        short_term_commission_rate_from:
+          type: string
+          format: date
+        mid_term_commission_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
+        mid_term_commission_rate_from:
+          type: string
+          format: date
+        bnblord_commission_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1.0
+          minimum: 0.0
+          title: Commission rate
+        commission_calculation:
+          allOf:
+          - $ref: '#/components/schemas/CommissionCalculationEnum'
+          description: 'Choose whether to calculate Property Manager or Owner commission.
+
+
+            * `PROPERTY_MANAGER` - Property Manager commission
+
+            * `OWNER` - Owner commission'
+        commission_formula:
+          type: string
+        contract_duration:
+          type:
+          - integer
+          - 'null'
+        contract:
+          type:
+          - string
+          - 'null'
+          format: uri
+        minimum_availability:
+          type:
+          - integer
+          - 'null'
+        maximum_blocked_nights:
+          type:
+          - integer
+          - 'null'
+        reservations_from:
+          type:
+          - string
+          - 'null'
+          format: date
+        access_utilities:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        default_agent_cleaning:
+          type:
+          - integer
+          - 'null'
+        default_agent_checkin:
+          type:
+          - integer
+          - 'null'
+        default_agent_checkout:
+          type:
+          - integer
+          - 'null'
+        default_agent_extra:
+          type:
+          - integer
+          - 'null'
+        indication_welcome:
+          type:
+          - string
+          - 'null'
+        permanent_check_in_external_comment:
+          type:
+          - string
+          - 'null'
+        permanent_check_in_internal_comment:
+          type:
+          - string
+          - 'null'
+        retour_proprietaire_texte:
+          type:
+          - string
+          - 'null'
+        cleaning_duration:
+          type:
+          - integer
+          - 'null'
+        permanent_cleaning_external_comment:
+          type:
+          - string
+          - 'null'
+        permanent_cleaning_internal_comment:
+          type:
+          - string
+          - 'null'
+        linen_delivery_information:
+          type:
+          - string
+          - 'null'
+        has_checkout:
+          type:
+          - boolean
+          - 'null'
+        permanent_extra_external_comment:
+          type:
+          - string
+          - 'null'
+        permanent_extra_internal_comment:
+          type:
+          - string
+          - 'null'
+        is_maintenance_allowed:
+          type:
+          - boolean
+          - 'null'
+        midterm_mandatory_checkin:
+          type:
+          - boolean
+          - 'null'
+        midterm_mandatory_checkout:
+          type:
+          - boolean
+          - 'null'
+        allow_vouchers:
+          type: boolean
+          title: Allow discount vouchers
+          description: Allow discount vouchers on this property
+        extra_key:
+          type: boolean
+          title: Extra Key for guest
+          description: Tick if there is an extra keyset for guests which remains in the property at all times.
+        neighbourhood:
+          type:
+          - integer
+          - 'null'
+        hellosign_contract:
+          type:
+          - integer
+          - 'null'
+          title: Dropbox Sign contract
+        hellosign_template_id:
+          type:
+          - string
+          - 'null'
+          title: Template ID
+          description: To be filled only if the contract is not the default contract used at office level
+          maxLength: 250
+        custom_contract:
+          type: boolean
+          title: Custom Contract for property
+          description: Do you need a custom contract for this property?
+        security_deposit_charging_rule:
+          $ref: '#/components/schemas/SecurityDepositChargingRuleEnum'
+        security_deposit_charging_method:
+          $ref: '#/components/schemas/SecurityDepositChargingMethodEnum'
+        is_nuki_belongs_pm:
+          type: boolean
+          title: Nuki lock belongs to property manager
+        platforms_that_cover_the_damage_deposit:
+          type: array
+          items:
+            type: integer
+            title: Platforms that cover the Damage Deposit
+          description: We do not create security deposit for bookings from these platforms. We create security deposits for all bookings from other platforms.
+        integrated_lock_belongs_to_pm:
+          type: boolean
+          title: Integrated lock belongs to property manager
+        city_tax_auto:
+          type: boolean
+          title: City tax paid to owner
+          description: If ticked, the city tax will be paid to the owner for each reservation, otherwise it will be paid to the property manager.
+        city_tax_hall_login:
+          type: string
+          maxLength: 250
+        city_tax_hall_password:
+          type: string
+          maxLength: 250
+        license_number_not_required:
+          type: boolean
+          title: Licence number is not required for this property
+        special_event:
+          type:
+          - string
+          - 'null'
+        host_is_exempted:
+          type:
+          - boolean
+          - 'null'
+          title: Owner is exempted
+          description: Local authorities may grant exemptions under certain conditions. This exemption is not synchronised with the channel manager. If a full exemption is granted, please enter "0" as the maximum number of short-term nights per year. If a partial exemption is granted, indicate the approved number of days in this field.
+        city_tax_rules:
+          type: array
+          items:
+            type: integer
+        surface:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        bedrooms:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+          description: Ids of the subrooms that count as bedrooms for this property.
+        bathrooms:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+          description: Ids of the subrooms that count as bathrooms for this property.
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalPhoto'
+          readOnly: true
+        currency_value:
+          allOf:
+          - $ref: '#/components/schemas/CurrencyValueEnum'
+          readOnly: true
+        street:
+          type: string
+        closest_tube_station:
+          type: string
+        building_code_1:
+          type: string
+        building_code_2:
+          type: string
+        floor:
+          type: integer
+        intercom:
+          type:
+          - string
+          - 'null'
+          description: Is there an intercom ? Display intercom name or indication
+        lift_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 20
+        self_checkin:
+          $ref: '#/components/schemas/SelfCheckinEnum'
+        self_checkin_key_location:
+          type:
+          - string
+          - 'null'
+          format: uri
+        extra_guest_information_en:
+          type:
+          - string
+          - 'null'
+          title: Extra information for guest (English)
+          description: Please add in English any extra information you want to advise the guest about. Kindly note that this will be added into guest templates.
+        extra_guest_information_local:
+          type:
+          - string
+          - 'null'
+          title: Extra information for guest (local language)
+          description: Please add in the local language any extra information you want to advise the guest about. Kindly note that this will be added into guest templates.
+        extra_information_internal:
+          type:
+          - string
+          - 'null'
+        house_manual:
+          type:
+          - string
+          - 'null'
+          format: uri
+          title: Property guide
+          description: This manual will be displayed to internal staff and agents upon check-in for better understanding of the property and equipments manual
+        youtube_instructions:
+          type:
+          - string
+          - 'null'
+        house_rules_en:
+          type:
+          - string
+          - 'null'
+          title: Same as house rules in English
+        house_rules_local:
+          type: string
+        extra_bedding_location_en:
+          type: string
+          readOnly: true
+        extra_bedding_location_local:
+          type: string
+          readOnly: true
+        listings:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalListing'
+          readOnly: true
+        listing_photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalPhoto'
+          readOnly: true
+        min_arrival:
+          type: string
+          description: This field is deprecated and will be removed in a near future. Use min_check_in_time instead.
+        max_arrival:
+          type: string
+          description: This field is deprecated and will be removed in a near future. Use max_check_in_time instead.
+        max_checkout:
+          type: string
+          description: This field is deprecated and will be removed in a near future. Use max_check_out_time instead.
+        cleaning_equipment_location:
+          type: string
+          readOnly: true
+        specific_cleaning_instructions:
+          type: string
+        hubspot_deal_id:
+          type: string
+          pattern: \d+
+          maxLength: 250
+        hubspot_deal_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        online_management:
+          type: boolean
+          description: This property is managed directly by the owner and not by the property manager (Online Offer/Online Management)
+        premium_class:
+          allOf:
+          - $ref: '#/components/schemas/PremiumClassEnum'
+          title: Class
+        parking_instructions_en:
+          type: string
+        parking_instructions_local:
+          type: string
+        private_parking:
+          type: boolean
+        parking_badge:
+          type: boolean
+          title: Is there a parking badge ?
+        access_badge:
+          type: boolean
+        building_key:
+          type: boolean
+        mailbox_instructions:
+          type: string
+        welcome_basket_description_en:
+          type:
+          - string
+          - 'null'
+          title: Welcome basket description (English)
+        welcome_basket_description_local:
+          type: string
+        total_floors:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        damage_already_reported:
+          type:
+          - string
+          - 'null'
+          description: Fill this field if there is already damage in the property prior to taking over the management
+        average_rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        average_rating_shareable:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        agent_cleaning_packages:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Not relevant to all missions, only used to compute agent earnings under some specific circumstances.
+        booking_deposit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Reservation deposit
+          description: Guest security deposit
+        cancellation_policy_category:
+          allOf:
+          - $ref: '#/components/schemas/CancellationPolicyCategoryEnum'
+          description: 'Cancellation policy
+
+
+            * `flexible` - Flexible
+
+            * `moderate` - Moderate
+
+            * `strict` - Strict
+
+            * `firm` - Firm'
+        min_check_in_time:
+          type:
+          - integer
+          - 'null'
+          maximum: 23
+          minimum: 0
+          title: Minimum arrival time
+        max_check_in_time:
+          type:
+          - integer
+          - 'null'
+          maximum: 24
+          minimum: 0
+          title: Maximum arrival time
+          description: Default time from platform
+        min_check_out_time:
+          type:
+          - integer
+          - 'null'
+        max_check_out_time:
+          type: integer
+        instant_booking_choices:
+          $ref: '#/components/schemas/InstantBookingChoicesEnum'
+        guest_control:
+          $ref: '#/components/schemas/GuestControl'
+        booking_lead_time_in_hours:
+          type: integer
+        turnover_days:
+          $ref: '#/components/schemas/TurnoverDaysEnum'
+        tags:
+          type: array
+          items:
+            type: integer
+          description: List of tag IDs to assign to the rental. Replaces the current set.
+        ical:
+          type: string
+          readOnly: true
+          description: Owner iCal feed URL for the property's calendar.
+        hotel_name:
+          type:
+          - string
+          - 'null'
+        room_type_name:
+          type:
+          - string
+          - 'null'
+        french_hotel_nature_category:
+          oneOf:
+          - $ref: '#/components/schemas/FrenchHotelNatureCategoryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        monthly_long_term_rate:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: Monthly long-term rate (net value for owner)
+        mid_term_cleaning_duration:
+          type:
+          - integer
+          - 'null'
+          description: Mid-term cleaning duration
+        mid_term_security_deposit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: Mid-term security deposit amount
+        airbnb_account:
+          type:
+          - integer
+          - 'null'
+        signed_by:
+          type:
+          - integer
+          - 'null'
+        has_outbound_deal:
+          type: boolean
+        outbound_deal_source:
+          type:
+          - string
+          - 'null'
+        account_manager:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+        baby_policy:
+          type:
+          - string
+          - 'null'
+        circuit_breaker_location:
+          type:
+          - string
+          - 'null'
+        water_cut_off_tap_location:
+          type:
+          - string
+          - 'null'
+        toilet_pump:
+          type:
+          - boolean
+          - 'null'
+          writeOnly: true
+        mid_term_default_checkin_agent:
+          type:
+          - integer
+          - 'null'
+        mid_term_default_cleaning_agent:
+          type:
+          - integer
+          - 'null'
+        mid_term_default_checkout_agent:
+          type:
+          - integer
+          - 'null'
+        mid_term_default_extra_agent:
+          type:
+          - integer
+          - 'null'
+        mid_term_house_instructions:
+          type:
+          - string
+          - 'null'
+          format: uri
+        mid_term_management_instructions:
+          type:
+          - string
+          - 'null'
+        mid_term_pre_approval_instructions:
+          type:
+          - string
+          - 'null'
+        mid_term_mailbox_instructions:
+          type:
+          - string
+          - 'null'
+        property_access_self_checkin:
+          type:
+          - string
+          - 'null'
+        self_check_in_receptions:
+          type: array
+          items:
+            type: integer
+        self_check_in_key_deposit_local:
+          type:
+          - string
+          - 'null'
+        self_check_in_key_deposit_en:
+          type:
+          - string
+          - 'null'
+        allow_regular_check_in_at_extra_cost:
+          type:
+          - boolean
+          - 'null'
+        onboarding_assignees:
+          type: array
+          items:
+            type: integer
+        listing_expectations:
+          type: object
+          additionalProperties: {}
+          writeOnly: true
+        existing_airbnb_account_credentials:
+          type:
+          - string
+          - 'null'
+        key_box_available:
+          type:
+          - boolean
+          - 'null'
+        bills_and_services_up_to_date:
+          type:
+          - boolean
+          - 'null'
+        air_conditioning_supplier_details:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        gas_supplier_details:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        du_etisalat_account_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        dewa_account_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        building_legal_status:
+          oneOf:
+          - $ref: '#/components/schemas/BuildingLegalStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        cadastral_reference:
+          type:
+          - string
+          - 'null'
+        padlock_possible:
+          type:
+          - boolean
+          - 'null'
+        smart_locks:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalSmartLock'
+          readOnly: true
+        check_in_fee:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        check_out_fee:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        cleaning_fee_invoiced_to:
+          $ref: '#/components/schemas/CleaningFeeInvoicedToEnum'
+        is_damage_risk:
+          type: boolean
+        is_party_risk:
+          type: boolean
+        no_laundry_with_delivery_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        no_laundry_with_laundry_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        with_laundry_with_laundry_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        with_laundry_with_delivery_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        with_laundry_no_cleaning_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        with_laundry_no_laundry_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        no_laundry_no_cleaning_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        no_laundry_no_laundry_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        hide_airbnb_pre_approvals:
+          type: boolean
+        pre_approval_instructions:
+          type:
+          - string
+          - 'null'
+        mailbox_instructions_bo:
+          type:
+          - string
+          - 'null'
+        enable_automatic_host_to_guest_reviews:
+          type: boolean
+        allow_booking_requests_past_minimum_advance:
+          type: boolean
+        display_exact_location_to_guest:
+          type: boolean
+        checkout_option_types:
+          $ref: '#/components/schemas/RentalCheckoutOptionTypes'
+        invoicing_details:
+          $ref: '#/components/schemas/RentalInvoiceDetails'
+      required:
+      - address
+      - average_rating
+      - average_rating_shareable
+      - bathrooms
+      - bedrooms
+      - booking_lead_time_in_hours
+      - building_code_1
+      - building_code_2
+      - city
+      - city_name
+      - cleaning_equipment_location
+      - closest_tube_station
+      - country
+      - country_name
+      - created_at
+      - currency_value
+      - extra_bedding_location_en
+      - extra_bedding_location_local
+      - floor
+      - geoposition
+      - guest_control
+      - host_id
+      - house_rules_local
+      - ical
+      - id
+      - images
+      - listing_photos
+      - listings
+      - mailbox_instructions
+      - max_arrival
+      - max_check_out_time
+      - max_checkout
+      - min_arrival
+      - multi_unit_id
+      - multi_unit_role
+      - office_id
+      - office_name
+      - owner_name
+      - parking_instructions_en
+      - parking_instructions_local
+      - postal_code
+      - property_setup
+      - self_checkin
+      - smart_locks
+      - specific_cleaning_instructions
+      - status
+      - street
+      - surface
+      - temporary_comment
+      - turnover_days
+      - welcome_basket_description_local
+    PatchedUnblockRentalCalendar:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+    BlockRentalCalendar:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        blocked_reason:
+          type: string
+        blocked_notes:
+          type: string
+      required:
+      - end_date
+      - start_date
+    PatchedRentalUpsellingConfiguration:
+      type: object
+      properties:
+        managed_upselling_configuration:
+          type:
+          - integer
+          - 'null'
+          description: ID of the upselling configuration to assign to the property. Must be one of the configurations connected to the property's office. Pass null to clear the assignment.
+    FrenchHotelNatureCategoryEnum:
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      description: '* `1` - Palace
+
+        * `2` - Tourist hotel
+
+        * `3` - Tourist residence
+
+        * `4` - Furnished tourism accommodation
+
+        * `5` - Holiday village
+
+        * `6` - Bed and breakfast
+
+        * `7` - Camping-car area or tourist parking lot per 24-hour period
+
+        * `8` - Camping or caravan site classified as 3, 4, and 5 stars and any other outdoor accommodation with equivalent characteristics
+
+        * `9` - Marina'
+    PremiumClassEnum:
+      enum:
+      - DIAMOND
+      - GOLD
+      - SILVER
+      - BRONZE
+      - CLASSIC
+      type: string
+      description: '* `DIAMOND` - Diamond
+
+        * `GOLD` - Gold
+
+        * `SILVER` - Silver
+
+        * `BRONZE` - Bronze
+
+        * `CLASSIC` - Classic'
+    NullEnum:
+      enum:
+      - null
+    RentalSmartLock:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+          description: Human-readable name including the provider prefix, e.g. 'Akiles - Cylindre V2 - 25 Feutrier 75018 Paris R+2'.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD5dEnum'
+          readOnly: true
+          description: Smart lock provider key (e.g. 'akiles'), or null when no provider is linked.
+        gadget_id:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Akiles gadget identifier as used by the Akiles platform, or null when no Akiles gadget is linked.
+      required:
+      - gadget_id
+      - id
+      - name
+      - type
+    TurnoverDaysEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      description: '* `0` - 0
+
+        * `1` - 1
+
+        * `2` - 2'
+    PatchedRental:
+      type: object
+      description: Renders custom-field values under `custom_fields`, skipped on list actions.
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          title: Property name
+          description: Use practical name for owners such as street name, do not use abbreviation or contract number. Name is displayed on invoices and owner profile.
+          maxLength: 100
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status075Enum'
+          readOnly: true
+        office_name:
+          type: string
+          title: Office name
+          description: 'Should be the name of the property manager + city (example: GUESTREADY-PARIS)'
+        owner_name:
+          type: string
+        city:
+          type: integer
+        city_name:
+          type: string
+          readOnly: true
+        country:
+          type: integer
+        country_name:
+          type: string
+          readOnly: true
+        address:
+          type: string
+          description: 'Name and street number only. Example: 2 rue Volta'
+        postal_code:
+          type: string
+        geoposition:
+          type: string
+        key_strategy:
+          description: 'Is used to define how to work with Keys.
+
+
+            * `PADLOCK` - Lockbox/Padlock
+
+            * `KEYNEST` - Keynest
+
+            * `IGLOOHOME_KEYBOX` - Igloohome KeyBox
+
+            * `IGLOOHOME_LOCK` - Igloohome Lock
+
+            * `OFFICE` - Office pick-up
+
+            * `NUKI_LOCK` - Nuki lock
+
+            * `SEAM_INTEGRATED_LOCK` - Integrated lock
+
+            * `KEY_STORAGE` - Key storage
+
+            * `PERSONAL_CHECK_IN` - Personal check-in
+
+            * `SMART_LOCK` - Smart lock (not synchronised with RentalReady)
+
+            * `DUBAI_KEYLESS` - Dubai Keyless
+
+            * `REMOTELOCK` - RemoteLock
+
+            * `YACAN_LOCK` - Yacan lock
+
+            * `MANAGED_SMART_LOCK` - Managed smart lock
+
+            * `OTHER` - Other'
+          oneOf:
+          - $ref: '#/components/schemas/KeyStrategyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        wifi_name:
+          type: string
+          maxLength: 200
+        wifi_password:
+          type: string
+          maxLength: 200
+        checkout_instructions:
+          type: string
+        trash_can_area_local:
+          type: string
+        trash_can_area_en:
+          type: string
+        key_deposit_local:
+          type: string
+        key_deposit_en:
+          type: string
+        key_box_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        lockbox_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        self_checkin_instructions_local:
+          type: string
+        self_checkin_instructions_en:
+          type: string
+        property_access_en:
+          type: string
+        property_access_local:
+          type: string
+        owner_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: '0.00'
+        platform_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          default: '0.00'
+        stars:
+          minimum: 0
+          maximum: 5
+          oneOf:
+          - $ref: '#/components/schemas/StarsEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        host_id:
+          type: integer
+          readOnly: true
+        emergency_contact:
+          type:
+          - string
+          - 'null'
+        property_setup:
+          type: string
+          description: "Valid choices: \n- apartment\n- bed-in-dormitory\n- boat\n- bungalow\n- cabin\n- castle\n- cave\n- chalet\n- condominium\n- cottage\n- dormitory\n- double-room\n- earth-house\n- family-room\n- farmhouse\n- holiday-home\n- hotel\n- house\n- hut\n- igloo\n- island\n- lighthouse\n- loft\n- plane\n- quad-room\n- recreational-vehicle\n- single-room\n- studio\n- suite\n- tent\n- tipi\n- townhouse\n- train\n- treehouse\n- triple-room\n- twin-room\n- villa\n- yurt"
+        property_type:
+          $ref: '#/components/schemas/PropertyTypeEnum'
+        building_construction_period:
+          oneOf:
+          - $ref: '#/components/schemas/BuildingConstructionPeriodEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        building_construction_year:
+          type:
+          - integer
+          - 'null'
+          maximum: 2999
+          minimum: 0
+        license_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        temporary_comment:
+          type: string
+        surface_area:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+          description: in m2
+        published_status:
+          oneOf:
+          - $ref: '#/components/schemas/PublishedStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        sleeps:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        sleeps_max:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        classic_rental_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Classic property expected price
+        land_registration_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        minimum_commission:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Minimum rate
+        fixed_rent:
+          type: boolean
+          description: When true, Property manager receives full payments from reservations. The owner payments should be done manually.
+        fixed_rent_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: This field data will be only used for analytics, it will not affect payment splits.
+        key_sets_total:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        keys_observation:
+          type:
+          - string
+          - 'null'
+        internal_notes:
+          type:
+          - string
+          - 'null'
+        office_id:
+          type: string
+          readOnly: true
+        multi_unit_id:
+          type: integer
+          readOnly: true
+          description: ID of the multi-unit the property is associated to, or null if the property is not part of a multi-unit.
+        multi_unit_role:
+          allOf:
+          - $ref: '#/components/schemas/MultiUnitRoleEnum'
+          readOnly: true
+          description: 'Role of the property within its multi-unit. Null when the property is not part of a multi-unit.
+
+
+            * `ROOM_TYPE` - Room type
+
+            * `INVENTORY` - Inventory
+
+            * `PARENT` - Parent
+
+            * `CHILD` - Child'
+        igloohome_lock_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        rental_category:
+          $ref: '#/components/schemas/RentalCategoryEnum'
+        can_receive_mid_term_reservations:
+          type: boolean
+        contract_started_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        contract_terminated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        short_term_commission_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
+        short_term_commission_rate_from:
+          type: string
+          format: date
+        mid_term_commission_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
+        mid_term_commission_rate_from:
+          type: string
+          format: date
+        bnblord_commission_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1.0
+          minimum: 0.0
+          title: Commission rate
+        commission_calculation:
+          allOf:
+          - $ref: '#/components/schemas/CommissionCalculationEnum'
+          description: 'Choose whether to calculate Property Manager or Owner commission.
+
+
+            * `PROPERTY_MANAGER` - Property Manager commission
+
+            * `OWNER` - Owner commission'
+        commission_formula:
+          type: string
+        contract_duration:
+          type:
+          - integer
+          - 'null'
+        contract:
+          type:
+          - string
+          - 'null'
+          format: uri
+        minimum_availability:
+          type:
+          - integer
+          - 'null'
+        maximum_blocked_nights:
+          type:
+          - integer
+          - 'null'
+        reservations_from:
+          type:
+          - string
+          - 'null'
+          format: date
+        access_utilities:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        default_agent_cleaning:
+          type:
+          - integer
+          - 'null'
+        default_agent_checkin:
+          type:
+          - integer
+          - 'null'
+        default_agent_checkout:
+          type:
+          - integer
+          - 'null'
+        default_agent_extra:
+          type:
+          - integer
+          - 'null'
+        indication_welcome:
+          type:
+          - string
+          - 'null'
+        permanent_check_in_external_comment:
+          type:
+          - string
+          - 'null'
+        permanent_check_in_internal_comment:
+          type:
+          - string
+          - 'null'
+        retour_proprietaire_texte:
+          type:
+          - string
+          - 'null'
+        cleaning_duration:
+          type:
+          - integer
+          - 'null'
+        permanent_cleaning_external_comment:
+          type:
+          - string
+          - 'null'
+        permanent_cleaning_internal_comment:
+          type:
+          - string
+          - 'null'
+        linen_delivery_information:
+          type:
+          - string
+          - 'null'
+        has_checkout:
+          type:
+          - boolean
+          - 'null'
+        permanent_extra_external_comment:
+          type:
+          - string
+          - 'null'
+        permanent_extra_internal_comment:
+          type:
+          - string
+          - 'null'
+        is_maintenance_allowed:
+          type:
+          - boolean
+          - 'null'
+        midterm_mandatory_checkin:
+          type:
+          - boolean
+          - 'null'
+        midterm_mandatory_checkout:
+          type:
+          - boolean
+          - 'null'
+        allow_vouchers:
+          type: boolean
+          title: Allow discount vouchers
+          description: Allow discount vouchers on this property
+        extra_key:
+          type: boolean
+          title: Extra Key for guest
+          description: Tick if there is an extra keyset for guests which remains in the property at all times.
+        neighbourhood:
+          type:
+          - integer
+          - 'null'
+        hellosign_contract:
+          type:
+          - integer
+          - 'null'
+          title: Dropbox Sign contract
+        hellosign_template_id:
+          type:
+          - string
+          - 'null'
+          title: Template ID
+          description: To be filled only if the contract is not the default contract used at office level
+          maxLength: 250
+        custom_contract:
+          type: boolean
+          title: Custom Contract for property
+          description: Do you need a custom contract for this property?
+        security_deposit_charging_rule:
+          $ref: '#/components/schemas/SecurityDepositChargingRuleEnum'
+        security_deposit_charging_method:
+          $ref: '#/components/schemas/SecurityDepositChargingMethodEnum'
+        is_nuki_belongs_pm:
+          type: boolean
+          title: Nuki lock belongs to property manager
+        platforms_that_cover_the_damage_deposit:
+          type: array
+          items:
+            type: integer
+            title: Platforms that cover the Damage Deposit
+          description: We do not create security deposit for bookings from these platforms. We create security deposits for all bookings from other platforms.
+        integrated_lock_belongs_to_pm:
+          type: boolean
+          title: Integrated lock belongs to property manager
+        city_tax_auto:
+          type: boolean
+          title: City tax paid to owner
+          description: If ticked, the city tax will be paid to the owner for each reservation, otherwise it will be paid to the property manager.
+        city_tax_hall_login:
+          type: string
+          maxLength: 250
+        city_tax_hall_password:
+          type: string
+          maxLength: 250
+        license_number_not_required:
+          type: boolean
+          title: Licence number is not required for this property
+        special_event:
+          type:
+          - string
+          - 'null'
+        host_is_exempted:
+          type:
+          - boolean
+          - 'null'
+          title: Owner is exempted
+          description: Local authorities may grant exemptions under certain conditions. This exemption is not synchronised with the channel manager. If a full exemption is granted, please enter "0" as the maximum number of short-term nights per year. If a partial exemption is granted, indicate the approved number of days in this field.
+        city_tax_rules:
+          type: array
+          items:
+            type: integer
+        surface:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        bedrooms:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+          description: Ids of the subrooms that count as bedrooms for this property.
+        bathrooms:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+          description: Ids of the subrooms that count as bathrooms for this property.
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalPhoto'
+          readOnly: true
+        currency_value:
+          allOf:
+          - $ref: '#/components/schemas/CurrencyValueEnum'
+          readOnly: true
+        street:
+          type: string
+        closest_tube_station:
+          type: string
+        building_code_1:
+          type: string
+        building_code_2:
+          type: string
+        floor:
+          type: integer
+        intercom:
+          type:
+          - string
+          - 'null'
+          description: Is there an intercom ? Display intercom name or indication
+        lift_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 20
+        self_checkin:
+          $ref: '#/components/schemas/SelfCheckinEnum'
+        self_checkin_key_location:
+          type:
+          - string
+          - 'null'
+          format: uri
+        extra_guest_information_en:
+          type:
+          - string
+          - 'null'
+          title: Extra information for guest (English)
+          description: Please add in English any extra information you want to advise the guest about. Kindly note that this will be added into guest templates.
+        extra_guest_information_local:
+          type:
+          - string
+          - 'null'
+          title: Extra information for guest (local language)
+          description: Please add in the local language any extra information you want to advise the guest about. Kindly note that this will be added into guest templates.
+        extra_information_internal:
+          type:
+          - string
+          - 'null'
+        house_manual:
+          type:
+          - string
+          - 'null'
+          format: uri
+          title: Property guide
+          description: This manual will be displayed to internal staff and agents upon check-in for better understanding of the property and equipments manual
+        youtube_instructions:
+          type:
+          - string
+          - 'null'
+        house_rules_en:
+          type:
+          - string
+          - 'null'
+          title: Same as house rules in English
+        house_rules_local:
+          type: string
+        extra_bedding_location_en:
+          type: string
+          readOnly: true
+        extra_bedding_location_local:
+          type: string
+          readOnly: true
+        listings:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalListing'
+          readOnly: true
+        listing_photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalPhoto'
+          readOnly: true
+        min_arrival:
+          type: string
+          description: This field is deprecated and will be removed in a near future. Use min_check_in_time instead.
+        max_arrival:
+          type: string
+          description: This field is deprecated and will be removed in a near future. Use max_check_in_time instead.
+        max_checkout:
+          type: string
+          description: This field is deprecated and will be removed in a near future. Use max_check_out_time instead.
+        cleaning_equipment_location:
+          type: string
+          readOnly: true
+        specific_cleaning_instructions:
+          type: string
+        hubspot_deal_id:
+          type: string
+          pattern: \d+
+          maxLength: 250
+        hubspot_deal_value:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        online_management:
+          type: boolean
+          description: This property is managed directly by the owner and not by the property manager (Online Offer/Online Management)
+        premium_class:
+          allOf:
+          - $ref: '#/components/schemas/PremiumClassEnum'
+          title: Class
+        parking_instructions_en:
+          type: string
+        parking_instructions_local:
+          type: string
+        private_parking:
+          type: boolean
+        parking_badge:
+          type: boolean
+          title: Is there a parking badge ?
+        access_badge:
+          type: boolean
+        building_key:
+          type: boolean
+        mailbox_instructions:
+          type: string
+        welcome_basket_description_en:
+          type:
+          - string
+          - 'null'
+          title: Welcome basket description (English)
+        welcome_basket_description_local:
+          type: string
+        total_floors:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        damage_already_reported:
+          type:
+          - string
+          - 'null'
+          description: Fill this field if there is already damage in the property prior to taking over the management
+        average_rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        average_rating_shareable:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        agent_cleaning_packages:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Not relevant to all missions, only used to compute agent earnings under some specific circumstances.
+        booking_deposit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Reservation deposit
+          description: Guest security deposit
+        cancellation_policy_category:
+          allOf:
+          - $ref: '#/components/schemas/CancellationPolicyCategoryEnum'
+          description: 'Cancellation policy
+
+
+            * `flexible` - Flexible
+
+            * `moderate` - Moderate
+
+            * `strict` - Strict
+
+            * `firm` - Firm'
+        min_check_in_time:
+          type:
+          - integer
+          - 'null'
+          maximum: 23
+          minimum: 0
+          title: Minimum arrival time
+        max_check_in_time:
+          type:
+          - integer
+          - 'null'
+          maximum: 24
+          minimum: 0
+          title: Maximum arrival time
+          description: Default time from platform
+        min_check_out_time:
+          type:
+          - integer
+          - 'null'
+        max_check_out_time:
+          type: integer
+        instant_booking_choices:
+          $ref: '#/components/schemas/InstantBookingChoicesEnum'
+        guest_control:
+          $ref: '#/components/schemas/GuestControl'
+        booking_lead_time_in_hours:
+          type: integer
+        turnover_days:
+          $ref: '#/components/schemas/TurnoverDaysEnum'
+        tags:
+          type: array
+          items:
+            type: integer
+          description: List of tag IDs to assign to the rental. Replaces the current set.
+        ical:
+          type: string
+          readOnly: true
+          description: Owner iCal feed URL for the property's calendar.
+        hotel_name:
+          type:
+          - string
+          - 'null'
+        room_type_name:
+          type:
+          - string
+          - 'null'
+        french_hotel_nature_category:
+          oneOf:
+          - $ref: '#/components/schemas/FrenchHotelNatureCategoryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        monthly_long_term_rate:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: Monthly long-term rate (net value for owner)
+        mid_term_cleaning_duration:
+          type:
+          - integer
+          - 'null'
+          description: Mid-term cleaning duration
+        mid_term_security_deposit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: Mid-term security deposit amount
+        airbnb_account:
+          type:
+          - integer
+          - 'null'
+        signed_by:
+          type:
+          - integer
+          - 'null'
+        has_outbound_deal:
+          type: boolean
+        outbound_deal_source:
+          type:
+          - string
+          - 'null'
+        account_manager:
+          type:
+          - integer
+          - 'null'
+          writeOnly: true
+        baby_policy:
+          type:
+          - string
+          - 'null'
+        circuit_breaker_location:
+          type:
+          - string
+          - 'null'
+        water_cut_off_tap_location:
+          type:
+          - string
+          - 'null'
+        toilet_pump:
+          type:
+          - boolean
+          - 'null'
+          writeOnly: true
+        mid_term_default_checkin_agent:
+          type:
+          - integer
+          - 'null'
+        mid_term_default_cleaning_agent:
+          type:
+          - integer
+          - 'null'
+        mid_term_default_checkout_agent:
+          type:
+          - integer
+          - 'null'
+        mid_term_default_extra_agent:
+          type:
+          - integer
+          - 'null'
+        mid_term_house_instructions:
+          type:
+          - string
+          - 'null'
+          format: uri
+        mid_term_management_instructions:
+          type:
+          - string
+          - 'null'
+        mid_term_pre_approval_instructions:
+          type:
+          - string
+          - 'null'
+        mid_term_mailbox_instructions:
+          type:
+          - string
+          - 'null'
+        property_access_self_checkin:
+          type:
+          - string
+          - 'null'
+        self_check_in_receptions:
+          type: array
+          items:
+            type: integer
+        self_check_in_key_deposit_local:
+          type:
+          - string
+          - 'null'
+        self_check_in_key_deposit_en:
+          type:
+          - string
+          - 'null'
+        allow_regular_check_in_at_extra_cost:
+          type:
+          - boolean
+          - 'null'
+        onboarding_assignees:
+          type: array
+          items:
+            type: integer
+        listing_expectations:
+          type: object
+          additionalProperties: {}
+          writeOnly: true
+        existing_airbnb_account_credentials:
+          type:
+          - string
+          - 'null'
+        key_box_available:
+          type:
+          - boolean
+          - 'null'
+        bills_and_services_up_to_date:
+          type:
+          - boolean
+          - 'null'
+        air_conditioning_supplier_details:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        gas_supplier_details:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        du_etisalat_account_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        dewa_account_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        building_legal_status:
+          oneOf:
+          - $ref: '#/components/schemas/BuildingLegalStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        cadastral_reference:
+          type:
+          - string
+          - 'null'
+        padlock_possible:
+          type:
+          - boolean
+          - 'null'
+        smart_locks:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalSmartLock'
+          readOnly: true
+        check_in_fee:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        check_out_fee:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        cleaning_fee_invoiced_to:
+          $ref: '#/components/schemas/CleaningFeeInvoicedToEnum'
+        is_damage_risk:
+          type: boolean
+        is_party_risk:
+          type: boolean
+        no_laundry_with_delivery_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        no_laundry_with_laundry_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        with_laundry_with_laundry_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        with_laundry_with_delivery_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        with_laundry_no_cleaning_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        with_laundry_no_laundry_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        no_laundry_no_cleaning_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        no_laundry_no_laundry_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        hide_airbnb_pre_approvals:
+          type: boolean
+        pre_approval_instructions:
+          type:
+          - string
+          - 'null'
+        mailbox_instructions_bo:
+          type:
+          - string
+          - 'null'
+        enable_automatic_host_to_guest_reviews:
+          type: boolean
+        allow_booking_requests_past_minimum_advance:
+          type: boolean
+        display_exact_location_to_guest:
+          type: boolean
+        checkout_option_types:
+          $ref: '#/components/schemas/RentalCheckoutOptionTypes'
+        invoicing_details:
+          $ref: '#/components/schemas/RentalInvoiceDetails'
+        custom_fields:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+          description: Custom field values set on this rental, keyed by field key. Only returned on detail views.
+    PatchedBlockRentalCalendar:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        blocked_reason:
+          type: string
+        blocked_notes:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

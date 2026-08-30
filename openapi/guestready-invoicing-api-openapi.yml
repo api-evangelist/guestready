@@ -1,0 +1,594 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Invoicing API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: invoicing
+paths:
+  /api/v3/invoicing/:
+    get:
+      operationId: invoicing_list
+      parameters:
+      - in: query
+        name: blocked_reason
+        schema:
+          type: array
+          items:
+            type:
+            - string
+            - 'null'
+        explode: true
+        style: form
+      - in: query
+        name: checkin_date_after
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: checkin_date_before
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: checkout_date_after
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: checkout_date_before
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: created_after
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_before
+        schema:
+          type: string
+          format: date-time
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: modified_after
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: modified_before
+        schema:
+          type: string
+          format: date-time
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: rental_id
+        schema:
+          type: array
+          items:
+            type: string
+            title: Contract number
+        description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        explode: true
+        style: form
+      - in: query
+        name: reservation_type
+        schema:
+          type: string
+      tags:
+      - invoicing
+      security:
+      - oauth2:
+        - reservations:read
+        - guest_registration:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInvoicingReservationList'
+          description: ''
+  /api/v3/invoicing/{id}/:
+    get:
+      operationId: invoicing_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reservation.
+        required: true
+      tags:
+      - invoicing
+      security:
+      - oauth2:
+        - reservations:read
+        - guest_registration:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoicingReservation'
+          description: ''
+components:
+  schemas:
+    ExtraFee:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 256
+      required:
+      - id
+      - name
+    BlankEnum:
+      enum:
+      - ''
+    BlockedReasonEnum:
+      enum:
+      - HOST_STAY
+      - MAINTENANCE
+      - OTHER
+      - PARTIAL_OCCUPANCY
+      - FULL_OCCUPANCY
+      - BLOCKED_BY_HOST
+      - UPSELLING_REQUEST
+      type: string
+      description: '* `HOST_STAY` - Owner stay
+
+        * `MAINTENANCE` - Maintenance
+
+        * `OTHER` - Other
+
+        * `PARTIAL_OCCUPANCY` - Partially occupied
+
+        * `FULL_OCCUPANCY` - Fully occupied
+
+        * `BLOCKED_BY_HOST` - Blocked by owner
+
+        * `UPSELLING_REQUEST` - Upselling request'
+    GuestInvoice:
+      type: object
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          title: Recipient email
+          maxLength: 254
+        country_name:
+          type: string
+          readOnly: true
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 75
+        company:
+          type:
+          - string
+          - 'null'
+          title: Company name
+          maxLength: 255
+        tax_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        address:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+      required:
+      - country_name
+    InvoicingReservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        platform_reservation_id:
+          type: string
+        number:
+          type: string
+        reservation_status:
+          allOf:
+          - $ref: '#/components/schemas/ReservationStatusEnum'
+          readOnly: true
+        source:
+          type: string
+        booked_at:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Timestamp when the booking was placed (UTC, ISO 8601).
+        checkin_date:
+          type: string
+          format: date
+        checkout_date:
+          type: string
+          format: date
+        arrival_time:
+          type: string
+          format: time
+        departure_time:
+          type: string
+          format: time
+        rental_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        city_tax:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        payment_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        property_manager_commission:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        extra_fees:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReservationExtraFee'
+        extra_revenue:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          readOnly: true
+        total_paid_by_guest:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        internal_comment:
+          type: string
+          readOnly: true
+          description: Visible to staff only
+        cleaning_internal_comment:
+          type: string
+          readOnly: true
+          description: Visible to staff only
+        number_of_adults:
+          type: integer
+        number_of_children:
+          type: integer
+        number_of_infants:
+          type: integer
+        number_of_pets:
+          type: integer
+        guest_first_name:
+          type: string
+          readOnly: true
+        guest_last_name:
+          type: string
+          readOnly: true
+        guest_personal_email:
+          type: string
+        guest_phone_number:
+          type: string
+        guest_preferred_language:
+          type: string
+        guest_invoice:
+          allOf:
+          - $ref: '#/components/schemas/GuestInvoice'
+          readOnly: true
+        is_owner:
+          type: boolean
+        guest_registration:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InvoicingGuestRegistration'
+          readOnly: true
+          description: Registered guest details for the stay (e.g. Portugal SEF registration), or null if none.
+        blocked_reason:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/BlockedReasonEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        blocked_notes:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+      required:
+      - arrival_time
+      - blocked_notes
+      - blocked_reason
+      - booked_at
+      - checkin_date
+      - checkout_date
+      - city_tax
+      - cleaning_internal_comment
+      - departure_time
+      - extra_fees
+      - extra_revenue
+      - guest_first_name
+      - guest_invoice
+      - guest_last_name
+      - guest_personal_email
+      - guest_phone_number
+      - guest_preferred_language
+      - guest_registration
+      - id
+      - internal_comment
+      - is_owner
+      - number
+      - number_of_adults
+      - number_of_children
+      - number_of_infants
+      - number_of_pets
+      - payment_fee
+      - platform_cleaning_fee
+      - platform_fee
+      - platform_reservation_id
+      - property_manager_commission
+      - rental_amount
+      - reservation_status
+      - source
+      - total_paid_by_guest
+    NullEnum:
+      enum:
+      - null
+    ReservationStatusEnum:
+      enum:
+      - pending
+      - accepted
+      - cancelled
+      type: string
+      description: '* `pending` - pending
+
+        * `accepted` - accepted
+
+        * `cancelled` - cancelled'
+    PaidToEnum:
+      enum:
+      - HOST
+      - PROPERTY_MANAGER
+      type: string
+      description: '* `HOST` - Owner
+
+        * `PROPERTY_MANAGER` - Property manager'
+    IdTypeEnum:
+      enum:
+      - P
+      - B
+      - O
+      type: string
+      description: '* `` - Select a travel document type
+
+        * `P` - Passport
+
+        * `B` - National ID card
+
+        * `O` - Other'
+    PaginatedInvoicingReservationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicingReservation'
+        limit:
+          type: integer
+          example: 2000
+    InvoicingGuestRegistration:
+      type: object
+      properties:
+        first_name:
+          type:
+          - string
+          - 'null'
+          pattern: ^([a-zA-Z\u00e7\u00c7\u00e3\u00c3\u00e1\u00c1\u00e0\u00c0\u00e9\u00c9\u00ea\u00ca\u00ed\u00cd\u00f5\u00d5\u00f4\u00d4\u00f3\u00d3\u00fa\u00da' ]|-)+$
+          maxLength: 40
+        last_name:
+          type:
+          - string
+          - 'null'
+          pattern: ^([a-zA-Z\u00e7\u00c7\u00e3\u00c3\u00e1\u00c1\u00e0\u00c0\u00e9\u00c9\u00ea\u00ca\u00ed\u00cd\u00f5\u00d5\u00f4\u00d4\u00f3\u00d3\u00fa\u00da' ]|-)+$
+          maxLength: 40
+        date_of_birth:
+          type:
+          - string
+          - 'null'
+          format: date
+        nationality_code:
+          type: string
+          default: ''
+        residence_country_code:
+          type: string
+          default: ''
+        id_type:
+          title: Travel document type
+          oneOf:
+          - $ref: '#/components/schemas/IdTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        id_number:
+          type:
+          - string
+          - 'null'
+          title: Travel document number
+          pattern: ^[a-zA-Z0-9]+$
+          maxLength: 16
+        country_code:
+          type: string
+          default: ''
+        check_in_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        check_out_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        is_primary_guest:
+          type: boolean
+          readOnly: true
+          description: Whether this guest is the primary (first) registered guest.
+      required:
+      - is_primary_guest
+    ReservationExtraFee:
+      type: object
+      properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        paid_to:
+          $ref: '#/components/schemas/PaidToEnum'
+        extra_fee:
+          $ref: '#/components/schemas/ExtraFee'
+        vat_rate:
+          type: number
+          format: double
+          readOnly: true
+      required:
+      - amount
+      - extra_fee
+      - vat_rate
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

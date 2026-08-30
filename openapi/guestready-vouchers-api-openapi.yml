@@ -1,0 +1,340 @@
+openapi: 3.2.0
+info:
+  title: RentalReady Vouchers API
+  version: 1.0.0 (api)
+  description: 'This API enables you to access and update resources from RentalReady (GuestReady PMS)
+
+
+    ### Throttling
+
+
+    Our API supports up to 400 requests per minute
+
+    '
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+tags:
+- name: Vouchers
+paths:
+  /api/v3/vouchers/:
+    get:
+      operationId: vouchers_list
+      description: Retrieve a list of discount vouchers accessible to the current user.
+      summary: List vouchers
+      parameters:
+      - in: query
+        name: antennes
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Office
+        explode: true
+        style: form
+      - in: query
+        name: code
+        schema:
+          type: string
+      - in: query
+        name: description
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: rentals
+        schema:
+          type: array
+          items:
+            type: string
+            title: Contract number
+        description: Property
+        explode: true
+        style: form
+      - in: query
+        name: reservation_platform
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Platform
+        explode: true
+        style: form
+      - in: query
+        name: validity_end_after
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: validity_end_before
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: validity_start_after
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: validity_start_before
+        schema:
+          type: string
+          format: date
+      tags:
+      - Vouchers
+      security:
+      - oauth2:
+        - vouchers:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedVoucherList'
+          description: ''
+  /api/v3/vouchers/{id}/:
+    get:
+      operationId: vouchers_retrieve
+      description: Retrieve a specific voucher by ID.
+      summary: Retrieve voucher
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this voucher.
+        required: true
+      tags:
+      - Vouchers
+      security:
+      - oauth2:
+        - vouchers:read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Voucher'
+          description: ''
+components:
+  schemas:
+    PaginatedVoucherList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Voucher'
+        limit:
+          type: integer
+          example: 50
+    KindEnum:
+      enum:
+      - PERCENTAGE
+      - FIXED
+      type: string
+      description: '* `PERCENTAGE` - Percentage
+
+        * `FIXED` - Fixed amount'
+    Voucher:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+          description: For internal reference
+        value:
+          oneOf:
+          - type: object
+            properties:
+              kind:
+                type: string
+                enum:
+                - PERCENTAGE
+              percentage:
+                type: number
+          - type: object
+            properties:
+              kind:
+                type: string
+                enum:
+                - FIXED
+              amount:
+                type: string
+              currency:
+                type: string
+          readOnly: true
+        rentals:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+          description: Ids of the properties (rentals) the voucher applies to.
+        antennes:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+          description: Ids of the offices the voucher applies to.
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+              - DISABLED
+              - PAST
+              - CURRENT
+            label:
+              type: string
+          readOnly: true
+        created:
+          type: string
+          readOnly: true
+          description: Timestamp when the voucher was created (ISO 8601).
+        validity_start:
+          type: string
+          readOnly: true
+          description: Date from which the voucher is valid (ISO 8601).
+        validity_end:
+          type: string
+          readOnly: true
+          description: Last date on which the voucher is valid (ISO 8601).
+        created_by:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Username of the user who created the voucher, or null.
+        percentage:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+          title: Discount percentage
+        enabled:
+          type: boolean
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/KindEnum'
+          title: Voucher type
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - antennes
+      - code
+      - created
+      - created_by
+      - description
+      - id
+      - kind
+      - rentals
+      - status
+      - validity_end
+      - validity_start
+      - value
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /o/authorize/
+          tokenUrl: /o/token/
+          refreshUrl: /o/token/
+          scopes:
+            read: Read scope
+            write: Write scope
+            amenities:read: Read amenities
+            amenities:write: Create, update and delete amenities
+            photos:write: Create, update and delete photos
+            reservations:read: Read reservations
+            reservations:write: Create, update and cancel reservations
+            reservation_platform:read: Read reservation platform
+            reviews:read: Read reviews
+            reviews:write: Write reviews
+            owners:read: Read owners
+            owners:write: Write owners
+            hosts:read: Read hosts (deprecated)
+            hosts:write: Write hosts (deprecated)
+            offices:read: Read offices
+            property_managers:read: Read property managers
+            onboarding_requests:read: Read onboarding requests
+            listing_requests:read: Read listing requests
+            pricing:read: Read pricing
+            pricing:write: Create, update and delete pricing
+            users:read: Read user data
+            calendar:read: Read calendar
+            calendar:write: Write calendar
+            rentals:read: Read rentals
+            rentals:write: Create, update and delete rentals
+            issues:read: Read issues
+            issues:write: Write issues
+            incidents:read: Read incidents
+            incidents:write: Write incidents
+            missions:read: Read missions
+            missions:write: Write missions
+            agents:read: Read agents
+            smart_schedulers:read: Read smart schedulers
+            smart_schedulers:write: Write smart schedulers
+            neighbourhoods:read: Read neighbourhoods
+            payment_links:read: Read payment links
+            swikly_deposits:read: Read swikly deposits
+            payout_adjustments:read: Read payout adjustments
+            payout_adjustments:write: Write payout adjustments
+            payment_acceptance_transactions:read: Read payment acceptance transactions
+            payment_acceptance_transactions:write: Write payment acceptance transactions
+            accounting_invoice:read: Read accounting invoices
+            accounting_invoice:write: Write accounting invoices
+            guest_registration:read: Read guest registration data
+            conversations:read: Read conversations
+            conversations:write: Write conversations
+            messages:read: Read messages
+            messages:write: Write messages
+            inquiries:read: Read inquiries
+            city_tax_rules:read: Read city tax rules
+            custom_fields:read: Read custom fields
+            custom_fields:write: Write custom fields
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
