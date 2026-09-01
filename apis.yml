@@ -79,7 +79,7 @@ apis:
   humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
   baseURL: https://pms.rentalready.io/api/v3/
   tags:
-  - Amenities
+  - amenities
   tags_raw:
   - amenities
   properties:
