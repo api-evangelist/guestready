@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 11
+edge_count: 15
 edges:
 - tag: daily_prices
   spec_file: guestready-daily-prices-api-openapi.yml
@@ -74,6 +74,16 @@ edges:
     listing attributes, photos, fees, blocking/enable-disable), i.e. lodging product/inventory master
     rather than a reservation or channel wiring. Some ambiguity with inventory allocation given the block
     endpoint, hence not maximal confidence.
+- tag: reviews
+  spec_file: guestready-reviews-api-openapi.yml
+  capability_id: BC-430.50
+  capability_id_l1: BC-430
+  capability_name: Customer Feedback Management
+  confidence: 0.75
+  evidence: 'schemas: GuestReview, GuestReviewCriteria, ReviewReply, ReviewReplyAuthor'
+  reason: Exposes guest reviews with rating criteria and host replies — voice-of-customer / feedback capture,
+    which maps to Customer Feedback Management. Read-only surface limits confidence slightly.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: guest_registration
   spec_file: guestready-guest-registration-api-openapi.yml
   capability_id: BC-4040.60
@@ -92,6 +102,18 @@ edges:
   evidence: rate_rules_create / rate_rules_update ; schema RateRule
   reason: CRUD over rate rules in a rental PMS is definition and adjustment of rate strategy for accommodation
     products, matching Pricing & Rate Strategy Management; could also touch restrictions, hence not higher.
+- tag: Conversations
+  spec_file: guestready-conversations-api-openapi.yml
+  capability_id: BC-430.10
+  capability_id_l1: BC-430
+  capability_name: Customer Inquiry Management
+  confidence: 0.7
+  evidence: GET /api/v3/conversations/ conversations_list List conversations; PATCH .../set_flag/ Set
+    conversation flag — vendor does "guest communication"
+  reason: Conversation threads with flags in a property-management system represent inbound guest contact
+    handling and routing, i.e. customer inquiry/contact management. Some chance it is better read as generic
+    messaging infrastructure.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: descriptions
   spec_file: guestready-descriptions-api-openapi.yml
   capability_id: BC-4000.70
@@ -102,6 +124,27 @@ edges:
     optimisation'''
   reason: CRUD over descriptive listing content for rental properties — authoring of descriptive product
     content. Slightly thin (no imagery/multimedia evidence) so moderate confidence.
+- tag: invoicing
+  spec_file: guestready-invoicing-api-openapi.yml
+  capability_id: BC-200.30
+  capability_id_l1: BC-200
+  capability_name: Accounts Receivable Management
+  confidence: 0.7
+  evidence: 'schemas: ExtraFee, GuestInvoice, InvoicingReservation, ReservationExtraFee, PaidToEnum'
+  reason: The surface exposes guest invoices with reservation charges and extra fees — customer invoicing
+    data, which is Accounts Receivable Management. Read-only exposure keeps confidence moderate.
+  recovered_from: sweep-20260829T005356Z-edges.json
+- tag: owners
+  spec_file: guestready-owners-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.7
+  evidence: 'POST /api/v3/owners/ owners_create; PATCH owners_partial_update; schemas: CreateOwner, PatchedOwner,
+    BankCountryEnum, BankAccountCurrencyEnum, OwnerDefaultLocaleEnum'
+  reason: Full CRUD over property-owner master records including bank/locale attributes — these owners
+    are the vendor's clients, so this is customer master data maintenance rather than a technical object.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: subrooms
   spec_file: guestready-subrooms-api-openapi.yml
   capability_id: BC-4000.10
