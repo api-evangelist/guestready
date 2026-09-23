@@ -8,19 +8,14 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: issues
+- name: Issues
 paths:
   /api/v3/issue_notes/:
     get:
       operationId: issue_notes_list
-      description: List the notes on tickets you have access to. Filter by ticket with ?issue=<id>. Notes are the ticket's internal activity log and are separate from its description (creation_comment).
+      description: List the notes on tickets you have access to. Filter by ticket with ?issue=. Notes are the ticket's internal activity log and are separate from its description (creation_comment).
       summary: List ticket notes
       parameters:
       - name: cursor
@@ -46,7 +41,7 @@ paths:
         schema:
           type: integer
       tags:
-      - issues
+      - Issues
       security:
       - oauth2:
         - issues:read
@@ -62,7 +57,7 @@ paths:
       description: Add a note to a ticket. Notes are append-only and never touch the ticket's own description (creation_comment); the new note is attributed to the calling user.
       summary: Add a ticket note
       tags:
-      - issues
+      - Issues
       requestBody:
         content:
           application/json:
@@ -251,7 +246,7 @@ paths:
         explode: true
         style: form
       tags:
-      - issues
+      - Issues
       security:
       - oauth2:
         - issues:read
@@ -262,6 +257,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedIssueList'
           description: ''
+      summary: Issues list
+      x-summary-source: derived
     post:
       operationId: issues_create
       description: 'Deny a field-agent application the WHOLE resource, reads included.
@@ -271,7 +268,7 @@ paths:
 
         has no business reading the ticket backlog at all.'
       tags:
-      - issues
+      - Issues
       requestBody:
         content:
           application/json:
@@ -294,6 +291,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Issue'
           description: ''
+      summary: Issues create
+      x-summary-source: derived
   /api/v3/issues/{id}/:
     get:
       operationId: issues_retrieve
@@ -311,7 +310,7 @@ paths:
         description: A unique integer value identifying this ticket.
         required: true
       tags:
-      - issues
+      - Issues
       security:
       - oauth2:
         - issues:read
@@ -322,6 +321,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Issue'
           description: ''
+      summary: Issues retrieve
+      x-summary-source: derived
     patch:
       operationId: issues_partial_update
       description: 'Deny a field-agent application the WHOLE resource, reads included.
@@ -338,7 +339,7 @@ paths:
         description: A unique integer value identifying this ticket.
         required: true
       tags:
-      - issues
+      - Issues
       requestBody:
         content:
           application/json:
@@ -360,6 +361,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Issue'
           description: ''
+      summary: Issues partial update
+      x-summary-source: derived
   /api/v3/issues/{id}/close/:
     patch:
       operationId: issues_close_partial_update
@@ -377,7 +380,7 @@ paths:
         description: A unique integer value identifying this ticket.
         required: true
       tags:
-      - issues
+      - Issues
       requestBody:
         content:
           application/json:
@@ -399,6 +402,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Issue'
           description: ''
+      summary: Issues close partial update
+      x-summary-source: derived
   /api/v3/support_user_groups/:
     get:
       operationId: support_user_groups_list
@@ -418,7 +423,7 @@ paths:
         schema:
           type: integer
       tags:
-      - issues
+      - Issues
       security:
       - oauth2:
         - issues:read
@@ -442,7 +447,7 @@ paths:
         description: A unique integer value identifying this staff user group.
         required: true
       tags:
-      - issues
+      - Issues
       security:
       - oauth2:
         - issues:read
@@ -455,23 +460,53 @@ paths:
           description: ''
 components:
   schemas:
-    IssueStatusEnum:
-      enum:
-      - OPEN
-      - ONGOING_RESOLUTION
-      - CLOSED
-      - ON_HOLD
-      - FINANCIAL_REVIEW
-      type: string
-      description: '* `OPEN` - Open
+    IssueNote:
+      type: object
+      description: 'A note on a ticket: the internal, append-only activity log of the ticket.
 
-        * `ONGOING_RESOLUTION` - Ongoing resolution
 
-        * `CLOSED` - Closed
+        The author is server-controlled -- the viewset sets it from the authenticated
 
-        * `ON_HOLD` - On hold
+        caller -- so a client cannot attribute a note to somebody else. ``issue`` IS
 
-        * `FINANCIAL_REVIEW` - Under financial review'
+        writable here (unlike the ticket-nested shape this replaced, where it came
+
+        from the URL), and its write queryset is scoped to the caller''s own tickets,
+
+        same as every writable relation on ``IssueSerializer``.'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        issue:
+          type: integer
+          description: Id of the ticket the note belongs to.
+        note:
+          type: string
+          description: Text of the note to add to the ticket.
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: Id of the user who wrote the note, if still known.
+        created_by_name:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the note was written.
+      required:
+      - created_at
+      - created_by
+      - created_by_name
+      - id
+      - issue
+      - note
     PatchedIssue:
       type: object
       properties:
@@ -616,20 +651,23 @@ components:
         user:
           type: string
           readOnly: true
-    SupportUserGroup:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the support-user group, usually naming a team and the region it covers (for example 'Owner Success France').
-          maxLength: 100
-      required:
-      - id
+    IssueStatusEnum:
+      enum:
+      - OPEN
+      - ONGOING_RESOLUTION
+      - CLOSED
+      - ON_HOLD
+      - FINANCIAL_REVIEW
+      type: string
+      description: '* `OPEN` - Open
+
+        * `ONGOING_RESOLUTION` - Ongoing resolution
+
+        * `CLOSED` - Closed
+
+        * `ON_HOLD` - On hold
+
+        * `FINANCIAL_REVIEW` - Under financial review'
     PaginatedIssueList:
       type: object
       required:
@@ -658,6 +696,20 @@ components:
         limit:
           type: integer
           example: 50
+    PriorityLevelEnum:
+      enum:
+      - LV1_EMERGENCY
+      - LV2_HIGH
+      - LV3_MEDIUM
+      - LV4_LOW
+      type: string
+      description: '* `LV1_EMERGENCY` - Urgent
+
+        * `LV2_HIGH` - High
+
+        * `LV3_MEDIUM` - Mid
+
+        * `LV4_LOW` - Low'
     PaginatedSupportUserGroupList:
       type: object
       required:
@@ -724,20 +776,6 @@ components:
         * `MISSION_INCIDENT_REPORTED` - Reported by agent through mission incident
 
         * `COURTESY_CALL` - Courtesy call'
-    PriorityLevelEnum:
-      enum:
-      - LV1_EMERGENCY
-      - LV2_HIGH
-      - LV3_MEDIUM
-      - LV4_LOW
-      type: string
-      description: '* `LV1_EMERGENCY` - Urgent
-
-        * `LV2_HIGH` - High
-
-        * `LV3_MEDIUM` - Mid
-
-        * `LV4_LOW` - Low'
     PaginatedIssueNoteList:
       type: object
       required:
@@ -767,53 +805,6 @@ components:
           type: integer
           example: 50
           description: Only present when paginating with `limit`/`offset`, not with `cursor`.
-    IssueNote:
-      type: object
-      description: 'A note on a ticket: the internal, append-only activity log of the ticket.
-
-
-        The author is server-controlled -- the viewset sets it from the authenticated
-
-        caller -- so a client cannot attribute a note to somebody else. ``issue`` IS
-
-        writable here (unlike the ticket-nested shape this replaced, where it came
-
-        from the URL), and its write queryset is scoped to the caller''s own tickets,
-
-        same as every writable relation on ``IssueSerializer``.'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        issue:
-          type: integer
-          description: Id of the ticket the note belongs to.
-        note:
-          type: string
-          description: Text of the note to add to the ticket.
-        created_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-          description: Id of the user who wrote the note, if still known.
-        created_by_name:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-          description: When the note was written.
-      required:
-      - created_at
-      - created_by
-      - created_by_name
-      - id
-      - issue
-      - note
     Issue:
       type: object
       properties:
@@ -962,6 +953,20 @@ components:
       - category
       - id
       - user
+    SupportUserGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the support-user group, usually naming a team and the region it covers (for example 'Owner Success France').
+          maxLength: 100
+      required:
+      - id
   securitySchemes:
     basicAuth:
       type: http

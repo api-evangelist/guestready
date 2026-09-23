@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: guest_registration
 paths:
@@ -39,8 +34,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/PortugalRegisteredGuestData'
           description: ''
+      summary: Guest registration retrieve
+      x-summary-source: derived
 components:
   schemas:
+    BlankEnum:
+      enum:
+      - ''
+    NullEnum:
+      enum:
+      - null
+    IdTypeEnum:
+      enum:
+      - P
+      - B
+      - O
+      type: string
+      description: '* `` - Select a travel document type
+
+        * `P` - Passport
+
+        * `B` - National ID card
+
+        * `O` - Other'
     PortugalRegisteredGuestData:
       type: object
       properties:
@@ -129,25 +145,6 @@ components:
       required:
       - is_primary_guest
       - pk
-    BlankEnum:
-      enum:
-      - ''
-    IdTypeEnum:
-      enum:
-      - P
-      - B
-      - O
-      type: string
-      description: '* `` - Select a travel document type
-
-        * `P` - Passport
-
-        * `B` - National ID card
-
-        * `O` - Other'
-    NullEnum:
-      enum:
-      - null
   securitySchemes:
     basicAuth:
       type: http

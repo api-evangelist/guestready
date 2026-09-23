@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: payment_links
+- name: Payment Links
 paths:
   /api/v3/payment_links/:
     get:
@@ -96,7 +91,7 @@ paths:
         explode: true
         style: form
       tags:
-      - payment_links
+      - Payment Links
       security:
       - oauth2:
         - payment_links:read
@@ -107,6 +102,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedPaymentLinkList'
           description: ''
+      summary: Payment links list
+      x-summary-source: derived
   /api/v3/payment_links/{id}/:
     get:
       operationId: payment_links_retrieve
@@ -118,7 +115,7 @@ paths:
         description: A unique integer value identifying this payment link.
         required: true
       tags:
-      - payment_links
+      - Payment Links
       security:
       - oauth2:
         - payment_links:read
@@ -129,6 +126,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaymentLink'
           description: ''
+      summary: Payment links retrieve
+      x-summary-source: derived
   /api/v3/payment_links/{id}/invoice_request/:
     get:
       operationId: payment_links_invoice_request_retrieve
@@ -141,7 +140,7 @@ paths:
         description: A unique integer value identifying this payment link.
         required: true
       tags:
-      - payment_links
+      - Payment Links
       security:
       - oauth2:
         - payment_links:read
@@ -182,56 +181,30 @@ paths:
                     vat_rate: number
                     quantity: number
           description: ''
+      summary: Payment links invoice request retrieve
+      x-summary-source: derived
 components:
   schemas:
-    PaginatedPaymentLinkList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentLink'
-        limit:
-          type: integer
-          example: 100
-    PaymentLinkCategoryEnum:
+    Status1a4Enum:
       enum:
-      - EXTRA_SERVICES
-      - DAMAGES
-      - RESERVATION_PAYMENT
-      - CITY_TAX
-      - SECURITY_DEPOSIT
-      - OTHER
+      - AUTHORIZED
+      - NOT_PAID
+      - PAID
+      - FAILED
+      - VOIDED
+      - PROCESSED
       type: string
-      description: '* `EXTRA_SERVICES` - Extra services
+      description: '* `AUTHORIZED` - Authorized
 
-        * `DAMAGES` - Damages
+        * `NOT_PAID` - Not paid
 
-        * `RESERVATION_PAYMENT` - Reservation payment
+        * `PAID` - Paid
 
-        * `CITY_TAX` - City tax
+        * `FAILED` - Failed
 
-        * `SECURITY_DEPOSIT` - Security deposit
+        * `VOIDED` - Voided
 
-        * `OTHER` - Other'
+        * `PROCESSED` - Processed'
     PaymentLinkCurrencyEnum:
       enum:
       - EUR
@@ -252,6 +225,26 @@ components:
         * `CHF` - CHF
 
         * `SAR` - SAR'
+    PaymentLinkCategoryEnum:
+      enum:
+      - EXTRA_SERVICES
+      - DAMAGES
+      - RESERVATION_PAYMENT
+      - CITY_TAX
+      - SECURITY_DEPOSIT
+      - OTHER
+      type: string
+      description: '* `EXTRA_SERVICES` - Extra services
+
+        * `DAMAGES` - Damages
+
+        * `RESERVATION_PAYMENT` - Reservation payment
+
+        * `CITY_TAX` - City tax
+
+        * `SECURITY_DEPOSIT` - Security deposit
+
+        * `OTHER` - Other'
     PaymentLink:
       type: object
       properties:
@@ -366,26 +359,34 @@ components:
       - reservation
       - short_uuid
       - uuid
-    Status1a4Enum:
-      enum:
-      - AUTHORIZED
-      - NOT_PAID
-      - PAID
-      - FAILED
-      - VOIDED
-      - PROCESSED
-      type: string
-      description: '* `AUTHORIZED` - Authorized
-
-        * `NOT_PAID` - Not paid
-
-        * `PAID` - Paid
-
-        * `FAILED` - Failed
-
-        * `VOIDED` - Voided
-
-        * `PROCESSED` - Processed'
+    PaginatedPaymentLinkList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentLink'
+        limit:
+          type: integer
+          example: 100
   securitySchemes:
     basicAuth:
       type: http

@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: issue_files
 paths:
@@ -51,6 +46,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedIssueFileList'
           description: ''
+      summary: Issue files list
+      x-summary-source: derived
     post:
       operationId: issue_files_create
       description: 'Deny a field-agent application the WHOLE resource, reads included.
@@ -83,6 +80,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/IssueFile'
           description: ''
+      summary: Issue files create
+      x-summary-source: derived
   /api/v3/issue_files/{id}/:
     get:
       operationId: issue_files_retrieve
@@ -111,6 +110,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/IssueFile'
           description: ''
+      summary: Issue files retrieve
+      x-summary-source: derived
     patch:
       operationId: issue_files_partial_update
       description: 'Deny a field-agent application the WHOLE resource, reads included.
@@ -149,6 +150,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/IssueFile'
           description: ''
+      summary: Issue files partial update
+      x-summary-source: derived
     delete:
       operationId: issue_files_destroy
       description: 'Deny a field-agent application the WHOLE resource, reads included.
@@ -172,28 +175,38 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Issue files destroy
+      x-summary-source: derived
 components:
   schemas:
-    TagEnum:
-      enum:
-      - BEFORE
-      - DURING
-      - AFTER
-      - QUOTE
-      - INVOICE
-      - REPORT
-      type: string
-      description: '* `BEFORE` - Before the incident
-
-        * `DURING` - During the incident
-
-        * `AFTER` - After the incident
-
-        * `QUOTE` - Quote (cost estimation)
-
-        * `INVOICE` - Invoice
-
-        * `REPORT` - Report'
+    PaginatedIssueFileList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssueFile'
+        limit:
+          type: integer
+          example: 50
     BlankEnum:
       enum:
       - ''
@@ -231,37 +244,6 @@ components:
       - id
       - url
       - user
-    NullEnum:
-      enum:
-      - null
-    PaginatedIssueFileList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssueFile'
-        limit:
-          type: integer
-          example: 50
     PatchedIssueFile:
       type: object
       properties:
@@ -291,6 +273,29 @@ components:
         user:
           type: string
           readOnly: true
+    NullEnum:
+      enum:
+      - null
+    TagEnum:
+      enum:
+      - BEFORE
+      - DURING
+      - AFTER
+      - QUOTE
+      - INVOICE
+      - REPORT
+      type: string
+      description: '* `BEFORE` - Before the incident
+
+        * `DURING` - During the incident
+
+        * `AFTER` - After the incident
+
+        * `QUOTE` - Quote (cost estimation)
+
+        * `INVOICE` - Invoice
+
+        * `REPORT` - Report'
   securitySchemes:
     basicAuth:
       type: http

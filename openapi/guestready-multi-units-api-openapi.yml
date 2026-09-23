@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: multi_units
 paths:
@@ -82,6 +77,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedMultiUnitList'
           description: ''
+      summary: Multi units list
+      x-summary-source: derived
     post:
       operationId: multi_units_create
       description: Create a multi-unit of type parent/child
@@ -109,6 +106,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/MultiUnit'
           description: ''
+      summary: Multi units create
+      x-summary-source: derived
   /api/v3/multi_units/{id}/:
     get:
       operationId: multi_units_retrieve
@@ -131,6 +130,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/MultiUnit'
           description: ''
+      summary: Multi units retrieve
+      x-summary-source: derived
     put:
       operationId: multi_units_update
       description: Update a multi-unit
@@ -164,6 +165,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/MultiUnit'
           description: ''
+      summary: Multi units update
+      x-summary-source: derived
     patch:
       operationId: multi_units_partial_update
       description: Partially update a multi-unit
@@ -197,6 +200,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/MultiUnit'
           description: ''
+      summary: Multi units partial update
+      x-summary-source: derived
     delete:
       operationId: multi_units_destroy
       description: Delete a multi-unit. The deactivation runs asynchronously.
@@ -215,6 +220,8 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Multi units destroy
+      x-summary-source: derived
 components:
   schemas:
     MultiUnitTypeEnum:
@@ -225,34 +232,17 @@ components:
       description: '* `PARENT_CHILD` - PARENT_CHILD
 
         * `HOTEL` - HOTEL'
-    PaginatedMultiUnitList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultiUnit'
-        limit:
-          type: integer
-          example: 50
+    MultiUnitStatusEnum:
+      enum:
+      - INACTIVE
+      - ACTIVE
+      - ONBOARDING
+      type: string
+      description: '* `INACTIVE` - INACTIVE
+
+        * `ACTIVE` - ACTIVE
+
+        * `ONBOARDING` - ONBOARDING'
     MultiUnit:
       type: object
       properties:
@@ -338,17 +328,34 @@ components:
       - rentals
       - status
       - type
-    MultiUnitStatusEnum:
-      enum:
-      - INACTIVE
-      - ACTIVE
-      - ONBOARDING
-      type: string
-      description: '* `INACTIVE` - INACTIVE
-
-        * `ACTIVE` - ACTIVE
-
-        * `ONBOARDING` - ONBOARDING'
+    PaginatedMultiUnitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiUnit'
+        limit:
+          type: integer
+          example: 50
     PatchedUpdateMultiUnit:
       type: object
       description: 'Partially update a parent/child multi-unit.

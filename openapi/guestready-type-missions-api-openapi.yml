@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: type_missions
 paths:
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedTypeMissionList'
           description: ''
+      summary: Type missions list
+      x-summary-source: derived
   /api/v3/type_missions/{id}/:
     get:
       operationId: type_missions_retrieve
@@ -67,6 +64,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/TypeMission'
           description: ''
+      summary: Type missions retrieve
+      x-summary-source: derived
 components:
   schemas:
     TypeMission:

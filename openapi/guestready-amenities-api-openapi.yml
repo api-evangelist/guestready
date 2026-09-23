@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: amenities
 paths:
@@ -46,6 +41,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedBookingsyncAmenityList'
           description: ''
+      summary: Amenities list
+      x-summary-source: derived
   /api/v3/amenities/{id}/:
     get:
       operationId: amenities_retrieve
@@ -69,27 +66,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingsyncAmenity'
           description: ''
+      summary: Amenities retrieve
+      x-summary-source: derived
 components:
   schemas:
-    BookingsyncAmenity:
+    AmenityMetadata:
       type: object
       properties:
         key:
           type: string
+          description: Stable identifier for this metadata field.
           maxLength: 100
-        title:
-          type:
-          - string
-          - 'null'
+        type:
+          type: string
+          description: 'Value type. One of: integer, boolean, choice, choices, time, amenity_price, schedule, month_ranges.'
           maxLength: 100
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/AmenityMetadata'
+        options:
+          type: string
           readOnly: true
+          description: Allowed values for choice/choices types. Empty for other types. UNKNOWN_* sentinels are excluded.
+        order:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: 0
+          description: Display order within the amenity's metadata fields.
       required:
       - key
-      - metadata
+      - options
+      - type
     PaginatedBookingsyncAmenityList:
       type: object
       required:
@@ -118,32 +124,25 @@ components:
         limit:
           type: integer
           example: 50
-    AmenityMetadata:
+    BookingsyncAmenity:
       type: object
       properties:
         key:
           type: string
-          description: Stable identifier for this metadata field.
           maxLength: 100
-        type:
-          type: string
-          description: 'Value type. One of: integer, boolean, choice, choices, time, amenity_price, schedule, month_ranges.'
-          maxLength: 100
-        options:
-          type: string
-          readOnly: true
-          description: Allowed values for choice/choices types. Empty for other types. UNKNOWN_* sentinels are excluded.
-        order:
+        title:
           type:
-          - integer
+          - string
           - 'null'
-          maximum: 2147483647
-          minimum: 0
-          description: Display order within the amenity's metadata fields.
+          maxLength: 100
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/AmenityMetadata'
+          readOnly: true
       required:
       - key
-      - options
-      - type
+      - metadata
   securitySchemes:
     basicAuth:
       type: http

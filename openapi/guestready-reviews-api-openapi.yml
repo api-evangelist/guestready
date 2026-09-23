@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: reviews
+- name: Reviews
 paths:
   /api/v3/reviews/:
     get:
@@ -69,7 +64,7 @@ paths:
         explode: true
         style: form
       tags:
-      - reviews
+      - Reviews
       security:
       - oauth2:
         - reviews:read
@@ -80,6 +75,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedGuestReviewList'
           description: ''
+      summary: Reviews list
+      x-summary-source: derived
   /api/v3/reviews/{id}/:
     get:
       operationId: reviews_retrieve
@@ -92,7 +89,7 @@ paths:
         description: A unique integer value identifying this guest review.
         required: true
       tags:
-      - reviews
+      - Reviews
       security:
       - oauth2:
         - reviews:read
@@ -103,24 +100,71 @@ paths:
               schema:
                 $ref: '#/components/schemas/GuestReview'
           description: ''
+      summary: Reviews retrieve
+      x-summary-source: derived
 components:
   schemas:
-    ReviewReplyAuthor:
+    GuestReviewCriteria:
       type: object
       properties:
-        username:
+        name:
           type: string
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-          pattern: ^[\w.@+-]+$
-          maxLength: 150
-        first_name:
+          maxLength: 250
+        rating:
           type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        comment:
+          type:
+          - string
+          - 'null'
       required:
-      - username
+      - name
+      - rating
+    PaginatedGuestReviewList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuestReview'
+        limit:
+          type: integer
+          example: 200
+    ReviewReply:
+      type: object
+      properties:
+        message:
+          type: string
+        submitted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        author:
+          allOf:
+          - $ref: '#/components/schemas/ReviewReplyAuthor'
+      required:
+      - author
+      - message
     GuestReview:
       type: object
       properties:
@@ -193,67 +237,22 @@ components:
       - replies
       - reservation_id
       - reservation_platform_name
-    GuestReviewCriteria:
+    ReviewReplyAuthor:
       type: object
       properties:
-        name:
+        username:
           type: string
-          maxLength: 250
-        rating:
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
           type: string
-          format: decimal
-          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
-        comment:
-          type:
-          - string
-          - 'null'
-      required:
-      - name
-      - rating
-    ReviewReply:
-      type: object
-      properties:
-        message:
+          maxLength: 150
+        last_name:
           type: string
-        submitted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        author:
-          allOf:
-          - $ref: '#/components/schemas/ReviewReplyAuthor'
+          maxLength: 150
       required:
-      - author
-      - message
-    PaginatedGuestReviewList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/GuestReview'
-        limit:
-          type: integer
-          example: 200
+      - username
   securitySchemes:
     basicAuth:
       type: http

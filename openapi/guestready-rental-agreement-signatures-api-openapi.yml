@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: rental_agreement_signatures
 paths:
@@ -67,6 +62,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedRentalAgreementSignatureList'
           description: ''
+      summary: Rental agreement signatures list
+      x-summary-source: derived
     post:
       operationId: rental_agreement_signatures_create
       description: 'Base viewset for records linked to a reservation and scoped to the
@@ -107,6 +104,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/RentalAgreementSignature'
           description: ''
+      summary: Rental agreement signatures create
+      x-summary-source: derived
   /api/v3/rental_agreement_signatures/{id}/:
     get:
       operationId: rental_agreement_signatures_retrieve
@@ -143,6 +142,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/RentalAgreementSignature'
           description: ''
+      summary: Rental agreement signatures retrieve
+      x-summary-source: derived
     patch:
       operationId: rental_agreement_signatures_partial_update
       description: 'Base viewset for records linked to a reservation and scoped to the
@@ -189,6 +190,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/RentalAgreementSignature'
           description: ''
+      summary: Rental agreement signatures partial update
+      x-summary-source: derived
     delete:
       operationId: rental_agreement_signatures_destroy
       description: 'Base viewset for records linked to a reservation and scoped to the
@@ -220,36 +223,10 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Rental agreement signatures destroy
+      x-summary-source: derived
 components:
   schemas:
-    PaginatedRentalAgreementSignatureList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/RentalAgreementSignature'
-        limit:
-          type: integer
-          example: 50
     PatchedRentalAgreementSignature:
       type: object
       description: 'Scopes the writable ``reservation`` field to the caller''s rentals.
@@ -300,6 +277,34 @@ components:
           type: string
           format: date-time
           readOnly: true
+    PaginatedRentalAgreementSignatureList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalAgreementSignature'
+        limit:
+          type: integer
+          example: 50
     RentalAgreementSignature:
       type: object
       description: 'Scopes the writable ``reservation`` field to the caller''s rentals.

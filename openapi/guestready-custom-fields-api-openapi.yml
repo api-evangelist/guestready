@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: custom_fields
+- name: Custom Fields
 paths:
   /api/v3/custom_fields/:
     get:
@@ -34,7 +29,7 @@ paths:
         schema:
           type: integer
       tags:
-      - custom_fields
+      - Custom Fields
       security:
       - oauth2:
         - custom_fields:read
@@ -45,10 +40,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedCustomFieldDefinitionList'
           description: ''
+      summary: Custom fields list
+      x-summary-source: derived
     post:
       operationId: custom_fields_create
       tags:
-      - custom_fields
+      - Custom Fields
       requestBody:
         content:
           application/json:
@@ -71,6 +68,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomFieldDefinition'
           description: ''
+      summary: Custom fields create
+      x-summary-source: derived
   /api/v3/custom_fields/{id}/:
     get:
       operationId: custom_fields_retrieve
@@ -82,7 +81,7 @@ paths:
         description: A unique integer value identifying this custom field definition.
         required: true
       tags:
-      - custom_fields
+      - Custom Fields
       security:
       - oauth2:
         - custom_fields:read
@@ -93,6 +92,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomFieldDefinition'
           description: ''
+      summary: Custom fields retrieve
+      x-summary-source: derived
     put:
       operationId: custom_fields_update
       parameters:
@@ -103,7 +104,7 @@ paths:
         description: A unique integer value identifying this custom field definition.
         required: true
       tags:
-      - custom_fields
+      - Custom Fields
       requestBody:
         content:
           application/json:
@@ -126,6 +127,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomFieldDefinition'
           description: ''
+      summary: Custom fields update
+      x-summary-source: derived
     patch:
       operationId: custom_fields_partial_update
       parameters:
@@ -136,7 +139,7 @@ paths:
         description: A unique integer value identifying this custom field definition.
         required: true
       tags:
-      - custom_fields
+      - Custom Fields
       requestBody:
         content:
           application/json:
@@ -158,6 +161,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomFieldDefinition'
           description: ''
+      summary: Custom fields partial update
+      x-summary-source: derived
     delete:
       operationId: custom_fields_destroy
       parameters:
@@ -168,13 +173,15 @@ paths:
         description: A unique integer value identifying this custom field definition.
         required: true
       tags:
-      - custom_fields
+      - Custom Fields
       security:
       - oauth2:
         - custom_fields:write
       responses:
         '204':
           description: No response body
+      summary: Custom fields destroy
+      x-summary-source: derived
   /api/v3/custom_fields/{id}/search/:
     get:
       operationId: custom_fields_search_retrieve
@@ -204,7 +211,7 @@ paths:
           type: string
         description: The value to search for. If omitted, returns all objects that have any value set for this custom field.
       tags:
-      - custom_fields
+      - Custom Fields
       security:
       - oauth2:
         - custom_fields:read
@@ -215,8 +222,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomFieldSearchResponse'
           description: ''
+      summary: Custom fields search retrieve
+      x-summary-source: derived
 components:
   schemas:
+    EntityTypeEnum:
+      type: string
+      enum:
+      - reservation
+      - rental
     PatchedCustomFieldDefinition:
       type: object
       properties:
@@ -247,6 +261,19 @@ components:
           type: string
           format: date-time
           readOnly: true
+    CustomFieldSearchResponse:
+      type: object
+      properties:
+        entity_type:
+          $ref: '#/components/schemas/EntityTypeEnum'
+        results:
+          type: array
+          items:
+            type: string
+          description: List of object IDs matching the search criteria.
+      required:
+      - entity_type
+      - results
     PaginatedCustomFieldDefinitionList:
       type: object
       required:
@@ -275,11 +302,23 @@ components:
         limit:
           type: integer
           example: 100
-    EntityTypeEnum:
-      type: string
+    FieldTypeEnum:
       enum:
-      - reservation
-      - rental
+      - text
+      - number
+      - boolean
+      - date
+      - select
+      type: string
+      description: '* `text` - Text
+
+        * `number` - Number
+
+        * `boolean` - Boolean
+
+        * `date` - Date
+
+        * `select` - Select'
     CustomFieldDefinition:
       type: object
       properties:
@@ -318,36 +357,6 @@ components:
       - key
       - label
       - modified
-    CustomFieldSearchResponse:
-      type: object
-      properties:
-        entity_type:
-          $ref: '#/components/schemas/EntityTypeEnum'
-        results:
-          type: array
-          items:
-            type: string
-          description: List of object IDs matching the search criteria.
-      required:
-      - entity_type
-      - results
-    FieldTypeEnum:
-      enum:
-      - text
-      - number
-      - boolean
-      - date
-      - select
-      type: string
-      description: '* `text` - Text
-
-        * `number` - Number
-
-        * `boolean` - Boolean
-
-        * `date` - Date
-
-        * `select` - Select'
   securitySchemes:
     basicAuth:
       type: http

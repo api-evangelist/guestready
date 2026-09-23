@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: subroom_types
 paths:
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedSubroomTypeList'
           description: ''
+      summary: Subroom types list
+      x-summary-source: derived
   /api/v3/subroom_types/{id}/:
     get:
       operationId: subroom_types_retrieve
@@ -67,8 +64,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/SubroomType'
           description: ''
+      summary: Subroom types retrieve
+      x-summary-source: derived
 components:
   schemas:
+    SubroomType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Room type code, e.g. "BEDROOM", "BATHROOM", "LIVING_ROOM".
+          maxLength: 255
+      required:
+      - id
+      - name
     PaginatedSubroomTypeList:
       type: object
       required:
@@ -97,19 +109,6 @@ components:
         limit:
           type: integer
           example: 50
-    SubroomType:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          description: Room type code, e.g. "BEDROOM", "BATHROOM", "LIVING_ROOM".
-          maxLength: 255
-      required:
-      - id
-      - name
   securitySchemes:
     basicAuth:
       type: http

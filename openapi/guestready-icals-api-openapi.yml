@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: icals
 paths:
@@ -79,6 +74,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedIcalSyncList'
           description: ''
+      summary: Icals list
+      x-summary-source: derived
     post:
       operationId: icals_create
       tags:
@@ -105,6 +102,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/IcalSync'
           description: ''
+      summary: Icals create
+      x-summary-source: derived
   /api/v3/icals/{id}/:
     get:
       operationId: icals_retrieve
@@ -127,6 +126,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/IcalSync'
           description: ''
+      summary: Icals retrieve
+      x-summary-source: derived
     put:
       operationId: icals_update
       parameters:
@@ -160,6 +161,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UpdateIcalSync'
           description: ''
+      summary: Icals update
+      x-summary-source: derived
     patch:
       operationId: icals_partial_update
       parameters:
@@ -192,6 +195,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UpdateIcalSync'
           description: ''
+      summary: Icals partial update
+      x-summary-source: derived
     delete:
       operationId: icals_destroy
       parameters:
@@ -209,6 +214,8 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Icals destroy
+      x-summary-source: derived
 components:
   schemas:
     PatchedUpdateIcalSync:
@@ -273,7 +280,7 @@ components:
           type: string
           format: date-time
           readOnly: true
-    IcalSync:
+    UpdateIcalSync:
       type: object
       properties:
         id:
@@ -283,11 +290,13 @@ components:
           type: string
           title: Contract number
           description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+          readOnly: true
         rental_name:
           type: string
           readOnly: true
         platform_id:
           type: integer
+          readOnly: true
         platform_name:
           type: string
           readOnly: true
@@ -345,7 +354,7 @@ components:
       - platform_name
       - rental_id
       - rental_name
-    UpdateIcalSync:
+    IcalSync:
       type: object
       properties:
         id:
@@ -355,13 +364,11 @@ components:
           type: string
           title: Contract number
           description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-          readOnly: true
         rental_name:
           type: string
           readOnly: true
         platform_id:
           type: integer
-          readOnly: true
         platform_name:
           type: string
           readOnly: true

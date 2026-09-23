@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: rental_platform_settings
 paths:
@@ -55,6 +50,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedRentalPlatformSettingsList'
           description: ''
+      summary: Rental platform settings list
+      x-summary-source: derived
   /api/v3/rental_platform_settings/{id}/:
     get:
       operationId: rental_platform_settings_retrieve
@@ -77,6 +74,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/RentalPlatformSettings'
           description: ''
+      summary: Rental platform settings retrieve
+      x-summary-source: derived
     put:
       operationId: rental_platform_settings_update
       parameters:
@@ -109,6 +108,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/RentalPlatformSettings'
           description: ''
+      summary: Rental platform settings update
+      x-summary-source: derived
     patch:
       operationId: rental_platform_settings_partial_update
       parameters:
@@ -141,8 +142,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/RentalPlatformSettings'
           description: ''
+      summary: Rental platform settings partial update
+      x-summary-source: derived
 components:
   schemas:
+    PatchedRentalPlatformSettings:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+          readOnly: true
+        platform:
+          type: integer
+          readOnly: true
+        platform_name:
+          type: string
+          readOnly: true
+        markup:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
     PaginatedRentalPlatformSettingsList:
       type: object
       required:
@@ -171,27 +195,6 @@ components:
         limit:
           type: integer
           example: 50
-    PatchedRentalPlatformSettings:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-          readOnly: true
-        platform:
-          type: integer
-          readOnly: true
-        platform_name:
-          type: string
-          readOnly: true
-        markup:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
     RentalPlatformSettings:
       type: object
       properties:

@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: issue_categories
 paths:
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedIssueCategoryList'
           description: ''
+      summary: Issue categories list
+      x-summary-source: derived
   /api/v3/issue_categories/{id}/:
     get:
       operationId: issue_categories_retrieve
@@ -67,36 +64,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/IssueCategory'
           description: ''
+      summary: Issue categories retrieve
+      x-summary-source: derived
 components:
   schemas:
-    PaginatedIssueCategoryList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssueCategory'
-        limit:
-          type: integer
-          example: 50
     IssueCategory:
       type: object
       properties:
@@ -125,6 +96,34 @@ components:
       - id
       - name
       - user
+    PaginatedIssueCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssueCategory'
+        limit:
+          type: integer
+          example: 50
   securitySchemes:
     basicAuth:
       type: http

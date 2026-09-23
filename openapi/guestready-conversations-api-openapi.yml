@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: Conversations
 paths:
@@ -238,34 +233,17 @@ paths:
           description: ''
 components:
   schemas:
-    PaginatedConversationFlagList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConversationFlag'
-        limit:
-          type: integer
-          example: 50
+    StatusFa3Enum:
+      enum:
+      - merged
+      - opened
+      - closed
+      type: string
+      description: '* `merged` - Merged
+
+        * `opened` - Opened
+
+        * `closed` - Closed'
     Conversation:
       type: object
       properties:
@@ -378,17 +356,92 @@ components:
       - reservation_ids
       - snooze_until
       - status
-    StatusFa3Enum:
-      enum:
-      - merged
-      - opened
-      - closed
-      type: string
-      description: '* `merged` - Merged
+    PaginatedConversationFlagList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConversationFlag'
+        limit:
+          type: integer
+          example: 50
+    ConversationCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusFa3Enum'
+        rental_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+        reservation_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+        default_channel:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+      required:
+      - id
+    ConversationFlag:
+      type: object
+      description: 'A triage flag, named AS THE CALLER''S PROPERTY MANAGER SEES IT.
 
-        * `opened` - Opened
 
-        * `closed` - Closed'
+        The rows themselves are global reference data (every tenant flags against
+
+        the same handful of flags), but the ``name`` is per-property-manager:
+
+        ``PropertyManagerConversationFlag`` renames a flag for one tenant, and that
+
+        rename is what the mailbox shows and what an operations lead says. So ``name``
+
+        is resolved the same way here as on ``ConversationSerializer.flag_name`` --
+
+        the two must agree, or "the Pink queue" resolves to a different id depending
+
+        on which endpoint answered.'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        class_name:
+          type: string
+          readOnly: true
+          description: Colour of the flag (for example 'pink', 'green'). Stable across renames, unlike name.
+      required:
+      - class_name
+      - id
+      - name
     PatchedSetConversationFlag:
       type: object
       description: 'Write serializer for the ``set_flag`` action: one field, no silent no-op.
@@ -425,64 +478,6 @@ components:
           - integer
           - 'null'
           description: Id of the triage flag to put on the conversation, or null to remove the flag. List the ids with the conversation_flags resource.
-    ConversationFlag:
-      type: object
-      description: 'A triage flag, named AS THE CALLER''S PROPERTY MANAGER SEES IT.
-
-
-        The rows themselves are global reference data (every tenant flags against
-
-        the same handful of flags), but the ``name`` is per-property-manager:
-
-        ``PropertyManagerConversationFlag`` renames a flag for one tenant, and that
-
-        rename is what the mailbox shows and what an operations lead says. So ``name``
-
-        is resolved the same way here as on ``ConversationSerializer.flag_name`` --
-
-        the two must agree, or "the Pink queue" resolves to a different id depending
-
-        on which endpoint answered.'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          readOnly: true
-        class_name:
-          type: string
-          readOnly: true
-          description: Colour of the flag (for example 'pink', 'green'). Stable across renames, unlike name.
-      required:
-      - class_name
-      - id
-      - name
-    ConversationCreate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/StatusFa3Enum'
-        rental_ids:
-          type: array
-          items:
-            type: integer
-          writeOnly: true
-        reservation_ids:
-          type: array
-          items:
-            type: integer
-          writeOnly: true
-        default_channel:
-          type:
-          - string
-          - 'null'
-          maxLength: 250
-      required:
-      - id
     PaginatedConversationList:
       type: object
       required:

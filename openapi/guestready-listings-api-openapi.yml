@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: listings
+- name: Listings
 paths:
   /api/v3/listings/:
     get:
@@ -34,7 +29,7 @@ paths:
         schema:
           type: integer
       tags:
-      - listings
+      - Listings
       security:
       - oauth2:
         - rentals:read
@@ -45,10 +40,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedListingList'
           description: ''
+      summary: Listings list
+      x-summary-source: derived
     post:
       operationId: listings_create
       tags:
-      - listings
+      - Listings
       requestBody:
         content:
           application/json:
@@ -71,6 +68,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateListing'
           description: ''
+      summary: Listings create
+      x-summary-source: derived
   /api/v3/listings/{id}/:
     get:
       operationId: listings_retrieve
@@ -81,7 +80,7 @@ paths:
           type: string
         required: true
       tags:
-      - listings
+      - Listings
       security:
       - oauth2:
         - rentals:read
@@ -92,6 +91,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Listing'
           description: ''
+      summary: Listings retrieve
+      x-summary-source: derived
   /api/v3/listings/{id}/disable/:
     post:
       operationId: listings_disable_create
@@ -102,7 +103,7 @@ paths:
           type: string
         required: true
       tags:
-      - listings
+      - Listings
       requestBody:
         content:
           application/json:
@@ -124,6 +125,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Listing'
           description: ''
+      summary: Listings disable create
+      x-summary-source: derived
   /api/v3/listings/{id}/enable/:
     post:
       operationId: listings_enable_create
@@ -134,7 +137,7 @@ paths:
           type: string
         required: true
       tags:
-      - listings
+      - Listings
       requestBody:
         content:
           application/json:
@@ -156,6 +159,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Listing'
           description: ''
+      summary: Listings enable create
+      x-summary-source: derived
 components:
   schemas:
     Listing:
@@ -221,18 +226,6 @@ components:
       - reservation_platform
       - title
       - url
-    ReservationPlatformBrief:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 50
-      required:
-      - id
-      - name
     CreateListing:
       type: object
       properties:
@@ -285,6 +278,18 @@ components:
       - id
       - rental
       - reservation_platform
+    ReservationPlatformBrief:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - id
+      - name
     PaginatedListingList:
       type: object
       required:

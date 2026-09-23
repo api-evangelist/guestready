@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: bathrooms
 paths:
@@ -50,6 +45,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedBathroomList'
           description: ''
+      summary: Bathrooms list
+      x-summary-source: derived
     post:
       operationId: bathrooms_create
       parameters:
@@ -82,6 +79,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bathroom'
           description: ''
+      summary: Bathrooms create
+      x-summary-source: derived
   /api/v3/bathrooms/{id}/:
     get:
       operationId: bathrooms_retrieve
@@ -109,6 +108,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bathroom'
           description: ''
+      summary: Bathrooms retrieve
+      x-summary-source: derived
     put:
       operationId: bathrooms_update
       parameters:
@@ -147,6 +148,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bathroom'
           description: ''
+      summary: Bathrooms update
+      x-summary-source: derived
     patch:
       operationId: bathrooms_partial_update
       parameters:
@@ -184,6 +187,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bathroom'
           description: ''
+      summary: Bathrooms partial update
+      x-summary-source: derived
     delete:
       operationId: bathrooms_destroy
       parameters:
@@ -206,6 +211,8 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Bathrooms destroy
+      x-summary-source: derived
 components:
   schemas:
     PatchedBathroom:
@@ -248,6 +255,34 @@ components:
         toilet:
           type: boolean
           default: false
+    PaginatedBathroomList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bathroom'
+        limit:
+          type: integer
+          example: 50
     Bathroom:
       type: object
       properties:
@@ -291,34 +326,6 @@ components:
       required:
       - id
       - rental_id
-    PaginatedBathroomList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bathroom'
-        limit:
-          type: integer
-          example: 50
   securitySchemes:
     basicAuth:
       type: http

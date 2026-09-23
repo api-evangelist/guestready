@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: owners
+- name: Owners
 paths:
   /api/v3/owners/:
     get:
@@ -38,7 +33,7 @@ paths:
         schema:
           type: integer
       tags:
-      - owners
+      - Owners
       security:
       - oauth2:
         - owners:read
@@ -51,11 +46,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedOwnerList'
           description: ''
+      summary: Owners list
+      x-summary-source: derived
     post:
       operationId: owners_create
       description: Create an owner
       tags:
-      - owners
+      - Owners
       requestBody:
         content:
           application/json:
@@ -80,6 +77,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CreateOwner'
           description: ''
+      summary: Owners create
+      x-summary-source: derived
   /api/v3/owners/{username}/:
     get:
       operationId: owners_retrieve
@@ -91,7 +90,7 @@ paths:
           pattern: ^[^/]+$
         required: true
       tags:
-      - owners
+      - Owners
       security:
       - oauth2:
         - owners:read
@@ -104,6 +103,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Owner'
           description: ''
+      summary: Owners retrieve
+      x-summary-source: derived
     patch:
       operationId: owners_partial_update
       parameters:
@@ -114,7 +115,7 @@ paths:
           pattern: ^[^/]+$
         required: true
       tags:
-      - owners
+      - Owners
       requestBody:
         content:
           application/json:
@@ -138,6 +139,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Owner'
           description: ''
+      summary: Owners partial update
+      x-summary-source: derived
     delete:
       operationId: owners_destroy
       parameters:
@@ -148,7 +151,7 @@ paths:
           pattern: ^[^/]+$
         required: true
       tags:
-      - owners
+      - Owners
       security:
       - oauth2:
         - owners:write
@@ -157,199 +160,10 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Owners destroy
+      x-summary-source: derived
 components:
   schemas:
-    BlankEnum:
-      enum:
-      - ''
-    CreateOwner:
-      type: object
-      properties:
-        name:
-          type: string
-          readOnly: true
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-          format: email
-        user_name:
-          type: string
-        phone:
-          type: string
-        property_manager:
-          type: string
-        default_locale:
-          $ref: '#/components/schemas/CreateOwnerDefaultLocaleEnum'
-        type:
-          $ref: '#/components/schemas/TypeF08Enum'
-        gender:
-          $ref: '#/components/schemas/GenderEnum'
-        nationality:
-          default: ''
-          oneOf:
-          - $ref: '#/components/schemas/BankCountryEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-        date_of_birth:
-          type:
-          - string
-          - 'null'
-          format: date
-        job:
-          type:
-          - string
-          - 'null'
-          title: Occupation
-          maxLength: 30
-        managed_by:
-          type:
-          - integer
-          - 'null'
-        address_line1:
-          type: string
-          title: Address line  1
-        address_line2:
-          type:
-          - string
-          - 'null'
-          title: Address line  2
-        post_code:
-          type:
-          - string
-          - 'null'
-          title: Postcode
-          maxLength: 10
-        city:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        region:
-          type:
-          - string
-          - 'null'
-          maxLength: 40
-        country_of_residence:
-          default: ''
-          oneOf:
-          - $ref: '#/components/schemas/BankCountryEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-        bank_account_iban:
-          type: string
-          title: Bank account (IBAN)
-          maxLength: 500
-        bic:
-          type:
-          - string
-          - 'null'
-          pattern: ^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$
-          maxLength: 50
-        bank_account_number:
-          type: string
-          maxLength: 100
-        bank_account_routing_number:
-          type: string
-          title: Bank account sort code / routing number
-          maxLength: 100
-        bank_account_currency:
-          oneOf:
-          - $ref: '#/components/schemas/BankAccountCurrencyEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        bank_account_name:
-          type:
-          - string
-          - 'null'
-          title: Bank account holder name
-          maxLength: 100
-        bank_account_holder_address:
-          type:
-          - string
-          - 'null'
-          maxLength: 250
-        bank_name:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        bank_branch_name:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        bank_country:
-          default: ''
-          oneOf:
-          - $ref: '#/components/schemas/BankCountryEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-        business_name:
-          type:
-          - string
-          - 'null'
-          maxLength: 250
-        company_id:
-          type:
-          - string
-          - 'null'
-          title: VAT number
-          maxLength: 50
-        company_number:
-          type:
-          - string
-          - 'null'
-          title: Company number / SIREN number
-          maxLength: 50
-        company_address:
-          type:
-          - string
-          - 'null'
-          maxLength: 250
-        tax_identification_number:
-          type:
-          - string
-          - 'null'
-          title: Tax identification number (TIN)
-          maxLength: 250
-        host_created_notification:
-          type: boolean
-          title: Owner creation notification
-          description: When the owner account is created, this will send the owner a notification containing their login credentials
-        property_validation:
-          type: boolean
-          title: Property validation notification
-          description: Once a property is validated, this will automatically send the owner a validation notification for the property and a link to their Airbnb listing.
-        deactivation_property_email:
-          type: boolean
-          title: Property deactivation notification
-          description: Once a property is deactivated, this will automatically send the owner a notification of deactivation. It will say to contact the property manager to reopen dates / reactivate the property in the future.
-        open_dates_notification:
-          type: boolean
-          description: Periodically send a notification to the owner if not enough dates are open
-      required:
-      - default_locale
-      - email
-      - first_name
-      - last_name
-      - name
-      - phone
-      - property_manager
-      - user_name
-    TypeF08Enum:
-      enum:
-      - NATURAL
-      - BUSINESS
-      - ORGANIZATION
-      - SOLETRADER
-      type: string
-      description: '* `NATURAL` - Individual owner
-
-        * `BUSINESS` - Business entity
-
-        * `ORGANIZATION` - Organization entity
-
-        * `SOLETRADER` - Soletrader entity'
     GenderEnum:
       enum:
       - M
@@ -358,7 +172,7 @@ components:
       description: '* `M` - Male
 
         * `F` - Female'
-    PatchedOwner:
+    Owner:
       type: object
       properties:
         name:
@@ -530,6 +344,69 @@ components:
         open_dates_notification:
           type: boolean
           description: Periodically send a notification to the owner if not enough dates are open
+      required:
+      - default_locale
+      - email
+      - name
+      - phone
+      - user_name
+    CreateOwnerDefaultLocaleEnum:
+      enum:
+      - en
+      - fr
+      - pt
+      - es
+      - it
+      - ar
+      - de
+      - pl
+      - nl
+      type: string
+      description: '* `en` - en
+
+        * `fr` - fr
+
+        * `pt` - pt
+
+        * `es` - es
+
+        * `it` - it
+
+        * `ar` - ar
+
+        * `de` - de
+
+        * `pl` - pl
+
+        * `nl` - nl'
+    PaginatedOwnerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Owner'
+        limit:
+          type: integer
+          example: 10
     BankCountryEnum:
       enum:
       - AF
@@ -1279,119 +1156,7 @@ components:
         * `ZM` - Zambia
 
         * `ZW` - Zimbabwe'
-    CreateOwnerDefaultLocaleEnum:
-      enum:
-      - en
-      - fr
-      - pt
-      - es
-      - it
-      - ar
-      - de
-      - pl
-      - nl
-      type: string
-      description: '* `en` - en
-
-        * `fr` - fr
-
-        * `pt` - pt
-
-        * `es` - es
-
-        * `it` - it
-
-        * `ar` - ar
-
-        * `de` - de
-
-        * `pl` - pl
-
-        * `nl` - nl'
-    OwnerDefaultLocaleEnum:
-      enum:
-      - en
-      - fr
-      - pt
-      - es
-      - it
-      - ar
-      - de
-      - pl
-      - nl
-      type: string
-      description: '* `en` - English
-
-        * `fr` - French
-
-        * `pt` - Portuguese
-
-        * `es` - Spanish
-
-        * `it` - Italian
-
-        * `ar` - Arabic
-
-        * `de` - German
-
-        * `pl` - Polish
-
-        * `nl` - Dutch'
-    NullEnum:
-      enum:
-      - null
-    BankAccountCurrencyEnum:
-      enum:
-      - EUR
-      - GBP
-      - USD
-      - AED
-      - SAR
-      - INR
-      - QAR
-      type: string
-      description: '* `EUR` - EUR
-
-        * `GBP` - GBP
-
-        * `USD` - USD
-
-        * `AED` - AED
-
-        * `SAR` - SAR
-
-        * `INR` - INR
-
-        * `QAR` - QAR'
-    PaginatedOwnerList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Owner'
-        limit:
-          type: integer
-          example: 10
-    Owner:
+    PatchedOwner:
       type: object
       properties:
         name:
@@ -1563,12 +1328,252 @@ components:
         open_dates_notification:
           type: boolean
           description: Periodically send a notification to the owner if not enough dates are open
+    OwnerDefaultLocaleEnum:
+      enum:
+      - en
+      - fr
+      - pt
+      - es
+      - it
+      - ar
+      - de
+      - pl
+      - nl
+      type: string
+      description: '* `en` - English
+
+        * `fr` - French
+
+        * `pt` - Portuguese
+
+        * `es` - Spanish
+
+        * `it` - Italian
+
+        * `ar` - Arabic
+
+        * `de` - German
+
+        * `pl` - Polish
+
+        * `nl` - Dutch'
+    BlankEnum:
+      enum:
+      - ''
+    TypeF08Enum:
+      enum:
+      - NATURAL
+      - BUSINESS
+      - ORGANIZATION
+      - SOLETRADER
+      type: string
+      description: '* `NATURAL` - Individual owner
+
+        * `BUSINESS` - Business entity
+
+        * `ORGANIZATION` - Organization entity
+
+        * `SOLETRADER` - Soletrader entity'
+    CreateOwner:
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        user_name:
+          type: string
+        phone:
+          type: string
+        property_manager:
+          type: string
+        default_locale:
+          $ref: '#/components/schemas/CreateOwnerDefaultLocaleEnum'
+        type:
+          $ref: '#/components/schemas/TypeF08Enum'
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        nationality:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        date_of_birth:
+          type:
+          - string
+          - 'null'
+          format: date
+        job:
+          type:
+          - string
+          - 'null'
+          title: Occupation
+          maxLength: 30
+        managed_by:
+          type:
+          - integer
+          - 'null'
+        address_line1:
+          type: string
+          title: Address line  1
+        address_line2:
+          type:
+          - string
+          - 'null'
+          title: Address line  2
+        post_code:
+          type:
+          - string
+          - 'null'
+          title: Postcode
+          maxLength: 10
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        region:
+          type:
+          - string
+          - 'null'
+          maxLength: 40
+        country_of_residence:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        bank_account_iban:
+          type: string
+          title: Bank account (IBAN)
+          maxLength: 500
+        bic:
+          type:
+          - string
+          - 'null'
+          pattern: ^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$
+          maxLength: 50
+        bank_account_number:
+          type: string
+          maxLength: 100
+        bank_account_routing_number:
+          type: string
+          title: Bank account sort code / routing number
+          maxLength: 100
+        bank_account_currency:
+          oneOf:
+          - $ref: '#/components/schemas/BankAccountCurrencyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        bank_account_name:
+          type:
+          - string
+          - 'null'
+          title: Bank account holder name
+          maxLength: 100
+        bank_account_holder_address:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        bank_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        bank_branch_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        bank_country:
+          default: ''
+          oneOf:
+          - $ref: '#/components/schemas/BankCountryEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        business_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        company_id:
+          type:
+          - string
+          - 'null'
+          title: VAT number
+          maxLength: 50
+        company_number:
+          type:
+          - string
+          - 'null'
+          title: Company number / SIREN number
+          maxLength: 50
+        company_address:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        tax_identification_number:
+          type:
+          - string
+          - 'null'
+          title: Tax identification number (TIN)
+          maxLength: 250
+        host_created_notification:
+          type: boolean
+          title: Owner creation notification
+          description: When the owner account is created, this will send the owner a notification containing their login credentials
+        property_validation:
+          type: boolean
+          title: Property validation notification
+          description: Once a property is validated, this will automatically send the owner a validation notification for the property and a link to their Airbnb listing.
+        deactivation_property_email:
+          type: boolean
+          title: Property deactivation notification
+          description: Once a property is deactivated, this will automatically send the owner a notification of deactivation. It will say to contact the property manager to reopen dates / reactivate the property in the future.
+        open_dates_notification:
+          type: boolean
+          description: Periodically send a notification to the owner if not enough dates are open
       required:
       - default_locale
       - email
+      - first_name
+      - last_name
       - name
       - phone
+      - property_manager
       - user_name
+    NullEnum:
+      enum:
+      - null
+    BankAccountCurrencyEnum:
+      enum:
+      - EUR
+      - GBP
+      - USD
+      - AED
+      - SAR
+      - INR
+      - QAR
+      type: string
+      description: '* `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `USD` - USD
+
+        * `AED` - AED
+
+        * `SAR` - SAR
+
+        * `INR` - INR
+
+        * `QAR` - QAR'
   securitySchemes:
     basicAuth:
       type: http

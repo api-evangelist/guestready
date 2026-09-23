@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: los
+- name: LOS
 paths:
   /api/v3/los/:
     get:
@@ -34,7 +29,7 @@ paths:
         schema:
           type: integer
       tags:
-      - los
+      - LOS
       security:
       - oauth2:
         - pricing:read
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedLOSRentalList'
           description: ''
+      summary: Los list
+      x-summary-source: derived
   /api/v3/los/{numero_contrat}/:
     get:
       operationId: los_retrieve
@@ -57,7 +54,7 @@ paths:
           description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
         required: true
       tags:
-      - los
+      - LOS
       security:
       - oauth2:
         - pricing:read
@@ -68,8 +65,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/LOSRental'
           description: ''
+      summary: Los retrieve
+      x-summary-source: derived
 components:
   schemas:
+    LOSRental:
+      type: object
+      properties:
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+          readOnly: true
+        los_url:
+          type: string
+          readOnly: true
+      required:
+      - los_url
+      - rental_id
     PaginatedLOSRentalList:
       type: object
       required:
@@ -98,20 +111,6 @@ components:
         limit:
           type: integer
           example: 50
-    LOSRental:
-      type: object
-      properties:
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-          readOnly: true
-        los_url:
-          type: string
-          readOnly: true
-      required:
-      - los_url
-      - rental_id
   securitySchemes:
     basicAuth:
       type: http

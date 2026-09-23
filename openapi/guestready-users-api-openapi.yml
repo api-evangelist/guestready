@@ -8,20 +8,15 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: users
+- name: Users
 paths:
   /api/v3/users/:
     get:
       operationId: users_list
       tags:
-      - users
+      - Users
       security:
       - oauth2:
         - users:read
@@ -34,6 +29,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserSerialzer'
           description: ''
+      summary: Users list
+      x-summary-source: derived
   /api/v3/users/{id}/:
     get:
       operationId: users_retrieve
@@ -45,7 +42,7 @@ paths:
         description: A unique integer value identifying this user.
         required: true
       tags:
-      - users
+      - Users
       security:
       - oauth2:
         - users:read
@@ -56,11 +53,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserSerialzer'
           description: ''
+      summary: Users retrieve
+      x-summary-source: derived
   /api/v3/users/me/:
     get:
       operationId: users_me_retrieve
       tags:
-      - users
+      - Users
       security:
       - oauth2:
         - users:read
@@ -71,6 +70,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserSerialzer'
           description: ''
+      summary: Users me retrieve
+      x-summary-source: derived
 components:
   schemas:
     UserSerialzer:

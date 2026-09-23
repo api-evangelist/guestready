@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: blacklist
+- name: Blacklist
 paths:
   /api/v3/blacklist/:
     get:
@@ -112,7 +107,7 @@ paths:
         explode: true
         style: form
       tags:
-      - blacklist
+      - Blacklist
       security:
       - oauth2:
         - blacklist:read
@@ -123,6 +118,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedBlacklistList'
           description: ''
+      summary: Blacklist list
+      x-summary-source: derived
   /api/v3/blacklist/{id}/:
     get:
       operationId: blacklist_retrieve
@@ -134,7 +131,7 @@ paths:
         description: A unique integer value identifying this blacklist.
         required: true
       tags:
-      - blacklist
+      - Blacklist
       security:
       - oauth2:
         - blacklist:read
@@ -145,8 +142,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Blacklist'
           description: ''
+      summary: Blacklist retrieve
+      x-summary-source: derived
 components:
   schemas:
+    BlacklistReason:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - id
+      - name
     Blacklist:
       type: object
       properties:
@@ -237,18 +248,6 @@ components:
       - property_manager_ids
       - reasons
       - reservation_ids
-    BlacklistReason:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 50
-      required:
-      - id
-      - name
     PaginatedBlacklistList:
       type: object
       required:

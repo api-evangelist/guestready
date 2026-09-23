@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: rental_amenities
 paths:
@@ -75,6 +70,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedBookingsyncRentalAmenityList'
           description: ''
+      summary: Rental amenities list
+      x-summary-source: derived
     post:
       operationId: rental_amenities_create
       description: 'Create a rental amenity. Optionally include `metadata_values` as a `{key: value}` dict. Available keys and their types are defined per amenity and can be discovered via GET /api/v3/amenities/.'
@@ -102,6 +99,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingsyncRentalAmenity'
           description: ''
+      summary: Rental amenities create
+      x-summary-source: derived
   /api/v3/rental_amenities/{id}/:
     get:
       operationId: rental_amenities_retrieve
@@ -124,6 +123,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingsyncRentalAmenity'
           description: ''
+      summary: Rental amenities retrieve
+      x-summary-source: derived
     put:
       operationId: rental_amenities_update
       description: 'Update a rental amenity. If `metadata_values` is present, all valid keys for this amenity are replaced (full replace): keys omitted from the dict are deleted. If `metadata_values` is absent, existing values are untouched. Available keys can be discovered via GET /api/v3/amenities/.'
@@ -158,6 +159,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingsyncRentalAmenity'
           description: ''
+      summary: Rental amenities update
+      x-summary-source: derived
     patch:
       operationId: rental_amenities_partial_update
       description: 'Partially update a rental amenity. If `metadata_values` is present, all valid keys for this amenity are replaced (full replace): keys omitted from the dict are deleted. If `metadata_values` is absent, existing values are untouched. Available keys can be discovered via GET /api/v3/amenities/.'
@@ -191,6 +194,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingsyncRentalAmenity'
           description: ''
+      summary: Rental amenities partial update
+      x-summary-source: derived
     delete:
       operationId: rental_amenities_destroy
       parameters:
@@ -208,8 +213,55 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Rental amenities destroy
+      x-summary-source: derived
 components:
   schemas:
+    PatchedBookingsyncRentalAmenity:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        amenity_key:
+          type: string
+        type_name:
+          type: string
+          readOnly: true
+        details:
+          type:
+          - string
+          - 'null'
+          description: Describe how to use the amenity
+        location:
+          type:
+          - string
+          - 'null'
+        model:
+          type:
+          - string
+          - 'null'
+        brand:
+          type:
+          - string
+          - 'null'
+        extra_information: {}
+        serial_number:
+          type:
+          - string
+          - 'null'
+        metadata_values:
+          type: object
+          additionalProperties: true
+          example:
+            wifi_speed: 100
+            parking_type: garage
+          readOnly: true
+          description: Key-value map of metadata for this rental amenity. Keys correspond to the `key` field on the amenity's metadata schema, available via GET /api/v3/amenities/. On write (POST/PUT/PATCH), send the full dict — omitted keys are deleted (full replace semantics). Unknown keys are silently ignored.
     PaginatedBookingsyncRentalAmenityList:
       type: object
       required:
@@ -289,51 +341,6 @@ components:
       - metadata_values
       - rental_id
       - type_name
-    PatchedBookingsyncRentalAmenity:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        amenity_key:
-          type: string
-        type_name:
-          type: string
-          readOnly: true
-        details:
-          type:
-          - string
-          - 'null'
-          description: Describe how to use the amenity
-        location:
-          type:
-          - string
-          - 'null'
-        model:
-          type:
-          - string
-          - 'null'
-        brand:
-          type:
-          - string
-          - 'null'
-        extra_information: {}
-        serial_number:
-          type:
-          - string
-          - 'null'
-        metadata_values:
-          type: object
-          additionalProperties: true
-          example:
-            wifi_speed: 100
-            parking_type: garage
-          readOnly: true
-          description: Key-value map of metadata for this rental amenity. Keys correspond to the `key` field on the amenity's metadata schema, available via GET /api/v3/amenities/. On write (POST/PUT/PATCH), send the full dict — omitted keys are deleted (full replace semantics). Unknown keys are silently ignored.
   securitySchemes:
     basicAuth:
       type: http

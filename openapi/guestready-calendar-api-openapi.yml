@@ -8,21 +8,16 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: calendar
+- name: Calendar
 paths:
   /api/v3/calendar/block/:
     post:
       operationId: calendar_block_create
       description: Block a property's calendar for a date range.
       tags:
-      - calendar
+      - Calendar
       requestBody:
         content:
           application/json:
@@ -47,12 +42,14 @@ paths:
                   message: Calendar was blocked.
                   id: 123
           description: ''
+      summary: Calendar block create
+      x-summary-source: derived
   /api/v3/calendar/unblock/:
     post:
       operationId: calendar_unblock_create
       description: Unblock a property's calendar for a date range.
       tags:
-      - calendar
+      - Calendar
       requestBody:
         content:
           application/json:
@@ -76,28 +73,10 @@ paths:
                 example:
                   message: Calendar was unblocked.
           description: ''
+      summary: Calendar unblock create
+      x-summary-source: derived
 components:
   schemas:
-    BlankEnum:
-      enum:
-      - ''
-    DepartureCleaningEnum:
-      enum:
-      - FULL_OWNER
-      - FULL_PROPERTY_MANAGER
-      - DELIVERY
-      - CLEANING_ONLY
-      - NO_CLEANING
-      type: string
-      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
-
-        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding
-
-        * `DELIVERY` - Delivery (No cleaning + Property manager bedding)
-
-        * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
-
-        * `NO_CLEANING` - No cleaning'
     BlockedReasonEnum:
       enum:
       - HOST_STAY
@@ -139,6 +118,23 @@ components:
       - end_date
       - rental_id
       - start_date
+    DepartureCleaningEnum:
+      enum:
+      - FULL_OWNER
+      - FULL_PROPERTY_MANAGER
+      - DELIVERY
+      - CLEANING_ONLY
+      - NO_CLEANING
+      type: string
+      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
+
+        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding
+
+        * `DELIVERY` - Delivery (No cleaning + Property manager bedding)
+
+        * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
+
+        * `NO_CLEANING` - No cleaning'
     BlockCalendar:
       type: object
       properties:
@@ -206,6 +202,9 @@ components:
       - end_date
       - rental_id
       - start_date
+    BlankEnum:
+      enum:
+      - ''
     ReturnCleaningEnum:
       enum:
       - FULL_OWNER

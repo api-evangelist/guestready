@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: property_manager_platform_settings
 paths:
@@ -53,6 +48,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedPropertyManagerPlatformSettingsList'
           description: ''
+      summary: Property manager platform settings list
+      x-summary-source: derived
   /api/v3/property_manager_platform_settings/{id}/:
     get:
       operationId: property_manager_platform_settings_retrieve
@@ -75,6 +72,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PropertyManagerPlatformSettings'
           description: ''
+      summary: Property manager platform settings retrieve
+      x-summary-source: derived
     put:
       operationId: property_manager_platform_settings_update
       parameters:
@@ -107,6 +106,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PropertyManagerPlatformSettings'
           description: ''
+      summary: Property manager platform settings update
+      x-summary-source: derived
     patch:
       operationId: property_manager_platform_settings_partial_update
       parameters:
@@ -139,6 +140,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PropertyManagerPlatformSettings'
           description: ''
+      summary: Property manager platform settings partial update
+      x-summary-source: derived
 components:
   schemas:
     PropertyManagerPlatformSettings:

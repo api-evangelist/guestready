@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: reservation_documents
 paths:
@@ -67,6 +62,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedReservationDocumentList'
           description: ''
+      summary: Reservation documents list
+      x-summary-source: derived
     post:
       operationId: reservation_documents_create
       description: 'Base viewset for records linked to a reservation and scoped to the
@@ -107,6 +104,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ReservationDocument'
           description: ''
+      summary: Reservation documents create
+      x-summary-source: derived
   /api/v3/reservation_documents/{id}/:
     get:
       operationId: reservation_documents_retrieve
@@ -143,6 +142,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ReservationDocument'
           description: ''
+      summary: Reservation documents retrieve
+      x-summary-source: derived
     delete:
       operationId: reservation_documents_destroy
       description: 'Base viewset for records linked to a reservation and scoped to the
@@ -174,6 +175,8 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Reservation documents destroy
+      x-summary-source: derived
 components:
   schemas:
     ReservationDocument:

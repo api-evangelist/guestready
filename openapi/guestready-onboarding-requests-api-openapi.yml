@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: onboarding_requests
 paths:
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedOnboardingRequestList'
           description: ''
+      summary: Onboarding requests list
+      x-summary-source: derived
   /api/v3/onboarding_requests/{id}/:
     get:
       operationId: onboarding_requests_retrieve
@@ -67,8 +64,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/OnboardingRequest'
           description: ''
+      summary: Onboarding requests retrieve
+      x-summary-source: derived
 components:
   schemas:
+    PaginatedOnboardingRequestList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OnboardingRequest'
+        limit:
+          type: integer
+          example: 10
+    OnboardingRequestStatusEnum:
+      enum:
+      - OPEN
+      - CLOSE
+      - DECLINED
+      type: string
+      description: '* `OPEN` - Open
+
+        * `CLOSE` - Close
+
+        * `DECLINED` - Declined'
     OnboardingRequest:
       type: object
       properties:
@@ -110,45 +148,6 @@ components:
       - requested_by
       - status
       - user
-    OnboardingRequestStatusEnum:
-      enum:
-      - OPEN
-      - CLOSE
-      - DECLINED
-      type: string
-      description: '* `OPEN` - Open
-
-        * `CLOSE` - Close
-
-        * `DECLINED` - Declined'
-    PaginatedOnboardingRequestList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/OnboardingRequest'
-        limit:
-          type: integer
-          example: 10
   securitySchemes:
     basicAuth:
       type: http

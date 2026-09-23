@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: payout_adjustments
 paths:
@@ -126,6 +121,8 @@ paths:
                     vat_rate: number
                     quantity: number
           description: ''
+      summary: Payout adjustments invoice request retrieve
+      x-summary-source: derived
   /api/v3/payout_adjustments/{id}/mark_as_paid/:
     post:
       operationId: payout_adjustments_mark_as_paid_create
@@ -179,164 +176,6 @@ paths:
           description: ''
 components:
   schemas:
-    CurrencyD53Enum:
-      enum:
-      - AED
-      - AUD
-      - BRL
-      - CAD
-      - CHF
-      - CZK
-      - EUR
-      - GBP
-      - HKD
-      - IDR
-      - ILS
-      - JPY
-      - KRW
-      - MAD
-      - MYR
-      - PLN
-      - RUB
-      - SAR
-      - THB
-      - USD
-      type: string
-      description: '* `AED` - AED
-
-        * `AUD` - AUD
-
-        * `BRL` - BRL
-
-        * `CAD` - CAD
-
-        * `CHF` - CHF
-
-        * `CZK` - CZK
-
-        * `EUR` - EUR
-
-        * `GBP` - GBP
-
-        * `HKD` - HKD
-
-        * `IDR` - IDR
-
-        * `ILS` - ILS
-
-        * `JPY` - JPY
-
-        * `KRW` - KRW
-
-        * `MAD` - MAD
-
-        * `MYR` - MYR
-
-        * `PLN` - PLN
-
-        * `RUB` - RUB
-
-        * `SAR` - SAR
-
-        * `THB` - THB
-
-        * `USD` - USD'
-    BlankEnum:
-      enum:
-      - ''
-    PaginatedPayoutAdjustmentList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PayoutAdjustment'
-        limit:
-          type: integer
-          example: 100
-    PayoutAdjustmentCategoryEnum:
-      enum:
-      - cleaning
-      - maintenance
-      - improvement
-      - quality_check
-      - issue_resolution
-      - onboarding_fee
-      - utility_bill
-      - unit_permits
-      - reservation_cancellation
-      - advance_payment_for_decoration_project
-      - decoration_project
-      - commission_offer
-      - fin_ops
-      - pest_control
-      - deep_cleaning
-      - guest_request
-      - tpl_insurance
-      - service_charge
-      - local_tax
-      - termination_fee
-      - others
-      type: string
-      description: '* `cleaning` - Cleaning
-
-        * `maintenance` - Maintenance
-
-        * `improvement` - Improvement/Furniture
-
-        * `quality_check` - Quality Check
-
-        * `issue_resolution` - Resolution adjustment
-
-        * `onboarding_fee` - Onboarding fee
-
-        * `utility_bill` - Utility bill
-
-        * `unit_permits` - Unit permits
-
-        * `reservation_cancellation` - Reservation cancellation
-
-        * `advance_payment_for_decoration_project` - Advance Payment for Decoration Project/Equipment
-
-        * `decoration_project` - Decoration Project/Equipment
-
-        * `commission_offer` - Commission Offer
-
-        * `fin_ops` - FinOps
-
-        * `pest_control` - Pest control
-
-        * `deep_cleaning` - Deep cleaning
-
-        * `guest_request` - Guest Request
-
-        * `tpl_insurance` - TPL Insurance
-
-        * `service_charge` - Service Charge
-
-        * `local_tax` - Local Tax
-
-        * `termination_fee` - Termination Fee
-
-        * `others` - Others'
     PayoutAdjustment:
       type: object
       properties:
@@ -465,17 +304,6 @@ components:
       - invoices
       - owner
       - property
-    NullEnum:
-      enum:
-      - null
-    PayoutAdjustmentTypeEnum:
-      enum:
-      - CHARGE
-      - REFUND
-      type: string
-      description: '* `CHARGE` - Charge
-
-        * `REFUND` - Refund'
     PayoutAdjustmentStatusEnum:
       enum:
       - inactive
@@ -487,14 +315,45 @@ components:
         * `paid` - Paid
 
         * `not_paid` - Not Paid'
-    InternalCategoryEnum:
+    PayoutAdjustmentTypeEnum:
       enum:
-      - airbnb_resolution
-      - mission_charge
+      - CHARGE
+      - REFUND
       type: string
-      description: '* `airbnb_resolution` - airbnb_resolution
+      description: '* `CHARGE` - Charge
 
-        * `mission_charge` - mission_charge'
+        * `REFUND` - Refund'
+    PaginatedPayoutAdjustmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayoutAdjustment'
+        limit:
+          type: integer
+          example: 100
+    BlankEnum:
+      enum:
+      - ''
     PayoutAdjustmentAccountingInvoice:
       type: object
       properties:
@@ -522,6 +381,144 @@ components:
           format: uri
       required:
       - category
+    PayoutAdjustmentCategoryEnum:
+      enum:
+      - cleaning
+      - maintenance
+      - improvement
+      - quality_check
+      - issue_resolution
+      - onboarding_fee
+      - utility_bill
+      - unit_permits
+      - reservation_cancellation
+      - advance_payment_for_decoration_project
+      - decoration_project
+      - commission_offer
+      - fin_ops
+      - pest_control
+      - deep_cleaning
+      - guest_request
+      - tpl_insurance
+      - service_charge
+      - local_tax
+      - termination_fee
+      - others
+      type: string
+      description: '* `cleaning` - Cleaning
+
+        * `maintenance` - Maintenance
+
+        * `improvement` - Improvement/Furniture
+
+        * `quality_check` - Quality Check
+
+        * `issue_resolution` - Resolution adjustment
+
+        * `onboarding_fee` - Onboarding fee
+
+        * `utility_bill` - Utility bill
+
+        * `unit_permits` - Unit permits
+
+        * `reservation_cancellation` - Reservation cancellation
+
+        * `advance_payment_for_decoration_project` - Advance Payment for Decoration Project/Equipment
+
+        * `decoration_project` - Decoration Project/Equipment
+
+        * `commission_offer` - Commission Offer
+
+        * `fin_ops` - FinOps
+
+        * `pest_control` - Pest control
+
+        * `deep_cleaning` - Deep cleaning
+
+        * `guest_request` - Guest Request
+
+        * `tpl_insurance` - TPL Insurance
+
+        * `service_charge` - Service Charge
+
+        * `local_tax` - Local Tax
+
+        * `termination_fee` - Termination Fee
+
+        * `others` - Others'
+    InternalCategoryEnum:
+      enum:
+      - airbnb_resolution
+      - mission_charge
+      type: string
+      description: '* `airbnb_resolution` - airbnb_resolution
+
+        * `mission_charge` - mission_charge'
+    NullEnum:
+      enum:
+      - null
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
   securitySchemes:
     basicAuth:
       type: http

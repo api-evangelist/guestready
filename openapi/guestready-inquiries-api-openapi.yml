@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: Inquiries
 paths:
@@ -103,97 +98,6 @@ paths:
           description: ''
 components:
   schemas:
-    InquiryOriginEnum:
-      enum:
-      - channel_manager
-      - bookingsync_inbox
-      - airbnb_message
-      - airbnb_email
-      - airbnb_tentative
-      - booking-com
-      - homeaway
-      - homeaway_tentative
-      - tripadvisor
-      - email
-      - messenger
-      - whatsapp
-      - sms
-      - notification
-      - event
-      - airbnb_review
-      - guestspace
-      - twilio
-      - booking_widget
-      - support
-      type: string
-      description: '* `channel_manager` - Platform
-
-        * `bookingsync_inbox` - BookingSync
-
-        * `airbnb_message` - Airbnb
-
-        * `airbnb_email` - Airbnb
-
-        * `airbnb_tentative` - Airbnb
-
-        * `booking-com` - Booking.com
-
-        * `homeaway` - HomeAway
-
-        * `homeaway_tentative` - HomeAway
-
-        * `tripadvisor` - TripAdvisor
-
-        * `email` - Email
-
-        * `messenger` - Messenger
-
-        * `whatsapp` - WhatsApp
-
-        * `sms` - SMS
-
-        * `notification` - Email
-
-        * `event` - Email
-
-        * `airbnb_review` - Airbnb
-
-        * `guestspace` - Guest space
-
-        * `twilio` - SMS
-
-        * `booking_widget` - Direct booking widget
-
-        * `support` - Support'
-    InquiryStatusEnum:
-      enum:
-      - inquiry
-      - pending
-      - preapproved
-      - denied
-      - not_possible
-      - accepted
-      - cancelled
-      - special_offer
-      - not_found
-      type: string
-      description: '* `inquiry` - Inquiry
-
-        * `pending` - Pending
-
-        * `preapproved` - Pre-approved
-
-        * `denied` - Refused
-
-        * `not_possible` - Not possible
-
-        * `accepted` - Accepted
-
-        * `cancelled` - Cancelled
-
-        * `special_offer` - Special offer
-
-        * `not_found` - Not found'
     PaginatedInquiryList:
       type: object
       required:
@@ -323,6 +227,97 @@ components:
       - origin
       - rental_id
       - status
+    InquiryStatusEnum:
+      enum:
+      - inquiry
+      - pending
+      - preapproved
+      - denied
+      - not_possible
+      - accepted
+      - cancelled
+      - special_offer
+      - not_found
+      type: string
+      description: '* `inquiry` - Inquiry
+
+        * `pending` - Pending
+
+        * `preapproved` - Pre-approved
+
+        * `denied` - Refused
+
+        * `not_possible` - Not possible
+
+        * `accepted` - Accepted
+
+        * `cancelled` - Cancelled
+
+        * `special_offer` - Special offer
+
+        * `not_found` - Not found'
+    InquiryOriginEnum:
+      enum:
+      - channel_manager
+      - bookingsync_inbox
+      - airbnb_message
+      - airbnb_email
+      - airbnb_tentative
+      - booking-com
+      - homeaway
+      - homeaway_tentative
+      - tripadvisor
+      - email
+      - messenger
+      - whatsapp
+      - sms
+      - notification
+      - event
+      - airbnb_review
+      - guestspace
+      - twilio
+      - booking_widget
+      - support
+      type: string
+      description: '* `channel_manager` - Platform
+
+        * `bookingsync_inbox` - BookingSync
+
+        * `airbnb_message` - Airbnb
+
+        * `airbnb_email` - Airbnb
+
+        * `airbnb_tentative` - Airbnb
+
+        * `booking-com` - Booking.com
+
+        * `homeaway` - HomeAway
+
+        * `homeaway_tentative` - HomeAway
+
+        * `tripadvisor` - TripAdvisor
+
+        * `email` - Email
+
+        * `messenger` - Messenger
+
+        * `whatsapp` - WhatsApp
+
+        * `sms` - SMS
+
+        * `notification` - Email
+
+        * `event` - Email
+
+        * `airbnb_review` - Airbnb
+
+        * `guestspace` - Guest space
+
+        * `twilio` - SMS
+
+        * `booking_widget` - Direct booking widget
+
+        * `support` - Support'
   securitySchemes:
     basicAuth:
       type: http

@@ -8,6 +8,9 @@ info:
     ### Throttling
 
     Our API supports up to 400 requests per minute
+servers:
+- url: https://pms.rentalready.io/api/v3/
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
 paths:
   /api/v3/accounting_invoices/:
     post:

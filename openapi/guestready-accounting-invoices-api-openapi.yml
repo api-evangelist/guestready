@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: accounting_invoices
 paths:
@@ -44,108 +39,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/AccountingInvoiceCreate'
           description: ''
+      summary: Accounting invoices create
+      x-summary-source: derived
 components:
   schemas:
-    AccountingInvoiceCreateCategoryEnum:
-      enum:
-      - COMMISSION
-      - STAY
-      - SINGLE_DOCUMENT
-      - CLEANING
-      - COMMISSION_AND_PAYMENT_FEE
-      - PLATFORM_FEE
-      - PMS
-      - ADJUSTMENT
-      - PAYMENT_LINK
-      - RESOLUTION
-      - EXTRA_FEE
-      - GUEST_INVOICE
-      type: string
-      description: '* `COMMISSION` - Commission
-
-        * `STAY` - Stay
-
-        * `SINGLE_DOCUMENT` - Single document
-
-        * `CLEANING` - Cleaning
-
-        * `COMMISSION_AND_PAYMENT_FEE` - Commission and payment fee
-
-        * `PLATFORM_FEE` - Platform fee
-
-        * `PMS` - Property management software invoice
-
-        * `ADJUSTMENT` - Payout adjustment
-
-        * `PAYMENT_LINK` - Payment link
-
-        * `RESOLUTION` - Resolution
-
-        * `EXTRA_FEE` - Extra fee
-
-        * `GUEST_INVOICE` - Guest invoice'
-    CurrencyD53Enum:
-      enum:
-      - AED
-      - AUD
-      - BRL
-      - CAD
-      - CHF
-      - CZK
-      - EUR
-      - GBP
-      - HKD
-      - IDR
-      - ILS
-      - JPY
-      - KRW
-      - MAD
-      - MYR
-      - PLN
-      - RUB
-      - SAR
-      - THB
-      - USD
-      type: string
-      description: '* `AED` - AED
-
-        * `AUD` - AUD
-
-        * `BRL` - BRL
-
-        * `CAD` - CAD
-
-        * `CHF` - CHF
-
-        * `CZK` - CZK
-
-        * `EUR` - EUR
-
-        * `GBP` - GBP
-
-        * `HKD` - HKD
-
-        * `IDR` - IDR
-
-        * `ILS` - ILS
-
-        * `JPY` - JPY
-
-        * `KRW` - KRW
-
-        * `MAD` - MAD
-
-        * `MYR` - MYR
-
-        * `PLN` - PLN
-
-        * `RUB` - RUB
-
-        * `SAR` - SAR
-
-        * `THB` - THB
-
-        * `USD` - USD'
     AccountingInvoiceCreate:
       type: object
       properties:
@@ -225,6 +122,68 @@ components:
       - pdf
       - source_id
       - type
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
     AccountingInvoiceCreateTypeEnum:
       enum:
       - INVOICE
@@ -239,6 +198,44 @@ components:
         * `CREDIT_NOTE` - Credit Note
 
         * `RECEIPT` - Receipt'
+    AccountingInvoiceCreateCategoryEnum:
+      enum:
+      - COMMISSION
+      - STAY
+      - SINGLE_DOCUMENT
+      - CLEANING
+      - COMMISSION_AND_PAYMENT_FEE
+      - PLATFORM_FEE
+      - PMS
+      - ADJUSTMENT
+      - PAYMENT_LINK
+      - RESOLUTION
+      - EXTRA_FEE
+      - GUEST_INVOICE
+      type: string
+      description: '* `COMMISSION` - Commission
+
+        * `STAY` - Stay
+
+        * `SINGLE_DOCUMENT` - Single document
+
+        * `CLEANING` - Cleaning
+
+        * `COMMISSION_AND_PAYMENT_FEE` - Commission and payment fee
+
+        * `PLATFORM_FEE` - Platform fee
+
+        * `PMS` - Property management software invoice
+
+        * `ADJUSTMENT` - Payout adjustment
+
+        * `PAYMENT_LINK` - Payment link
+
+        * `RESOLUTION` - Resolution
+
+        * `EXTRA_FEE` - Extra fee
+
+        * `GUEST_INVOICE` - Guest invoice'
   securitySchemes:
     basicAuth:
       type: http

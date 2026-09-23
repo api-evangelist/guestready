@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: bedrooms
 paths:
@@ -50,6 +45,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedBedroomList'
           description: ''
+      summary: Bedrooms list
+      x-summary-source: derived
     post:
       operationId: bedrooms_create
       parameters:
@@ -82,6 +79,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bedroom'
           description: ''
+      summary: Bedrooms create
+      x-summary-source: derived
   /api/v3/bedrooms/{id}/:
     get:
       operationId: bedrooms_retrieve
@@ -109,6 +108,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bedroom'
           description: ''
+      summary: Bedrooms retrieve
+      x-summary-source: derived
     put:
       operationId: bedrooms_update
       parameters:
@@ -147,6 +148,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bedroom'
           description: ''
+      summary: Bedrooms update
+      x-summary-source: derived
     patch:
       operationId: bedrooms_partial_update
       parameters:
@@ -184,6 +187,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bedroom'
           description: ''
+      summary: Bedrooms partial update
+      x-summary-source: derived
     delete:
       operationId: bedrooms_destroy
       parameters:
@@ -206,15 +211,10 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Bedrooms destroy
+      x-summary-source: derived
 components:
   schemas:
-    Bed:
-      type: object
-      properties:
-        bed_type:
-          type: string
-      required:
-      - bed_type
     PatchedBedroom:
       type: object
       properties:
@@ -241,14 +241,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Bed'
-    BedroomTypeEnum:
-      enum:
-      - BEDROOM
-      - LIVINGROOM
-      type: string
-      description: '* `BEDROOM` - BEDROOM
-
-        * `LIVINGROOM` - LIVINGROOM'
+    Bed:
+      type: object
+      properties:
+        bed_type:
+          type: string
+      required:
+      - bed_type
     Bedroom:
       type: object
       properties:
@@ -280,6 +279,23 @@ components:
       - id
       - rental_id
       - universal_adapter
+    BedroomWindowCoverageEnum:
+      enum:
+      - SHUTTER
+      - ESHUTTER
+      - CURTAIN
+      - STORE
+      - NOTHING
+      type: string
+      description: '* `SHUTTER` - SHUTTER
+
+        * `ESHUTTER` - ESHUTTER
+
+        * `CURTAIN` - CURTAIN
+
+        * `STORE` - STORE
+
+        * `NOTHING` - NOTHING'
     PaginatedBedroomList:
       type: object
       required:
@@ -308,23 +324,14 @@ components:
         limit:
           type: integer
           example: 50
-    BedroomWindowCoverageEnum:
+    BedroomTypeEnum:
       enum:
-      - SHUTTER
-      - ESHUTTER
-      - CURTAIN
-      - STORE
-      - NOTHING
+      - BEDROOM
+      - LIVINGROOM
       type: string
-      description: '* `SHUTTER` - SHUTTER
+      description: '* `BEDROOM` - BEDROOM
 
-        * `ESHUTTER` - ESHUTTER
-
-        * `CURTAIN` - CURTAIN
-
-        * `STORE` - STORE
-
-        * `NOTHING` - NOTHING'
+        * `LIVINGROOM` - LIVINGROOM'
     NullEnum:
       enum:
       - null

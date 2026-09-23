@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: payment_acceptance_transactions
 paths:
@@ -82,6 +77,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedPaymentAcceptanceTransactionList'
           description: ''
+      summary: Payment acceptance transactions list
+      x-summary-source: derived
     post:
       operationId: payment_acceptance_transactions_create
       tags:
@@ -108,6 +105,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaymentAcceptanceTransaction'
           description: ''
+      summary: Payment acceptance transactions create
+      x-summary-source: derived
   /api/v3/payment_acceptance_transactions/{id}/:
     get:
       operationId: payment_acceptance_transactions_retrieve
@@ -130,6 +129,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaymentAcceptanceTransaction'
           description: ''
+      summary: Payment acceptance transactions retrieve
+      x-summary-source: derived
   /api/v3/payment_acceptance_transactions/{id}/refund/:
     post:
       operationId: payment_acceptance_transactions_refund_create
@@ -183,84 +184,10 @@ paths:
                 example:
                   message: Refund allowed only for stripe payment gateway
           description: ''
+      summary: Payment acceptance transactions refund create
+      x-summary-source: derived
 components:
   schemas:
-    PaymentCollectionMethodEnum:
-      enum:
-      - CASH
-      - BANK_TRANSFER
-      - CHEQUE
-      - STRIPE
-      type: string
-      description: '* `CASH` - Cash
-
-        * `BANK_TRANSFER` - Bank Transfer
-
-        * `CHEQUE` - Cheque
-
-        * `STRIPE` - Stripe'
-    CurrencyD53Enum:
-      enum:
-      - AED
-      - AUD
-      - BRL
-      - CAD
-      - CHF
-      - CZK
-      - EUR
-      - GBP
-      - HKD
-      - IDR
-      - ILS
-      - JPY
-      - KRW
-      - MAD
-      - MYR
-      - PLN
-      - RUB
-      - SAR
-      - THB
-      - USD
-      type: string
-      description: '* `AED` - AED
-
-        * `AUD` - AUD
-
-        * `BRL` - BRL
-
-        * `CAD` - CAD
-
-        * `CHF` - CHF
-
-        * `CZK` - CZK
-
-        * `EUR` - EUR
-
-        * `GBP` - GBP
-
-        * `HKD` - HKD
-
-        * `IDR` - IDR
-
-        * `ILS` - ILS
-
-        * `JPY` - JPY
-
-        * `KRW` - KRW
-
-        * `MAD` - MAD
-
-        * `MYR` - MYR
-
-        * `PLN` - PLN
-
-        * `RUB` - RUB
-
-        * `SAR` - SAR
-
-        * `THB` - THB
-
-        * `USD` - USD'
     PaginatedPaymentAcceptanceTransactionList:
       type: object
       required:
@@ -289,6 +216,20 @@ components:
         limit:
           type: integer
           example: 100
+    PaymentCollectionMethodEnum:
+      enum:
+      - CASH
+      - BANK_TRANSFER
+      - CHEQUE
+      - STRIPE
+      type: string
+      description: '* `CASH` - Cash
+
+        * `BANK_TRANSFER` - Bank Transfer
+
+        * `CHEQUE` - Cheque
+
+        * `STRIPE` - Stripe'
     PaymentAcceptanceTransaction:
       type: object
       properties:
@@ -356,6 +297,68 @@ components:
       - payment_collection_method
       - reservation
       - voucher
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
   securitySchemes:
     basicAuth:
       type: http

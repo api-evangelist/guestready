@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: neighbourhoods
 paths:
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedNeighbourhoodList'
           description: ''
+      summary: Neighbourhoods list
+      x-summary-source: derived
   /api/v3/neighbourhoods/{id}/:
     get:
       operationId: neighbourhoods_retrieve
@@ -67,8 +64,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/Neighbourhood'
           description: ''
+      summary: Neighbourhoods retrieve
+      x-summary-source: derived
 components:
   schemas:
+    Neighbourhood:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Name of the neighbourhood.
+          maxLength: 100
+        description:
+          type: string
+          description: Free-text description of the neighbourhood.
+        city:
+          type: string
+          readOnly: true
+          description: Name of the city the neighbourhood belongs to.
+      required:
+      - city
+      - id
+      - name
     PaginatedNeighbourhoodList:
       type: object
       required:
@@ -97,27 +117,6 @@ components:
         limit:
           type: integer
           example: 50
-    Neighbourhood:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          description: Name of the neighbourhood.
-          maxLength: 100
-        description:
-          type: string
-          description: Free-text description of the neighbourhood.
-        city:
-          type: string
-          readOnly: true
-          description: Name of the city the neighbourhood belongs to.
-      required:
-      - city
-      - id
-      - name
   securitySchemes:
     basicAuth:
       type: http

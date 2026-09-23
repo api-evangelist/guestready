@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: bed_types
 paths:
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedBedTypeList'
           description: ''
+      summary: Bed types list
+      x-summary-source: derived
   /api/v3/bed_types/{id}/:
     get:
       operationId: bed_types_retrieve
@@ -67,6 +64,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BedType'
           description: ''
+      summary: Bed types retrieve
+      x-summary-source: derived
 components:
   schemas:
     PaginatedBedTypeList:

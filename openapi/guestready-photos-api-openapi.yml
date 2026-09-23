@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: photos
+- name: Photos
 paths:
   /api/v3/photos/:
     get:
@@ -48,7 +43,7 @@ paths:
         schema:
           type: integer
       tags:
-      - photos
+      - Photos
       security:
       - oauth2:
         - rentals:read
@@ -59,10 +54,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedPhotoList'
           description: ''
+      summary: Photos list
+      x-summary-source: derived
     post:
       operationId: photos_create
       tags:
-      - photos
+      - Photos
       requestBody:
         content:
           application/json:
@@ -85,6 +82,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Photo'
           description: ''
+      summary: Photos create
+      x-summary-source: derived
   /api/v3/photos/{id}/:
     get:
       operationId: photos_retrieve
@@ -96,7 +95,7 @@ paths:
         description: A unique integer value identifying this photo.
         required: true
       tags:
-      - photos
+      - Photos
       security:
       - oauth2:
         - rentals:read
@@ -107,6 +106,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Photo'
           description: ''
+      summary: Photos retrieve
+      x-summary-source: derived
     put:
       operationId: photos_update
       parameters:
@@ -117,7 +118,7 @@ paths:
         description: A unique integer value identifying this photo.
         required: true
       tags:
-      - photos
+      - Photos
       requestBody:
         content:
           application/json:
@@ -140,6 +141,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UpdatePhoto'
           description: ''
+      summary: Photos update
+      x-summary-source: derived
     patch:
       operationId: photos_partial_update
       parameters:
@@ -150,7 +153,7 @@ paths:
         description: A unique integer value identifying this photo.
         required: true
       tags:
-      - photos
+      - Photos
       requestBody:
         content:
           application/json:
@@ -172,6 +175,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UpdatePhoto'
           description: ''
+      summary: Photos partial update
+      x-summary-source: derived
     delete:
       operationId: photos_destroy
       parameters:
@@ -182,51 +187,22 @@ paths:
         description: A unique integer value identifying this photo.
         required: true
       tags:
-      - photos
+      - Photos
       security:
       - oauth2:
         - photos:write
       responses:
         '204':
           description: No response body
+      summary: Photos destroy
+      x-summary-source: derived
 components:
   schemas:
-    BlankEnum:
-      enum:
-      - ''
     CategoryC86Enum:
       enum:
       - COVID
       type: string
       description: '* `COVID` - covid'
-    PaginatedPhotoList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Photo'
-        limit:
-          type: integer
-          example: 50
     UpdatePhoto:
       type: object
       properties:
@@ -331,6 +307,37 @@ components:
       - rental_id
       - subroom_position
       - subroom_type
+    BlankEnum:
+      enum:
+      - ''
+    PaginatedPhotoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Photo'
+        limit:
+          type: integer
+          example: 50
     NullEnum:
       enum:
       - null

@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: offices
+- name: Offices
 paths:
   /api/v3/offices/:
     get:
@@ -34,7 +29,7 @@ paths:
         schema:
           type: integer
       tags:
-      - offices
+      - Offices
       security:
       - oauth2:
         - offices:read
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedOfficeList'
           description: ''
+      summary: Offices list
+      x-summary-source: derived
   /api/v3/offices/{id}/:
     get:
       operationId: offices_retrieve
@@ -56,7 +53,7 @@ paths:
         description: A unique integer value identifying this office.
         required: true
       tags:
-      - offices
+      - Offices
       security:
       - oauth2:
         - offices:read
@@ -67,34 +64,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Office'
           description: ''
+      summary: Offices retrieve
+      x-summary-source: derived
 components:
   schemas:
-    Office:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          title: Office name
-          description: Name of the office, typically the property manager name combined with its city.
-          maxLength: 100
-        is_internal:
-          type: boolean
-          title: Is internal?
-          description: Whether the office is operated internally by the property manager rather than by an external partner. Defaults to false.
-        vat_rate:
-          type: number
-          format: double
-          description: VAT rate applied to prices excluding tax, as a decimal fraction (for example 0.2 for 20%). Defaults to 0.2.
-        user:
-          type: string
-          readOnly: true
-      required:
-      - id
-      - name
-      - user
     PaginatedOfficeList:
       type: object
       required:
@@ -123,6 +96,32 @@ components:
         limit:
           type: integer
           example: 10
+    Office:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Office name
+          description: Name of the office, typically the property manager name combined with its city.
+          maxLength: 100
+        is_internal:
+          type: boolean
+          title: Is internal?
+          description: Whether the office is operated internally by the property manager rather than by an external partner. Defaults to false.
+        vat_rate:
+          type: number
+          format: double
+          description: VAT rate applied to prices excluding tax, as a decimal fraction (for example 0.2 for 20%). Defaults to 0.2.
+        user:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - name
+      - user
   securitySchemes:
     basicAuth:
       type: http

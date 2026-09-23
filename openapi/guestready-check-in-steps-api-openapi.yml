@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: check_in_steps
 paths:
@@ -63,6 +58,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedCheckInStepList'
           description: ''
+      summary: Check in steps list
+      x-summary-source: derived
     post:
       operationId: check_in_steps_create
       description: Create a check-in step. Requires `rental_id` in the request body. If the property has no check-in guide yet, one is created automatically.
@@ -98,6 +95,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CheckInStep'
           description: ''
+      summary: Check in steps create
+      x-summary-source: derived
   /api/v3/check_in_steps/{id}/:
     get:
       operationId: check_in_steps_retrieve
@@ -128,6 +127,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CheckInStep'
           description: ''
+      summary: Check in steps retrieve
+      x-summary-source: derived
     put:
       operationId: check_in_steps_update
       description: 'Manage check-in guide steps for properties.
@@ -169,6 +170,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CheckInStep'
           description: ''
+      summary: Check in steps update
+      x-summary-source: derived
     patch:
       operationId: check_in_steps_partial_update
       description: 'Manage check-in guide steps for properties.
@@ -209,6 +212,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CheckInStep'
           description: ''
+      summary: Check in steps partial update
+      x-summary-source: derived
     delete:
       operationId: check_in_steps_destroy
       description: Soft-delete a check-in step.
@@ -227,6 +232,8 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Check in steps destroy
+      x-summary-source: derived
   /api/v3/check_in_steps/order/:
     post:
       operationId: check_in_steps_order_create
@@ -278,8 +285,71 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedCheckInStepList'
           description: ''
+      summary: Check in steps order create
+      x-summary-source: derived
 components:
   schemas:
+    CheckInStepAttachment:
+      type: object
+      properties:
+        image:
+          type:
+          - string
+          - 'null'
+          format: uri
+        file:
+          type:
+          - string
+          - 'null'
+          format: uri
+        image_or_file:
+          type:
+          - string
+          - 'null'
+          format: uri
+    PaginatedCheckInStepList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckInStep'
+        limit:
+          type: integer
+          example: 50
+    BlankEnum:
+      enum:
+      - ''
+    OrderCheckInSteps:
+      type: object
+      properties:
+        rental_id:
+          type: string
+        step_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - rental_id
+      - step_ids
     CheckInStep:
       type: object
       properties:
@@ -326,9 +396,9 @@ components:
           type: string
       required:
       - order
-    BlankEnum:
+    NullEnum:
       enum:
-      - ''
+      - null
     PatchedCheckInStep:
       type: object
       properties:
@@ -373,67 +443,6 @@ components:
           type: string
         content_nl:
           type: string
-    CheckInStepAttachment:
-      type: object
-      properties:
-        image:
-          type:
-          - string
-          - 'null'
-          format: uri
-        file:
-          type:
-          - string
-          - 'null'
-          format: uri
-        image_or_file:
-          type:
-          - string
-          - 'null'
-          format: uri
-    NullEnum:
-      enum:
-      - null
-    OrderCheckInSteps:
-      type: object
-      properties:
-        rental_id:
-          type: string
-        step_ids:
-          type: array
-          items:
-            type: integer
-      required:
-      - rental_id
-      - step_ids
-    PaginatedCheckInStepList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckInStep'
-        limit:
-          type: integer
-          example: 50
     ShowForCheckInTypeEnum:
       enum:
       - SELF_CHECK_IN

@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: midterm_contract_files
 paths:
@@ -67,6 +62,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedMidtermContractFileList'
           description: ''
+      summary: Midterm contract files list
+      x-summary-source: derived
     post:
       operationId: midterm_contract_files_create
       description: 'Base viewset for records linked to a reservation and scoped to the
@@ -107,6 +104,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/MidtermContractFile'
           description: ''
+      summary: Midterm contract files create
+      x-summary-source: derived
   /api/v3/midterm_contract_files/{id}/:
     get:
       operationId: midterm_contract_files_retrieve
@@ -143,6 +142,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/MidtermContractFile'
           description: ''
+      summary: Midterm contract files retrieve
+      x-summary-source: derived
     delete:
       operationId: midterm_contract_files_destroy
       description: 'Base viewset for records linked to a reservation and scoped to the
@@ -174,6 +175,8 @@ paths:
       responses:
         '204':
           description: No response body
+      summary: Midterm contract files destroy
+      x-summary-source: derived
 components:
   schemas:
     PaginatedMidtermContractFileList:

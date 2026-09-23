@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: descriptions
+- name: Descriptions
 paths:
   /api/v3/descriptions/:
     get:
@@ -44,7 +39,7 @@ paths:
         explode: true
         style: form
       tags:
-      - descriptions
+      - Descriptions
       security:
       - oauth2:
         - rentals:read
@@ -55,10 +50,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedDescriptionList'
           description: ''
+      summary: Descriptions list
+      x-summary-source: derived
     post:
       operationId: descriptions_create
       tags:
-      - descriptions
+      - Descriptions
       requestBody:
         content:
           application/json:
@@ -81,6 +78,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Description'
           description: ''
+      summary: Descriptions create
+      x-summary-source: derived
   /api/v3/descriptions/{id}/:
     get:
       operationId: descriptions_retrieve
@@ -92,7 +91,7 @@ paths:
         description: A unique integer value identifying this description appartement.
         required: true
       tags:
-      - descriptions
+      - Descriptions
       security:
       - oauth2:
         - rentals:read
@@ -103,6 +102,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Description'
           description: ''
+      summary: Descriptions retrieve
+      x-summary-source: derived
     put:
       operationId: descriptions_update
       parameters:
@@ -113,7 +114,7 @@ paths:
         description: A unique integer value identifying this description appartement.
         required: true
       tags:
-      - descriptions
+      - Descriptions
       requestBody:
         content:
           application/json:
@@ -136,6 +137,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UpdateDescription'
           description: ''
+      summary: Descriptions update
+      x-summary-source: derived
     patch:
       operationId: descriptions_partial_update
       parameters:
@@ -146,7 +149,7 @@ paths:
         description: A unique integer value identifying this description appartement.
         required: true
       tags:
-      - descriptions
+      - Descriptions
       requestBody:
         content:
           application/json:
@@ -168,6 +171,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/UpdateDescription'
           description: ''
+      summary: Descriptions partial update
+      x-summary-source: derived
     delete:
       operationId: descriptions_destroy
       parameters:
@@ -178,15 +183,98 @@ paths:
         description: A unique integer value identifying this description appartement.
         required: true
       tags:
-      - descriptions
+      - Descriptions
       security:
       - oauth2:
         - rentals:write
       responses:
         '204':
           description: No response body
+      summary: Descriptions destroy
+      x-summary-source: derived
 components:
   schemas:
+    PatchedUpdateDescription:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) the description belongs to.
+        headline:
+          type:
+          - string
+          - 'null'
+          description: Short listing headline shown as the property's title on booking platforms. Single line, up to 75 characters.
+          maxLength: 75
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Brief overview of the property, shown near the top of the listing. Up to 500 characters.
+          maxLength: 500
+        space:
+          type:
+          - string
+          - 'null'
+          description: 'Description of the space itself: the layout, rooms and what guests will find inside the property.'
+        access:
+          type:
+          - string
+          - 'null'
+          description: Description of how guests access the property and which areas they are free to use.
+        interaction:
+          type:
+          - string
+          - 'null'
+          description: Description of the level of contact and interaction guests can expect during their stay.
+        neighborhood:
+          type:
+          - string
+          - 'null'
+          title: Neighbourhood
+          description: Description of the surrounding neighbourhood, such as nearby attractions, amenities and the character of the area.
+        transit:
+          type:
+          - string
+          - 'null'
+          description: Description of how to get around and reach the property, such as public transport and parking.
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Any other useful details about the property not covered by the other sections.
+    PaginatedDescriptionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Description'
+        limit:
+          type: integer
+          example: 50
     UpdateDescription:
       type: object
       properties:
@@ -305,87 +393,6 @@ components:
       - id
       - language
       - rental_id
-    PatchedUpdateDescription:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: Id of the property (rental) the description belongs to.
-        headline:
-          type:
-          - string
-          - 'null'
-          description: Short listing headline shown as the property's title on booking platforms. Single line, up to 75 characters.
-          maxLength: 75
-        summary:
-          type:
-          - string
-          - 'null'
-          description: Brief overview of the property, shown near the top of the listing. Up to 500 characters.
-          maxLength: 500
-        space:
-          type:
-          - string
-          - 'null'
-          description: 'Description of the space itself: the layout, rooms and what guests will find inside the property.'
-        access:
-          type:
-          - string
-          - 'null'
-          description: Description of how guests access the property and which areas they are free to use.
-        interaction:
-          type:
-          - string
-          - 'null'
-          description: Description of the level of contact and interaction guests can expect during their stay.
-        neighborhood:
-          type:
-          - string
-          - 'null'
-          title: Neighbourhood
-          description: Description of the surrounding neighbourhood, such as nearby attractions, amenities and the character of the area.
-        transit:
-          type:
-          - string
-          - 'null'
-          description: Description of how to get around and reach the property, such as public transport and parking.
-        notes:
-          type:
-          - string
-          - 'null'
-          description: Any other useful details about the property not covered by the other sections.
-    PaginatedDescriptionList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Description'
-        limit:
-          type: integer
-          example: 50
   securitySchemes:
     basicAuth:
       type: http

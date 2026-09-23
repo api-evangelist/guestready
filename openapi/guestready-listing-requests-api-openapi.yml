@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: listing_requests
 paths:
@@ -45,6 +40,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedListingRequestList'
           description: ''
+      summary: Listing requests list
+      x-summary-source: derived
   /api/v3/listing_requests/{id}/:
     get:
       operationId: listing_requests_retrieve
@@ -67,6 +64,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListingRequest'
           description: ''
+      summary: Listing requests retrieve
+      x-summary-source: derived
 components:
   schemas:
     SourceEnum:
@@ -86,34 +85,23 @@ components:
         * `MEETING` - Meeting
 
         * `BUTTON` - Button'
-    PaginatedListingRequestList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ListingRequest'
-        limit:
-          type: integer
-          example: 10
+    ListingRequestStatusEnum:
+      enum:
+      - NEW
+      - PENDING
+      - PENDING_LISTING
+      - PUBLISHED
+      - CANCELLED
+      type: string
+      description: '* `NEW` - New
+
+        * `PENDING` - Pending
+
+        * `PENDING_LISTING` - Pending listing
+
+        * `PUBLISHED` - Published
+
+        * `CANCELLED` - Cancelled'
     ListingRequest:
       type: object
       properties:
@@ -149,23 +137,34 @@ components:
       - staff
       - status
       - user
-    ListingRequestStatusEnum:
-      enum:
-      - NEW
-      - PENDING
-      - PENDING_LISTING
-      - PUBLISHED
-      - CANCELLED
-      type: string
-      description: '* `NEW` - New
-
-        * `PENDING` - Pending
-
-        * `PENDING_LISTING` - Pending listing
-
-        * `PUBLISHED` - Published
-
-        * `CANCELLED` - Cancelled'
+    PaginatedListingRequestList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ListingRequest'
+        limit:
+          type: integer
+          example: 10
   securitySchemes:
     basicAuth:
       type: http

@@ -8,14 +8,9 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
-- name: schema
+- name: Schema
 paths:
   /api/v3/schema/:
     get:
@@ -49,7 +44,7 @@ paths:
           - pl
           - pt
       tags:
-      - schema
+      - Schema
       security:
       - {}
       responses:
@@ -72,6 +67,8 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+      summary: Schema retrieve
+      x-summary-source: derived
 components:
   securitySchemes:
     basicAuth:

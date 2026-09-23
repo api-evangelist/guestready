@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: daily_prices
 paths:
@@ -65,6 +60,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedDailyPriceList'
           description: ''
+      summary: Daily prices list
+      x-summary-source: derived
     post:
       operationId: daily_prices_create
       tags:
@@ -91,6 +88,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/DailyPrice'
           description: ''
+      summary: Daily prices create
+      x-summary-source: derived
   /api/v3/daily_prices/{id}/:
     get:
       operationId: daily_prices_retrieve
@@ -113,6 +112,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/DailyPrice'
           description: ''
+      summary: Daily prices retrieve
+      x-summary-source: derived
   /api/v3/daily_prices/bulk_update/:
     post:
       operationId: daily_prices_bulk_update_create
@@ -142,8 +143,39 @@ paths:
       responses:
         '201':
           description: No response body
+      summary: Daily prices bulk update create
+      x-summary-source: derived
 components:
   schemas:
+    DailyPrice:
+      type: object
+      properties:
+        is_available:
+          allOf:
+          - $ref: '#/components/schemas/IsAvailableEnum'
+          readOnly: true
+        date:
+          type: string
+          format: date
+        price:
+          type: number
+          format: double
+        minimum_stay:
+          type: integer
+        pricing_calendar:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+        user:
+          type: string
+          readOnly: true
+      required:
+      - is_available
+      - price
+      - pricing_calendar
+      - rental_id
+      - user
     PaginatedDailyPriceList:
       type: object
       required:
@@ -183,35 +215,6 @@ components:
         * `BOOKED` - BOOKED
 
         * `UNAVAILABLE` - UNAVAILABLE'
-    DailyPrice:
-      type: object
-      properties:
-        is_available:
-          allOf:
-          - $ref: '#/components/schemas/IsAvailableEnum'
-          readOnly: true
-        date:
-          type: string
-          format: date
-        price:
-          type: number
-          format: double
-        minimum_stay:
-          type: integer
-        pricing_calendar:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-        user:
-          type: string
-          readOnly: true
-      required:
-      - is_available
-      - price
-      - pricing_calendar
-      - rental_id
-      - user
   securitySchemes:
     basicAuth:
       type: http

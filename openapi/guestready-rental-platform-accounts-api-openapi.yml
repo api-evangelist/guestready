@@ -8,12 +8,7 @@ info:
     ### Throttling
 
 
-    Our API supports up to 400 requests per minute
-
-    '
-servers:
-- url: https://pms.rentalready.io/api/v3/
-  description: Base URL declared by the provider in apis.yml (roadmap#122).
+    Our API supports up to 400 requests per minute'
 tags:
 - name: rental_platform_accounts
 paths:
@@ -51,6 +46,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedRentalAccountList'
           description: ''
+      summary: Rental platform accounts list
+      x-summary-source: derived
   /api/v3/rental_platform_accounts/{id}/:
     get:
       operationId: rental_platform_accounts_retrieve
@@ -73,6 +70,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/RentalAccount'
           description: ''
+      summary: Rental platform accounts retrieve
+      x-summary-source: derived
 components:
   schemas:
     RentalAccountStatusEnum:
