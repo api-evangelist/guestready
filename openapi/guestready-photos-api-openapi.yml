@@ -198,12 +198,7 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CategoryC86Enum:
-      enum:
-      - COVID
-      type: string
-      description: '* `COVID` - covid'
-    UpdatePhoto:
+    PatchedUpdatePhoto:
       type: object
       properties:
         id:
@@ -247,12 +242,6 @@ components:
           - 'null'
           readOnly: true
           description: Position of the assigned room within its property. Read-only, null when the photo is not assigned to a room.
-      required:
-      - id
-      - kind_verbose
-      - rental_id
-      - subroom_position
-      - subroom_type
     Photo:
       type: object
       properties:
@@ -307,41 +296,7 @@ components:
       - rental_id
       - subroom_position
       - subroom_type
-    BlankEnum:
-      enum:
-      - ''
-    PaginatedPhotoList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Photo'
-        limit:
-          type: integer
-          example: 50
-    NullEnum:
-      enum:
-      - null
-    PatchedUpdatePhoto:
+    UpdatePhoto:
       type: object
       properties:
         id:
@@ -385,6 +340,51 @@ components:
           - 'null'
           readOnly: true
           description: Position of the assigned room within its property. Read-only, null when the photo is not assigned to a room.
+      required:
+      - id
+      - kind_verbose
+      - rental_id
+      - subroom_position
+      - subroom_type
+    CategoryC86Enum:
+      enum:
+      - COVID
+      type: string
+      description: '* `COVID` - covid'
+    BlankEnum:
+      enum:
+      - ''
+    PaginatedPhotoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Photo'
+        limit:
+          type: integer
+          example: 50
+    NullEnum:
+      enum:
+      - null
   securitySchemes:
     basicAuth:
       type: http

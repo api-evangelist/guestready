@@ -98,34 +98,6 @@ paths:
           description: ''
 components:
   schemas:
-    PaginatedInquiryList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Inquiry'
-        limit:
-          type: integer
-          example: 50
     Inquiry:
       type: object
       properties:
@@ -227,35 +199,34 @@ components:
       - origin
       - rental_id
       - status
-    InquiryStatusEnum:
-      enum:
-      - inquiry
-      - pending
-      - preapproved
-      - denied
-      - not_possible
-      - accepted
-      - cancelled
-      - special_offer
-      - not_found
-      type: string
-      description: '* `inquiry` - Inquiry
-
-        * `pending` - Pending
-
-        * `preapproved` - Pre-approved
-
-        * `denied` - Refused
-
-        * `not_possible` - Not possible
-
-        * `accepted` - Accepted
-
-        * `cancelled` - Cancelled
-
-        * `special_offer` - Special offer
-
-        * `not_found` - Not found'
+    PaginatedInquiryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Inquiry'
+        limit:
+          type: integer
+          example: 50
     InquiryOriginEnum:
       enum:
       - channel_manager
@@ -318,6 +289,35 @@ components:
         * `booking_widget` - Direct booking widget
 
         * `support` - Support'
+    InquiryStatusEnum:
+      enum:
+      - inquiry
+      - pending
+      - preapproved
+      - denied
+      - not_possible
+      - accepted
+      - cancelled
+      - special_offer
+      - not_found
+      type: string
+      description: '* `inquiry` - Inquiry
+
+        * `pending` - Pending
+
+        * `preapproved` - Pre-approved
+
+        * `denied` - Refused
+
+        * `not_possible` - Not possible
+
+        * `accepted` - Accepted
+
+        * `cancelled` - Cancelled
+
+        * `special_offer` - Special offer
+
+        * `not_found` - Not found'
   securitySchemes:
     basicAuth:
       type: http

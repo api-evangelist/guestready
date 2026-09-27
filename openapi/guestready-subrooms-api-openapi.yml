@@ -245,58 +245,29 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Bed:
-      type: object
-      properties:
-        bed_type:
-          type: string
-      required:
-      - bed_type
-    SubroomWindowCoverageEnum:
+    LocationEnum:
       enum:
-      - SHUTTER
-      - ESHUTTER
-      - CURTAIN
-      - STORE
-      - NOTHING
+      - ENSUITE
+      - NEXT_DOOR
+      - DOWN_THE_HALL
+      - OPPOSITE_THE_ROOM
+      - IN_THE_HALLWAY
+      - OTHER
+      - INSIDE_THE_UNIT
       type: string
-      description: '* `SHUTTER` - Shutter
+      description: '* `ENSUITE` - Ensuite
 
-        * `ESHUTTER` - Electronic Shutter
+        * `NEXT_DOOR` - Next door
 
-        * `CURTAIN` - Curtain
+        * `DOWN_THE_HALL` - Down the hall
 
-        * `STORE` - Store
+        * `OPPOSITE_THE_ROOM` - Opposite to the room
 
-        * `NOTHING` - No Coverage'
-    PaginatedSubroomList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Subroom'
-        limit:
-          type: integer
-          example: 50
+        * `IN_THE_HALLWAY` - In the hallway
+
+        * `OTHER` - Other
+
+        * `INSIDE_THE_UNIT` - Inside the unit'
     PatchedSubroom:
       type: object
       properties:
@@ -367,17 +338,33 @@ components:
           items:
             $ref: '#/components/schemas/Bed'
           description: Beds in this room.
-    PrivacyEnum:
+    Bed:
+      type: object
+      properties:
+        bed_type:
+          type: string
+      required:
+      - bed_type
+    SubroomWindowCoverageEnum:
       enum:
-      - PRIVATE
-      - SHARED
-      - ENSUITE
+      - SHUTTER
+      - ESHUTTER
+      - CURTAIN
+      - STORE
+      - NOTHING
       type: string
-      description: '* `PRIVATE` - Private
+      description: '* `SHUTTER` - Shutter
 
-        * `SHARED` - Shared
+        * `ESHUTTER` - Electronic Shutter
 
-        * `ENSUITE` - Ensuite'
+        * `CURTAIN` - Curtain
+
+        * `STORE` - Store
+
+        * `NOTHING` - No Coverage'
+    NullEnum:
+      enum:
+      - null
     Subroom:
       type: object
       properties:
@@ -453,32 +440,45 @@ components:
       - position
       - rental_id
       - subroom_type
-    LocationEnum:
+    PaginatedSubroomList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subroom'
+        limit:
+          type: integer
+          example: 50
+    PrivacyEnum:
       enum:
+      - PRIVATE
+      - SHARED
       - ENSUITE
-      - NEXT_DOOR
-      - DOWN_THE_HALL
-      - OPPOSITE_THE_ROOM
-      - IN_THE_HALLWAY
-      - OTHER
-      - INSIDE_THE_UNIT
       type: string
-      description: '* `ENSUITE` - Ensuite
+      description: '* `PRIVATE` - Private
 
-        * `NEXT_DOOR` - Next door
+        * `SHARED` - Shared
 
-        * `DOWN_THE_HALL` - Down the hall
-
-        * `OPPOSITE_THE_ROOM` - Opposite to the room
-
-        * `IN_THE_HALLWAY` - In the hallway
-
-        * `OTHER` - Other
-
-        * `INSIDE_THE_UNIT` - Inside the unit'
-    NullEnum:
-      enum:
-      - null
+        * `ENSUITE` - Ensuite'
   securitySchemes:
     basicAuth:
       type: http

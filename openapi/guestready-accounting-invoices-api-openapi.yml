@@ -43,6 +43,44 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    AccountingInvoiceCreateCategoryEnum:
+      enum:
+      - COMMISSION
+      - STAY
+      - SINGLE_DOCUMENT
+      - CLEANING
+      - COMMISSION_AND_PAYMENT_FEE
+      - PLATFORM_FEE
+      - PMS
+      - ADJUSTMENT
+      - PAYMENT_LINK
+      - RESOLUTION
+      - EXTRA_FEE
+      - GUEST_INVOICE
+      type: string
+      description: '* `COMMISSION` - Commission
+
+        * `STAY` - Stay
+
+        * `SINGLE_DOCUMENT` - Single document
+
+        * `CLEANING` - Cleaning
+
+        * `COMMISSION_AND_PAYMENT_FEE` - Commission and payment fee
+
+        * `PLATFORM_FEE` - Platform fee
+
+        * `PMS` - Property management software invoice
+
+        * `ADJUSTMENT` - Payout adjustment
+
+        * `PAYMENT_LINK` - Payment link
+
+        * `RESOLUTION` - Resolution
+
+        * `EXTRA_FEE` - Extra fee
+
+        * `GUEST_INVOICE` - Guest invoice'
     AccountingInvoiceCreate:
       type: object
       properties:
@@ -198,44 +236,6 @@ components:
         * `CREDIT_NOTE` - Credit Note
 
         * `RECEIPT` - Receipt'
-    AccountingInvoiceCreateCategoryEnum:
-      enum:
-      - COMMISSION
-      - STAY
-      - SINGLE_DOCUMENT
-      - CLEANING
-      - COMMISSION_AND_PAYMENT_FEE
-      - PLATFORM_FEE
-      - PMS
-      - ADJUSTMENT
-      - PAYMENT_LINK
-      - RESOLUTION
-      - EXTRA_FEE
-      - GUEST_INVOICE
-      type: string
-      description: '* `COMMISSION` - Commission
-
-        * `STAY` - Stay
-
-        * `SINGLE_DOCUMENT` - Single document
-
-        * `CLEANING` - Cleaning
-
-        * `COMMISSION_AND_PAYMENT_FEE` - Commission and payment fee
-
-        * `PLATFORM_FEE` - Platform fee
-
-        * `PMS` - Property management software invoice
-
-        * `ADJUSTMENT` - Payout adjustment
-
-        * `PAYMENT_LINK` - Payment link
-
-        * `RESOLUTION` - Resolution
-
-        * `EXTRA_FEE` - Extra fee
-
-        * `GUEST_INVOICE` - Guest invoice'
   securitySchemes:
     basicAuth:
       type: http

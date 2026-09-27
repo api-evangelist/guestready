@@ -423,6 +423,37 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ReservationExtraFee:
+      type: object
+      properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        paid_to:
+          $ref: '#/components/schemas/PaidToEnum'
+        extra_fee:
+          $ref: '#/components/schemas/ExtraFee'
+        vat_rate:
+          type: number
+          format: double
+          readOnly: true
+      required:
+      - amount
+      - extra_fee
+      - vat_rate
+    VoucherRedemption:
+      type: object
+      properties:
+        code:
+          type: string
+        voucher_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+      required:
+      - code
+      - voucher_amount
     Status1a4Enum:
       enum:
       - AUTHORIZED
@@ -443,127 +474,6 @@ components:
         * `VOIDED` - Voided
 
         * `PROCESSED` - Processed'
-    GuestInvoice:
-      type: object
-      properties:
-        email:
-          type:
-          - string
-          - 'null'
-          format: email
-          title: Recipient email
-          maxLength: 254
-        country_name:
-          type: string
-          readOnly: true
-        city:
-          type:
-          - string
-          - 'null'
-          maxLength: 50
-        name:
-          type:
-          - string
-          - 'null'
-          maxLength: 75
-        company:
-          type:
-          - string
-          - 'null'
-          title: Company name
-          maxLength: 255
-        tax_number:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        address:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-      required:
-      - country_name
-    DepartureCleaningEnum:
-      enum:
-      - FULL_OWNER
-      - FULL_PROPERTY_MANAGER
-      - DELIVERY
-      - CLEANING_ONLY
-      - NO_CLEANING
-      type: string
-      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
-
-        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding
-
-        * `DELIVERY` - Delivery (No cleaning + Property manager bedding)
-
-        * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
-
-        * `NO_CLEANING` - No cleaning'
-    MidTermPeriodBreakdown:
-      type: object
-      properties:
-        period_start_date:
-          type: string
-          format: date
-        period_end_date:
-          type: string
-          format: date
-        payment_due_date:
-          type: string
-          format: date
-        total_guest_payment:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        rental_income:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        platform_fees:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        city_tax:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        cleaning_fee_share:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        pm_commission:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        owner_net_payout:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-      required:
-      - city_tax
-      - cleaning_fee_share
-      - owner_net_payout
-      - payment_due_date
-      - period_end_date
-      - period_start_date
-      - platform_fees
-      - pm_commission
-      - rental_income
-      - total_guest_payment
-    ExtraFee:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 256
-      required:
-      - id
-      - name
     PatchedReservationArrivalTimeUpdate:
       type: object
       description: Set the expected guest arrival time, and nothing else.
@@ -572,33 +482,191 @@ components:
           type: string
           format: time
           description: New expected guest arrival time on the check-in date, in the property's local time (e.g. 15:00:00).
-    SwiklyDepositEmbedded:
+    NullEnum:
+      enum:
+      - null
+    ReservationStatusEnum:
+      enum:
+      - pending
+      - accepted
+      - cancelled
+      type: string
+      description: '* `pending` - pending
+
+        * `accepted` - accepted
+
+        * `cancelled` - cancelled'
+    PatchedReservationCreate:
       type: object
       properties:
-        status:
+        guest_preferred_language:
+          type:
+          - string
+          - 'null'
+        currency:
+          oneOf:
+          - $ref: '#/components/schemas/CurrencyD53Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        payment_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: 'Deprecated: any submitted value is ignored. The payment fee is computed from the platform/property-level rate configured in RentalReady.'
+        reservation_type:
           allOf:
-          - $ref: '#/components/schemas/Status6f9Enum'
+          - $ref: '#/components/schemas/ReservationTypeEnum'
+          default: CLASSIQUE
+        check_in_internal_comment:
+          type: string
+          description: Visible to staff only
+        platform_reservation_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        id:
+          type: integer
           readOnly: true
-          description: 'Swikly security-deposit status. Possible values: `NOT_PAID` — not yet paid; `PAID` — paid.
-
-
-            * `NOT_PAID` - NOT_PAID
-
-            * `PAID` - PAID'
-        amount:
-          type: number
-          format: double
-      required:
-      - amount
-      - status
-    ReturnCleaningEnum:
+        rental_id:
+          type: string
+          description: Id of the property (rental) the reservation is for.
+        booked_at:
+          type: string
+          readOnly: true
+          description: Timestamp when the booking was originally placed on the source platform (ISO 8601, e.g. 2026-07-04T09:00:00Z); falls back to when the reservation was first created in the system.
+        reservation_platform_id:
+          type: integer
+          description: Id of the reservation platform (the booking channel) the reservation belongs to.
+        checkin_date:
+          type: string
+          format: date
+          description: Check-in date, the first night of the stay (YYYY-MM-DD).
+        checkout_date:
+          type: string
+          format: date
+          description: Check-out date, the day the guest leaves (YYYY-MM-DD); falls after the check-in date.
+        rental_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        invoiced_cleaning_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        platform_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        guest_first_name:
+          type: string
+          maxLength: 90
+        guest_last_name:
+          type: string
+          maxLength: 150
+        guest_email:
+          type:
+          - string
+          - 'null'
+          format: email
+          maxLength: 254
+        guest_phone_number:
+          type: string
+        guest_personal_email:
+          type: string
+        arrival_time:
+          type: string
+          format: time
+          description: Expected guest arrival time on the check-in date (e.g. 15:00:00).
+        departure_time:
+          type: string
+          format: time
+          description: Expected guest departure time on the check-out date (e.g. 11:00:00).
+        number_of_adults:
+          type: integer
+          description: Number of adults staying on the reservation.
+        number_of_children:
+          type: integer
+          description: Number of children staying on the reservation.
+        number_of_infants:
+          type: integer
+          description: Number of infants staying on the reservation (at most 5).
+        number_of_pets:
+          type: integer
+          description: Number of pets on the reservation.
+        city_tax:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        status:
+          $ref: '#/components/schemas/Status3eaEnum'
+        is_stay_relocation:
+          type:
+          - boolean
+          - 'null'
+          title: Is this a stay relocation?
+        is_stay_extension:
+          type:
+          - boolean
+          - 'null'
+          title: Is this a stay extension?
+        blocked_reason:
+          oneOf:
+          - $ref: '#/components/schemas/BlockedReasonEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        blocked_notes:
+          type:
+          - string
+          - 'null'
+        internal_comment:
+          type: string
+          description: Visible to staff only
+        return_cleaning:
+          title: Owner return cleaning
+          oneOf:
+          - $ref: '#/components/schemas/ReturnCleaningEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        departure_cleaning:
+          title: Owner departure cleaning
+          oneOf:
+          - $ref: '#/components/schemas/DepartureCleaningEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        platform_payment_fees:
+          type: string
+          readOnly: true
+        passport_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        guest_invoice:
+          $ref: '#/components/schemas/GuestInvoice'
+        guidebook_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        user:
+          type: string
+          readOnly: true
+    ReservationTypeEnum:
       enum:
-      - FULL_OWNER
-      - FULL_PROPERTY_MANAGER
+      - CLASSIQUE
+      - FAUSSE
+      - PROPRIETAIRE
       type: string
-      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
+      description: '* `CLASSIQUE` - CLASSIQUE
 
-        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding'
+        * `FAUSSE` - FAUSSE
+
+        * `PROPRIETAIRE` - PROPRIETAIRE'
     ReservationCreate:
       type: object
       properties:
@@ -777,86 +845,23 @@ components:
       - rental_id
       - reservation_platform_id
       - user
-    Status3eaEnum:
+    DepartureCleaningEnum:
       enum:
-      - TENTATIVE
-      - NEW
-      - ARCHIVED
-      - CANCELLED
-      - CANCELLED_FEE
+      - FULL_OWNER
+      - FULL_PROPERTY_MANAGER
+      - DELIVERY
+      - CLEANING_ONLY
+      - NO_CLEANING
       type: string
-      description: '* `TENTATIVE` - Tentative
+      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
 
-        * `NEW` - New
+        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding
 
-        * `ARCHIVED` - Archived
+        * `DELIVERY` - Delivery (No cleaning + Property manager bedding)
 
-        * `CANCELLED` - Cancelled
+        * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
 
-        * `CANCELLED_FEE` - Cancelled with fee'
-    BlockedReasonEnum:
-      enum:
-      - HOST_STAY
-      - MAINTENANCE
-      - OTHER
-      - PARTIAL_OCCUPANCY
-      - FULL_OCCUPANCY
-      - BLOCKED_BY_HOST
-      - UPSELLING_REQUEST
-      type: string
-      description: '* `HOST_STAY` - Owner stay
-
-        * `MAINTENANCE` - Maintenance
-
-        * `OTHER` - Other
-
-        * `PARTIAL_OCCUPANCY` - Partially occupied
-
-        * `FULL_OCCUPANCY` - Fully occupied
-
-        * `BLOCKED_BY_HOST` - Blocked by owner
-
-        * `UPSELLING_REQUEST` - Upselling request'
-    PaymentLinkSecurityDeposit:
-      type: object
-      properties:
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Status1a4Enum'
-          description: 'Payment-link security-deposit status. Possible values: `NOT_PAID` — not yet paid; `AUTHORIZED` — pre-authorization hold placed; `PAID` — paid; `FAILED` — payment failed; `VOIDED` — payment voided; `PROCESSED` — pre-authorization released/processed.
-
-
-            * `AUTHORIZED` - Authorized
-
-            * `NOT_PAID` - Not paid
-
-            * `PAID` - Paid
-
-            * `FAILED` - Failed
-
-            * `VOIDED` - Voided
-
-            * `PROCESSED` - Processed'
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        pre_authorization:
-          type: boolean
-      required:
-      - amount
-    VoucherRedemption:
-      type: object
-      properties:
-        code:
-          type: string
-        voucher_amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
-      required:
-      - code
-      - voucher_amount
+        * `NO_CLEANING` - No cleaning'
     IdVerificationStatusEnum:
       enum:
       - NOT_VERIFIED
@@ -871,207 +876,91 @@ components:
         * `VERIFIED` - VERIFIED
 
         * `FAILED` - FAILED'
-    PatchedReservationCreate:
+    MidTermPeriodBreakdown:
       type: object
       properties:
-        guest_preferred_language:
-          type:
-          - string
-          - 'null'
-        currency:
-          oneOf:
-          - $ref: '#/components/schemas/CurrencyD53Enum'
-          - $ref: '#/components/schemas/BlankEnum'
-        payment_fee:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          description: 'Deprecated: any submitted value is ignored. The payment fee is computed from the platform/property-level rate configured in RentalReady.'
-        reservation_type:
-          allOf:
-          - $ref: '#/components/schemas/ReservationTypeEnum'
-          default: CLASSIQUE
-        check_in_internal_comment:
-          type: string
-          description: Visible to staff only
-        platform_reservation_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 50
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          description: Id of the property (rental) the reservation is for.
-        booked_at:
-          type: string
-          readOnly: true
-          description: Timestamp when the booking was originally placed on the source platform (ISO 8601, e.g. 2026-07-04T09:00:00Z); falls back to when the reservation was first created in the system.
-        reservation_platform_id:
-          type: integer
-          description: Id of the reservation platform (the booking channel) the reservation belongs to.
-        checkin_date:
+        period_start_date:
           type: string
           format: date
-          description: Check-in date, the first night of the stay (YYYY-MM-DD).
-        checkout_date:
+        period_end_date:
           type: string
           format: date
-          description: Check-out date, the day the guest leaves (YYYY-MM-DD); falls after the check-in date.
-        rental_amount:
+        payment_due_date:
+          type: string
+          format: date
+        total_guest_payment:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        platform_cleaning_fee:
+        rental_income:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        invoiced_cleaning_fee:
+        platform_fees:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        platform_fee:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        guest_first_name:
-          type: string
-          maxLength: 90
-        guest_last_name:
-          type: string
-          maxLength: 150
-        guest_email:
-          type:
-          - string
-          - 'null'
-          format: email
-          maxLength: 254
-        guest_phone_number:
-          type: string
-        guest_personal_email:
-          type: string
-        arrival_time:
-          type: string
-          format: time
-          description: Expected guest arrival time on the check-in date (e.g. 15:00:00).
-        departure_time:
-          type: string
-          format: time
-          description: Expected guest departure time on the check-out date (e.g. 11:00:00).
-        number_of_adults:
-          type: integer
-          description: Number of adults staying on the reservation.
-        number_of_children:
-          type: integer
-          description: Number of children staying on the reservation.
-        number_of_infants:
-          type: integer
-          description: Number of infants staying on the reservation (at most 5).
-        number_of_pets:
-          type: integer
-          description: Number of pets on the reservation.
         city_tax:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        status:
-          $ref: '#/components/schemas/Status3eaEnum'
-        is_stay_relocation:
-          type:
-          - boolean
-          - 'null'
-          title: Is this a stay relocation?
-        is_stay_extension:
-          type:
-          - boolean
-          - 'null'
-          title: Is this a stay extension?
-        blocked_reason:
-          oneOf:
-          - $ref: '#/components/schemas/BlockedReasonEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        blocked_notes:
-          type:
-          - string
-          - 'null'
-        internal_comment:
-          type: string
-          description: Visible to staff only
-        return_cleaning:
-          title: Owner return cleaning
-          oneOf:
-          - $ref: '#/components/schemas/ReturnCleaningEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        departure_cleaning:
-          title: Owner departure cleaning
-          oneOf:
-          - $ref: '#/components/schemas/DepartureCleaningEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        platform_payment_fees:
-          type: string
-          readOnly: true
-        passport_number:
-          type:
-          - string
-          - 'null'
-          maxLength: 50
-        guest_invoice:
-          $ref: '#/components/schemas/GuestInvoice'
-        guidebook_url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        user:
-          type: string
-          readOnly: true
-    ReservationStatusEnum:
-      enum:
-      - pending
-      - accepted
-      - cancelled
-      type: string
-      description: '* `pending` - pending
-
-        * `accepted` - accepted
-
-        * `cancelled` - cancelled'
-    ReservationTypeEnum:
-      enum:
-      - CLASSIQUE
-      - FAUSSE
-      - PROPRIETAIRE
-      type: string
-      description: '* `CLASSIQUE` - CLASSIQUE
-
-        * `FAUSSE` - FAUSSE
-
-        * `PROPRIETAIRE` - PROPRIETAIRE'
-    ReservationExtraFee:
-      type: object
-      properties:
-        amount:
+        cleaning_fee_share:
           type: string
           format: decimal
           pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        paid_to:
-          $ref: '#/components/schemas/PaidToEnum'
-        extra_fee:
-          $ref: '#/components/schemas/ExtraFee'
-        vat_rate:
+        pm_commission:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        owner_net_payout:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+      required:
+      - city_tax
+      - cleaning_fee_share
+      - owner_net_payout
+      - payment_due_date
+      - period_end_date
+      - period_start_date
+      - platform_fees
+      - pm_commission
+      - rental_income
+      - total_guest_payment
+    ExtraFee:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 256
+      required:
+      - id
+      - name
+    SwiklyDepositEmbedded:
+      type: object
+      properties:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status6f9Enum'
+          readOnly: true
+          description: 'Swikly security-deposit status. Possible values: `NOT_PAID` — not yet paid; `PAID` — paid.
+
+
+            * `NOT_PAID` - NOT_PAID
+
+            * `PAID` - PAID'
+        amount:
           type: number
           format: double
-          readOnly: true
       required:
       - amount
-      - extra_fee
-      - vat_rate
+      - status
+    BlankEnum:
+      enum:
+      - ''
     Reservation:
       type: object
       description: Renders custom-field values under `custom_fields`, skipped on list actions.
@@ -1543,6 +1432,107 @@ components:
       - total_paid_by_guest
       - user
       - voucher_redemption
+    PaginatedReservationList:
+      type: object
+      required:
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+        limit:
+          type: integer
+          example: 100
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+    Status6f9Enum:
+      enum:
+      - NOT_PAID
+      - PAID
+      type: string
+      description: '* `NOT_PAID` - NOT_PAID
+
+        * `PAID` - PAID'
+    GuestInvoice:
+      type: object
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          title: Recipient email
+          maxLength: 254
+        country_name:
+          type: string
+          readOnly: true
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 75
+        company:
+          type:
+          - string
+          - 'null'
+          title: Company name
+          maxLength: 255
+        tax_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        address:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+      required:
+      - country_name
+    BlockedReasonEnum:
+      enum:
+      - HOST_STAY
+      - MAINTENANCE
+      - OTHER
+      - PARTIAL_OCCUPANCY
+      - FULL_OCCUPANCY
+      - BLOCKED_BY_HOST
+      - UPSELLING_REQUEST
+      type: string
+      description: '* `HOST_STAY` - Owner stay
+
+        * `MAINTENANCE` - Maintenance
+
+        * `OTHER` - Other
+
+        * `PARTIAL_OCCUPANCY` - Partially occupied
+
+        * `FULL_OCCUPANCY` - Fully occupied
+
+        * `BLOCKED_BY_HOST` - Blocked by owner
+
+        * `UPSELLING_REQUEST` - Upselling request'
     CurrencyD53Enum:
       enum:
       - AED
@@ -1605,14 +1595,6 @@ components:
         * `THB` - THB
 
         * `USD` - USD'
-    Status6f9Enum:
-      enum:
-      - NOT_PAID
-      - PAID
-      type: string
-      description: '* `NOT_PAID` - NOT_PAID
-
-        * `PAID` - PAID'
     PaidToEnum:
       enum:
       - HOST
@@ -1621,41 +1603,59 @@ components:
       description: '* `HOST` - Owner
 
         * `PROPERTY_MANAGER` - Property manager'
-    BlankEnum:
-      enum:
-      - ''
-    PaginatedReservationList:
+    PaymentLinkSecurityDeposit:
       type: object
-      required:
-      - results
       properties:
-        count:
-          type: integer
-          example: 123
-          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Reservation'
-        limit:
-          type: integer
-          example: 100
-          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
-    NullEnum:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status1a4Enum'
+          description: 'Payment-link security-deposit status. Possible values: `NOT_PAID` — not yet paid; `AUTHORIZED` — pre-authorization hold placed; `PAID` — paid; `FAILED` — payment failed; `VOIDED` — payment voided; `PROCESSED` — pre-authorization released/processed.
+
+
+            * `AUTHORIZED` - Authorized
+
+            * `NOT_PAID` - Not paid
+
+            * `PAID` - Paid
+
+            * `FAILED` - Failed
+
+            * `VOIDED` - Voided
+
+            * `PROCESSED` - Processed'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        pre_authorization:
+          type: boolean
+      required:
+      - amount
+    Status3eaEnum:
       enum:
-      - null
+      - TENTATIVE
+      - NEW
+      - ARCHIVED
+      - CANCELLED
+      - CANCELLED_FEE
+      type: string
+      description: '* `TENTATIVE` - Tentative
+
+        * `NEW` - New
+
+        * `ARCHIVED` - Archived
+
+        * `CANCELLED` - Cancelled
+
+        * `CANCELLED_FEE` - Cancelled with fee'
+    ReturnCleaningEnum:
+      enum:
+      - FULL_OWNER
+      - FULL_PROPERTY_MANAGER
+      type: string
+      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
+
+        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding'
   securitySchemes:
     basicAuth:
       type: http

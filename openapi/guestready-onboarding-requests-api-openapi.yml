@@ -68,45 +68,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedOnboardingRequestList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/OnboardingRequest'
-        limit:
-          type: integer
-          example: 10
-    OnboardingRequestStatusEnum:
-      enum:
-      - OPEN
-      - CLOSE
-      - DECLINED
-      type: string
-      description: '* `OPEN` - Open
-
-        * `CLOSE` - Close
-
-        * `DECLINED` - Declined'
     OnboardingRequest:
       type: object
       properties:
@@ -148,6 +109,45 @@ components:
       - requested_by
       - status
       - user
+    OnboardingRequestStatusEnum:
+      enum:
+      - OPEN
+      - CLOSE
+      - DECLINED
+      type: string
+      description: '* `OPEN` - Open
+
+        * `CLOSE` - Close
+
+        * `DECLINED` - Declined'
+    PaginatedOnboardingRequestList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OnboardingRequest'
+        limit:
+          type: integer
+          example: 10
   securitySchemes:
     basicAuth:
       type: http

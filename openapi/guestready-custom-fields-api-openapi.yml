@@ -226,41 +226,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    EntityTypeEnum:
-      type: string
-      enum:
-      - reservation
-      - rental
-    PatchedCustomFieldDefinition:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        entity_type:
-          $ref: '#/components/schemas/EntityTypeEnum'
-        key:
-          type: string
-          maxLength: 100
-        label:
-          type: string
-          maxLength: 255
-        field_type:
-          $ref: '#/components/schemas/FieldTypeEnum'
-        options:
-          type: array
-          items:
-            type: string
-            maxLength: 255
-          description: List of allowed values. Required for 'select' field type, must be omitted or empty for other types.
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
     CustomFieldSearchResponse:
       type: object
       properties:
@@ -274,6 +239,11 @@ components:
       required:
       - entity_type
       - results
+    EntityTypeEnum:
+      type: string
+      enum:
+      - reservation
+      - rental
     PaginatedCustomFieldDefinitionList:
       type: object
       required:
@@ -302,23 +272,6 @@ components:
         limit:
           type: integer
           example: 100
-    FieldTypeEnum:
-      enum:
-      - text
-      - number
-      - boolean
-      - date
-      - select
-      type: string
-      description: '* `text` - Text
-
-        * `number` - Number
-
-        * `boolean` - Boolean
-
-        * `date` - Date
-
-        * `select` - Select'
     CustomFieldDefinition:
       type: object
       properties:
@@ -357,6 +310,53 @@ components:
       - key
       - label
       - modified
+    FieldTypeEnum:
+      enum:
+      - text
+      - number
+      - boolean
+      - date
+      - select
+      type: string
+      description: '* `text` - Text
+
+        * `number` - Number
+
+        * `boolean` - Boolean
+
+        * `date` - Date
+
+        * `select` - Select'
+    PatchedCustomFieldDefinition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        entity_type:
+          $ref: '#/components/schemas/EntityTypeEnum'
+        key:
+          type: string
+          maxLength: 100
+        label:
+          type: string
+          maxLength: 255
+        field_type:
+          $ref: '#/components/schemas/FieldTypeEnum'
+        options:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+          description: List of allowed values. Required for 'select' field type, must be omitted or empty for other types.
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
   securitySchemes:
     basicAuth:
       type: http

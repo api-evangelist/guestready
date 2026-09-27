@@ -117,6 +117,68 @@ components:
       description: '* `FIXED` - Fixed
 
         * `PERCENTAGE` - Percentage'
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
     TaxableBaseEnum:
       enum:
       - RENTAL_INCOME
@@ -301,71 +363,6 @@ components:
       - currency
       - id
       - name
-    NullEnum:
-      enum:
-      - null
-    CurrencyD53Enum:
-      enum:
-      - AED
-      - AUD
-      - BRL
-      - CAD
-      - CHF
-      - CZK
-      - EUR
-      - GBP
-      - HKD
-      - IDR
-      - ILS
-      - JPY
-      - KRW
-      - MAD
-      - MYR
-      - PLN
-      - RUB
-      - SAR
-      - THB
-      - USD
-      type: string
-      description: '* `AED` - AED
-
-        * `AUD` - AUD
-
-        * `BRL` - BRL
-
-        * `CAD` - CAD
-
-        * `CHF` - CHF
-
-        * `CZK` - CZK
-
-        * `EUR` - EUR
-
-        * `GBP` - GBP
-
-        * `HKD` - HKD
-
-        * `IDR` - IDR
-
-        * `ILS` - ILS
-
-        * `JPY` - JPY
-
-        * `KRW` - KRW
-
-        * `MAD` - MAD
-
-        * `MYR` - MYR
-
-        * `PLN` - PLN
-
-        * `RUB` - RUB
-
-        * `SAR` - SAR
-
-        * `THB` - THB
-
-        * `USD` - USD'
     ChargeTypeEnum:
       enum:
       - PER_ADULT
@@ -377,6 +374,9 @@ components:
         * `PER_ROOM` - Per room / per night
 
         * `PER_NIGHT` - Per night'
+    NullEnum:
+      enum:
+      - null
   securitySchemes:
     basicAuth:
       type: http

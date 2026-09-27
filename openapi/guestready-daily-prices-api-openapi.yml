@@ -147,6 +147,45 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    IsAvailableEnum:
+      enum:
+      - AVAILABLE
+      - BOOKED
+      - UNAVAILABLE
+      type: string
+      description: '* `AVAILABLE` - AVAILABLE
+
+        * `BOOKED` - BOOKED
+
+        * `UNAVAILABLE` - UNAVAILABLE'
+    PaginatedDailyPriceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyPrice'
+        limit:
+          type: integer
+          example: 365
     DailyPrice:
       type: object
       properties:
@@ -176,45 +215,6 @@ components:
       - pricing_calendar
       - rental_id
       - user
-    PaginatedDailyPriceList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/DailyPrice'
-        limit:
-          type: integer
-          example: 365
-    IsAvailableEnum:
-      enum:
-      - AVAILABLE
-      - BOOKED
-      - UNAVAILABLE
-      type: string
-      description: '* `AVAILABLE` - AVAILABLE
-
-        * `BOOKED` - BOOKED
-
-        * `UNAVAILABLE` - UNAVAILABLE'
   securitySchemes:
     basicAuth:
       type: http

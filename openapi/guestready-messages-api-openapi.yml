@@ -190,14 +190,6 @@ paths:
           description: ''
 components:
   schemas:
-    SenderEnum:
-      enum:
-      - guest
-      - staff
-      type: string
-      description: '* `guest` - Guest
-
-        * `staff` - Staff'
     Message:
       type: object
       properties:
@@ -232,6 +224,47 @@ components:
       - id
       - sender
       - sent_at
+    ChannelEnum:
+      enum:
+      - airbnb
+      - homeaway
+      - vrbo
+      - vrbo_qa
+      - email
+      - sms
+      - booking
+      - booking-com
+      - booking-qa
+      - internal
+      - whatsapp
+      - guestspace
+      - support
+      type: string
+      description: '* `airbnb` - Airbnb
+
+        * `homeaway` - HomeAway
+
+        * `vrbo` - VRBO
+
+        * `vrbo_qa` - VRBO (QA)
+
+        * `email` - Email
+
+        * `sms` - SMS
+
+        * `booking` - Booking.com (Channel-Manager)
+
+        * `booking-com` - Booking.com
+
+        * `booking-qa` - Booking.com QA
+
+        * `internal` - Internal
+
+        * `whatsapp` - WhatsApp
+
+        * `guestspace` - Guest space
+
+        * `support` - Support'
     MessageCreate:
       type: object
       properties:
@@ -274,50 +307,17 @@ components:
         limit:
           type: integer
           example: 50
+    SenderEnum:
+      enum:
+      - guest
+      - staff
+      type: string
+      description: '* `guest` - Guest
+
+        * `staff` - Staff'
     NullEnum:
       enum:
       - null
-    ChannelEnum:
-      enum:
-      - airbnb
-      - homeaway
-      - vrbo
-      - vrbo_qa
-      - email
-      - sms
-      - booking
-      - booking-com
-      - booking-qa
-      - internal
-      - whatsapp
-      - guestspace
-      - support
-      type: string
-      description: '* `airbnb` - Airbnb
-
-        * `homeaway` - HomeAway
-
-        * `vrbo` - VRBO
-
-        * `vrbo_qa` - VRBO (QA)
-
-        * `email` - Email
-
-        * `sms` - SMS
-
-        * `booking` - Booking.com (Channel-Manager)
-
-        * `booking-com` - Booking.com
-
-        * `booking-qa` - Booking.com QA
-
-        * `internal` - Internal
-
-        * `whatsapp` - WhatsApp
-
-        * `guestspace` - Guest space
-
-        * `support` - Support'
   securitySchemes:
     basicAuth:
       type: http

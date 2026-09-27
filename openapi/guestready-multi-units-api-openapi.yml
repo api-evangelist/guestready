@@ -224,6 +224,34 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    UpdateMultiUnit:
+      type: object
+      description: 'Partially update a parent/child multi-unit.
+
+
+        Every field is optional, but ``main_unit`` and ``rentals`` must be supplied
+
+        together (or both omitted). When they are supplied, the multi-unit''s office
+
+        and address are refreshed from the new main unit; newly added properties have
+
+        their calendars blocked and removed ones unblocked for future reservations
+
+        (see ``save_rentals_and_block``).'
+      properties:
+        name:
+          type: string
+          description: New name for the multi-unit.
+        main_unit:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) to set as the main (parent) unit. Must be provided together with rentals; the multi-unit's office and address are refreshed from it.
+        rentals:
+          type: array
+          items:
+            type: string
+            title: Contract number
+          description: Ids of the properties (rentals) to group under the multi-unit, including the main unit and at least one sub-unit. Must be provided together with main_unit. A property not already in this multi-unit must not belong to another one and must share the main unit's address or sit within the configured distance of it. Newly added properties have their future reservations' calendars blocked and removed ones unblocked.
     MultiUnitTypeEnum:
       enum:
       - PARENT_CHILD
@@ -232,17 +260,34 @@ components:
       description: '* `PARENT_CHILD` - PARENT_CHILD
 
         * `HOTEL` - HOTEL'
-    MultiUnitStatusEnum:
-      enum:
-      - INACTIVE
-      - ACTIVE
-      - ONBOARDING
-      type: string
-      description: '* `INACTIVE` - INACTIVE
+    PatchedUpdateMultiUnit:
+      type: object
+      description: 'Partially update a parent/child multi-unit.
 
-        * `ACTIVE` - ACTIVE
 
-        * `ONBOARDING` - ONBOARDING'
+        Every field is optional, but ``main_unit`` and ``rentals`` must be supplied
+
+        together (or both omitted). When they are supplied, the multi-unit''s office
+
+        and address are refreshed from the new main unit; newly added properties have
+
+        their calendars blocked and removed ones unblocked for future reservations
+
+        (see ``save_rentals_and_block``).'
+      properties:
+        name:
+          type: string
+          description: New name for the multi-unit.
+        main_unit:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) to set as the main (parent) unit. Must be provided together with rentals; the multi-unit's office and address are refreshed from it.
+        rentals:
+          type: array
+          items:
+            type: string
+            title: Contract number
+          description: Ids of the properties (rentals) to group under the multi-unit, including the main unit and at least one sub-unit. Must be provided together with main_unit. A property not already in this multi-unit must not belong to another one and must share the main unit's address or sit within the configured distance of it. Newly added properties have their future reservations' calendars blocked and removed ones unblocked.
     MultiUnit:
       type: object
       properties:
@@ -328,90 +373,6 @@ components:
       - rentals
       - status
       - type
-    PaginatedMultiUnitList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultiUnit'
-        limit:
-          type: integer
-          example: 50
-    PatchedUpdateMultiUnit:
-      type: object
-      description: 'Partially update a parent/child multi-unit.
-
-
-        Every field is optional, but ``main_unit`` and ``rentals`` must be supplied
-
-        together (or both omitted). When they are supplied, the multi-unit''s office
-
-        and address are refreshed from the new main unit; newly added properties have
-
-        their calendars blocked and removed ones unblocked for future reservations
-
-        (see ``save_rentals_and_block``).'
-      properties:
-        name:
-          type: string
-          description: New name for the multi-unit.
-        main_unit:
-          type: string
-          title: Contract number
-          description: Id of the property (rental) to set as the main (parent) unit. Must be provided together with rentals; the multi-unit's office and address are refreshed from it.
-        rentals:
-          type: array
-          items:
-            type: string
-            title: Contract number
-          description: Ids of the properties (rentals) to group under the multi-unit, including the main unit and at least one sub-unit. Must be provided together with main_unit. A property not already in this multi-unit must not belong to another one and must share the main unit's address or sit within the configured distance of it. Newly added properties have their future reservations' calendars blocked and removed ones unblocked.
-    UpdateMultiUnit:
-      type: object
-      description: 'Partially update a parent/child multi-unit.
-
-
-        Every field is optional, but ``main_unit`` and ``rentals`` must be supplied
-
-        together (or both omitted). When they are supplied, the multi-unit''s office
-
-        and address are refreshed from the new main unit; newly added properties have
-
-        their calendars blocked and removed ones unblocked for future reservations
-
-        (see ``save_rentals_and_block``).'
-      properties:
-        name:
-          type: string
-          description: New name for the multi-unit.
-        main_unit:
-          type: string
-          title: Contract number
-          description: Id of the property (rental) to set as the main (parent) unit. Must be provided together with rentals; the multi-unit's office and address are refreshed from it.
-        rentals:
-          type: array
-          items:
-            type: string
-            title: Contract number
-          description: Ids of the properties (rentals) to group under the multi-unit, including the main unit and at least one sub-unit. Must be provided together with main_unit. A property not already in this multi-unit must not belong to another one and must share the main unit's address or sit within the configured distance of it. Newly added properties have their future reservations' calendars blocked and removed ones unblocked.
     CreateMultiUnit:
       type: object
       description: 'Create a parent/child multi-unit from a main unit and its sub-units.
@@ -444,6 +405,45 @@ components:
       - main_unit
       - name
       - rentals
+    PaginatedMultiUnitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiUnit'
+        limit:
+          type: integer
+          example: 50
+    MultiUnitStatusEnum:
+      enum:
+      - INACTIVE
+      - ACTIVE
+      - ONBOARDING
+      type: string
+      description: '* `INACTIVE` - INACTIVE
+
+        * `ACTIVE` - ACTIVE
+
+        * `ONBOARDING` - ONBOARDING'
   securitySchemes:
     basicAuth:
       type: http

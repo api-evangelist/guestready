@@ -179,34 +179,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedMidtermContractFileList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MidtermContractFile'
-        limit:
-          type: integer
-          example: 50
     MidtermContractFile:
       type: object
       description: 'Scopes the writable ``reservation`` field to the caller''s rentals.
@@ -250,6 +222,34 @@ components:
       - modified
       - reservation
       - url
+    PaginatedMidtermContractFileList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MidtermContractFile'
+        limit:
+          type: integer
+          example: 50
   securitySchemes:
     basicAuth:
       type: http

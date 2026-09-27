@@ -215,39 +215,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PatchedBedroom:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        bedroom_type:
-          allOf:
-          - $ref: '#/components/schemas/BedroomTypeEnum'
-          default: BEDROOM
-        window_coverage:
-          oneOf:
-          - $ref: '#/components/schemas/BedroomWindowCoverageEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        universal_adapter:
-          type: boolean
-          readOnly: true
-          default: false
-        beds:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bed'
-    Bed:
-      type: object
-      properties:
-        bed_type:
-          type: string
-      required:
-      - bed_type
     Bedroom:
       type: object
       properties:
@@ -279,6 +246,13 @@ components:
       - id
       - rental_id
       - universal_adapter
+    Bed:
+      type: object
+      properties:
+        bed_type:
+          type: string
+      required:
+      - bed_type
     BedroomWindowCoverageEnum:
       enum:
       - SHUTTER
@@ -296,6 +270,32 @@ components:
         * `STORE` - STORE
 
         * `NOTHING` - NOTHING'
+    PatchedBedroom:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        bedroom_type:
+          allOf:
+          - $ref: '#/components/schemas/BedroomTypeEnum'
+          default: BEDROOM
+        window_coverage:
+          oneOf:
+          - $ref: '#/components/schemas/BedroomWindowCoverageEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        universal_adapter:
+          type: boolean
+          readOnly: true
+          default: false
+        beds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bed'
     PaginatedBedroomList:
       type: object
       required:
@@ -324,6 +324,9 @@ components:
         limit:
           type: integer
           example: 50
+    NullEnum:
+      enum:
+      - null
     BedroomTypeEnum:
       enum:
       - BEDROOM
@@ -332,9 +335,6 @@ components:
       description: '* `BEDROOM` - BEDROOM
 
         * `LIVINGROOM` - LIVINGROOM'
-    NullEnum:
-      enum:
-      - null
   securitySchemes:
     basicAuth:
       type: http

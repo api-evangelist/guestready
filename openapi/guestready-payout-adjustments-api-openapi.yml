@@ -176,6 +176,137 @@ paths:
           description: ''
 components:
   schemas:
+    PayoutAdjustmentAccountingInvoice:
+      type: object
+      properties:
+        serie:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        emmission_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        category:
+          type: integer
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        pdf:
+          type:
+          - string
+          - 'null'
+          format: uri
+      required:
+      - category
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
+    PayoutAdjustmentStatusEnum:
+      enum:
+      - inactive
+      - paid
+      - not_paid
+      type: string
+      description: '* `inactive` - Inactive
+
+        * `paid` - Paid
+
+        * `not_paid` - Not Paid'
+    PaginatedPayoutAdjustmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayoutAdjustment'
+        limit:
+          type: integer
+          example: 100
+    BlankEnum:
+      enum:
+      - ''
     PayoutAdjustment:
       type: object
       properties:
@@ -304,83 +435,14 @@ components:
       - invoices
       - owner
       - property
-    PayoutAdjustmentStatusEnum:
+    InternalCategoryEnum:
       enum:
-      - inactive
-      - paid
-      - not_paid
+      - airbnb_resolution
+      - mission_charge
       type: string
-      description: '* `inactive` - Inactive
+      description: '* `airbnb_resolution` - airbnb_resolution
 
-        * `paid` - Paid
-
-        * `not_paid` - Not Paid'
-    PayoutAdjustmentTypeEnum:
-      enum:
-      - CHARGE
-      - REFUND
-      type: string
-      description: '* `CHARGE` - Charge
-
-        * `REFUND` - Refund'
-    PaginatedPayoutAdjustmentList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PayoutAdjustment'
-        limit:
-          type: integer
-          example: 100
-    BlankEnum:
-      enum:
-      - ''
-    PayoutAdjustmentAccountingInvoice:
-      type: object
-      properties:
-        serie:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        emmission_date:
-          type:
-          - string
-          - 'null'
-          format: date
-        category:
-          type: integer
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-        pdf:
-          type:
-          - string
-          - 'null'
-          format: uri
-      required:
-      - category
+        * `mission_charge` - mission_charge'
     PayoutAdjustmentCategoryEnum:
       enum:
       - cleaning
@@ -446,79 +508,17 @@ components:
         * `termination_fee` - Termination Fee
 
         * `others` - Others'
-    InternalCategoryEnum:
+    PayoutAdjustmentTypeEnum:
       enum:
-      - airbnb_resolution
-      - mission_charge
+      - CHARGE
+      - REFUND
       type: string
-      description: '* `airbnb_resolution` - airbnb_resolution
+      description: '* `CHARGE` - Charge
 
-        * `mission_charge` - mission_charge'
+        * `REFUND` - Refund'
     NullEnum:
       enum:
       - null
-    CurrencyD53Enum:
-      enum:
-      - AED
-      - AUD
-      - BRL
-      - CAD
-      - CHF
-      - CZK
-      - EUR
-      - GBP
-      - HKD
-      - IDR
-      - ILS
-      - JPY
-      - KRW
-      - MAD
-      - MYR
-      - PLN
-      - RUB
-      - SAR
-      - THB
-      - USD
-      type: string
-      description: '* `AED` - AED
-
-        * `AUD` - AUD
-
-        * `BRL` - BRL
-
-        * `CAD` - CAD
-
-        * `CHF` - CHF
-
-        * `CZK` - CZK
-
-        * `EUR` - EUR
-
-        * `GBP` - GBP
-
-        * `HKD` - HKD
-
-        * `IDR` - IDR
-
-        * `ILS` - ILS
-
-        * `JPY` - JPY
-
-        * `KRW` - KRW
-
-        * `MAD` - MAD
-
-        * `MYR` - MYR
-
-        * `PLN` - PLN
-
-        * `RUB` - RUB
-
-        * `SAR` - SAR
-
-        * `THB` - THB
-
-        * `USD` - USD'
   securitySchemes:
     basicAuth:
       type: http

@@ -232,20 +232,34 @@ paths:
           description: ''
 components:
   schemas:
-    IncidentCategoryEnum:
-      enum:
-      - CLEANING
-      - MAINTENANCE
-      - CHECK_IN
-      - QUALITY
-      type: string
-      description: '* `CLEANING` - Cleaning
-
-        * `MAINTENANCE` - Maintenance
-
-        * `CHECK_IN` - Check-in
-
-        * `QUALITY` - Quality'
+    PaginatedIncidentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Incident'
+        limit:
+          type: integer
+          example: 100
     Incident:
       type: object
       properties:
@@ -326,7 +340,7 @@ components:
       - issues
       - mission
       - property
-    PatchedArchiveIncident:
+    PatchedCloseIncident:
       type: object
       description: "Base write serializer for the incident ``close`` / ``archive`` actions.\n\nBound to the incident instance (like\n``MarkPayoutAdjustmentAsPaidSerializer``): transition rules are checked in\n``validate`` against ``self.instance`` and the mutation happens in\n``update``.\n\nModelled on the incident dashboard's Close / Archive buttons, but it does\nNOT reproduce ``authentification.views.MarkIncidentAsClosed`` /\n``MarkIncidentAsIgnored`` line for line. Three deliberate divergences:\n\n1. **Only a non-empty comment overwrites** ``status_change_comment``. The\n   views assign ``request.POST.get(\"comment\", None)`` UNCONDITIONALLY, so a\n   no-comment post wipes the existing reason -- including the note\n   ``issue_manager.signals.close_incident_when_all_tickets_closed`` writes\n   (\"All tickets are closed.\"). An API caller re-closing without a comment\n   must not silently destroy that provenance.\n2. **Transitions out of IGNORED are rejected.** The views themselves accept\n   any transition; it is the dashboard TEMPLATES that make IGNORED terminal\n   (``staffing/templates/staffing/mission_incidents.html`` and\n   ``authentification/templates/authentification/table_actions.html`` both\n   disable the whole action menu on an archived incident). The API mirrors\n   what the interface can actually produce, not what the views would let\n   through -- otherwise the API could re-archive an incident, overwriting a\n   human's archive note and bumping ``status_updated_at`` in a way no user\n   can.\n3. **Idempotent re-close is allowed** even though the template hides Close\n   on a CLOSED incident: re-closing changes nothing a caller cares about\n   (same target status, ``status_updated_at`` keeps the original transition\n   time), and an agent retrying a call it cannot tell succeeded must not\n   get a spurious 400. CLOSED -> IGNORED stays allowed too, because the\n   templates do offer Archive on a closed incident."
       properties:
@@ -335,35 +349,21 @@ components:
           - string
           - 'null'
           description: Optional free-text reason recorded on the incident for this status change. Left out, blank, or null, the previous status comment is kept -- notably the automatic 'All tickets are closed.' note.
-    PaginatedIncidentList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Incident'
-        limit:
-          type: integer
-          example: 100
-    PatchedCloseIncident:
+    IncidentCategoryEnum:
+      enum:
+      - CLEANING
+      - MAINTENANCE
+      - CHECK_IN
+      - QUALITY
+      type: string
+      description: '* `CLEANING` - Cleaning
+
+        * `MAINTENANCE` - Maintenance
+
+        * `CHECK_IN` - Check-in
+
+        * `QUALITY` - Quality'
+    PatchedArchiveIncident:
       type: object
       description: "Base write serializer for the incident ``close`` / ``archive`` actions.\n\nBound to the incident instance (like\n``MarkPayoutAdjustmentAsPaidSerializer``): transition rules are checked in\n``validate`` against ``self.instance`` and the mutation happens in\n``update``.\n\nModelled on the incident dashboard's Close / Archive buttons, but it does\nNOT reproduce ``authentification.views.MarkIncidentAsClosed`` /\n``MarkIncidentAsIgnored`` line for line. Three deliberate divergences:\n\n1. **Only a non-empty comment overwrites** ``status_change_comment``. The\n   views assign ``request.POST.get(\"comment\", None)`` UNCONDITIONALLY, so a\n   no-comment post wipes the existing reason -- including the note\n   ``issue_manager.signals.close_incident_when_all_tickets_closed`` writes\n   (\"All tickets are closed.\"). An API caller re-closing without a comment\n   must not silently destroy that provenance.\n2. **Transitions out of IGNORED are rejected.** The views themselves accept\n   any transition; it is the dashboard TEMPLATES that make IGNORED terminal\n   (``staffing/templates/staffing/mission_incidents.html`` and\n   ``authentification/templates/authentification/table_actions.html`` both\n   disable the whole action menu on an archived incident). The API mirrors\n   what the interface can actually produce, not what the views would let\n   through -- otherwise the API could re-archive an incident, overwriting a\n   human's archive note and bumping ``status_updated_at`` in a way no user\n   can.\n3. **Idempotent re-close is allowed** even though the template hides Close\n   on a CLOSED incident: re-closing changes nothing a caller cares about\n   (same target status, ``status_updated_at`` keeps the original transition\n   time), and an agent retrying a call it cannot tell succeeded must not\n   get a spurious 400. CLOSED -> IGNORED stays allowed too, because the\n   templates do offer Archive on a closed incident."
       properties:

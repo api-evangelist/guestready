@@ -156,14 +156,6 @@ components:
       - payment_link
       - reservation_id
       - status
-    Status6f9Enum:
-      enum:
-      - NOT_PAID
-      - PAID
-      type: string
-      description: '* `NOT_PAID` - NOT_PAID
-
-        * `PAID` - PAID'
     PaginatedSwiklyDepositList:
       type: object
       required:
@@ -192,6 +184,14 @@ components:
         limit:
           type: integer
           example: 100
+    Status6f9Enum:
+      enum:
+      - NOT_PAID
+      - PAID
+      type: string
+      description: '* `NOT_PAID` - NOT_PAID
+
+        * `PAID` - PAID'
   securitySchemes:
     basicAuth:
       type: http

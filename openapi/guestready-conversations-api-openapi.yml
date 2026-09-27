@@ -244,6 +244,95 @@ components:
         * `opened` - Opened
 
         * `closed` - Closed'
+    ConversationCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusFa3Enum'
+        rental_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+        reservation_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+        default_channel:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+      required:
+      - id
+    PatchedSetConversationFlag:
+      type: object
+      description: 'Write serializer for the ``set_flag`` action: one field, no silent no-op.
+
+
+        Bound to the conversation instance (like the incident status-change
+
+        serializers): ``update`` delegates to ``SetConversationFlagService``, so this
+
+        path produces exactly the mailbox''s side effects -- the conversation event
+
+        and the note on every ticket raised from the conversation.
+
+
+        ``flag_id`` is REQUIRED and nullable, and the two are not the same thing:
+
+        ``null`` removes the flag, while omitting the field is a 400. A missing
+
+        field must never read as "leave it alone" on a single-field write -- an
+
+        agent that meant to clear a flag and dropped the key would otherwise get a
+
+        200 back for a call that changed nothing.
+
+
+        The queryset is unscoped, like the ``flag_id`` filter and the
+
+        ``conversation_flags`` resource: ``ConversationFlag`` is global reference
+
+        data, so narrowing it per tenant would only 400 a valid id.'
+      properties:
+        flag_id:
+          type:
+          - integer
+          - 'null'
+          description: Id of the triage flag to put on the conversation, or null to remove the flag. List the ids with the conversation_flags resource.
+    PaginatedConversationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conversation'
+        limit:
+          type: integer
+          example: 50
     Conversation:
       type: object
       properties:
@@ -356,59 +445,6 @@ components:
       - reservation_ids
       - snooze_until
       - status
-    PaginatedConversationFlagList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConversationFlag'
-        limit:
-          type: integer
-          example: 50
-    ConversationCreate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/StatusFa3Enum'
-        rental_ids:
-          type: array
-          items:
-            type: integer
-          writeOnly: true
-        reservation_ids:
-          type: array
-          items:
-            type: integer
-          writeOnly: true
-        default_channel:
-          type:
-          - string
-          - 'null'
-          maxLength: 250
-      required:
-      - id
     ConversationFlag:
       type: object
       description: 'A triage flag, named AS THE CALLER''S PROPERTY MANAGER SEES IT.
@@ -442,43 +478,7 @@ components:
       - class_name
       - id
       - name
-    PatchedSetConversationFlag:
-      type: object
-      description: 'Write serializer for the ``set_flag`` action: one field, no silent no-op.
-
-
-        Bound to the conversation instance (like the incident status-change
-
-        serializers): ``update`` delegates to ``SetConversationFlagService``, so this
-
-        path produces exactly the mailbox''s side effects -- the conversation event
-
-        and the note on every ticket raised from the conversation.
-
-
-        ``flag_id`` is REQUIRED and nullable, and the two are not the same thing:
-
-        ``null`` removes the flag, while omitting the field is a 400. A missing
-
-        field must never read as "leave it alone" on a single-field write -- an
-
-        agent that meant to clear a flag and dropped the key would otherwise get a
-
-        200 back for a call that changed nothing.
-
-
-        The queryset is unscoped, like the ``flag_id`` filter and the
-
-        ``conversation_flags`` resource: ``ConversationFlag`` is global reference
-
-        data, so narrowing it per tenant would only 400 a valid id.'
-      properties:
-        flag_id:
-          type:
-          - integer
-          - 'null'
-          description: Id of the triage flag to put on the conversation, or null to remove the flag. List the ids with the conversation_flags resource.
-    PaginatedConversationList:
+    PaginatedConversationFlagList:
       type: object
       required:
       - count
@@ -502,7 +502,7 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/Conversation'
+            $ref: '#/components/schemas/ConversationFlag'
         limit:
           type: integer
           example: 50

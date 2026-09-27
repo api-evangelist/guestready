@@ -163,69 +163,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Listing:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        reservation_platform:
-          allOf:
-          - $ref: '#/components/schemas/ReservationPlatformBrief'
-          readOnly: true
-        rental:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-          readOnly: true
-        title:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        id_platform:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        id_platform_2:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-          description: Use only when platform has multiple IDs, eg. HomeAway
-        url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          readOnly: true
-        is_active:
-          type: boolean
-          readOnly: true
-        insurance:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-        insurance_rate:
-          type:
-          - number
-          - 'null'
-          format: double
-          readOnly: true
-          description: Insurance rate as invoiced to client
-      required:
-      - id
-      - id_platform
-      - id_platform_2
-      - insurance
-      - insurance_rate
-      - is_active
-      - rental
-      - reservation_platform
-      - title
-      - url
     CreateListing:
       type: object
       properties:
@@ -290,6 +227,69 @@ components:
       required:
       - id
       - name
+    Listing:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        reservation_platform:
+          allOf:
+          - $ref: '#/components/schemas/ReservationPlatformBrief'
+          readOnly: true
+        rental:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+          readOnly: true
+        title:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        id_platform:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        id_platform_2:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Use only when platform has multiple IDs, eg. HomeAway
+        url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          readOnly: true
+        is_active:
+          type: boolean
+          readOnly: true
+        insurance:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        insurance_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+          readOnly: true
+          description: Insurance rate as invoiced to client
+      required:
+      - id
+      - id_platform
+      - id_platform_2
+      - insurance
+      - insurance_rate
+      - is_active
+      - rental
+      - reservation_platform
+      - title
+      - url
     PaginatedListingList:
       type: object
       required:

@@ -68,29 +68,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    TypeMission:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          readOnly: true
-          description: Internal code identifying the mission type (for example CHECK-IN). Set internally.
-        display_name:
-          type:
-          - string
-          - 'null'
-          description: Human-readable label for the mission type shown in the interface. Falls back to the internal name when not set.
-          maxLength: 20
-        user:
-          type: string
-          readOnly: true
-      required:
-      - id
-      - name
-      - user
     PaginatedTypeMissionList:
       type: object
       required:
@@ -119,6 +96,29 @@ components:
         limit:
           type: integer
           example: 50
+    TypeMission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+          description: Internal code identifying the mission type (for example CHECK-IN). Set internally.
+        display_name:
+          type:
+          - string
+          - 'null'
+          description: Human-readable label for the mission type shown in the interface. Falls back to the internal name when not set.
+          maxLength: 20
+        user:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - name
+      - user
   securitySchemes:
     basicAuth:
       type: http

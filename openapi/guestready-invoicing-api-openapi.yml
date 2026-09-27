@@ -140,108 +140,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ReservationStatusEnum:
-      enum:
-      - pending
-      - accepted
-      - cancelled
-      type: string
-      description: '* `pending` - pending
-
-        * `accepted` - accepted
-
-        * `cancelled` - cancelled'
-    PaginatedInvoicingReservationList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/InvoicingReservation'
-        limit:
-          type: integer
-          example: 2000
-    NullEnum:
-      enum:
-      - null
-    GuestInvoice:
-      type: object
-      properties:
-        email:
-          type:
-          - string
-          - 'null'
-          format: email
-          title: Recipient email
-          maxLength: 254
-        country_name:
-          type: string
-          readOnly: true
-        city:
-          type:
-          - string
-          - 'null'
-          maxLength: 50
-        name:
-          type:
-          - string
-          - 'null'
-          maxLength: 75
-        company:
-          type:
-          - string
-          - 'null'
-          title: Company name
-          maxLength: 255
-        tax_number:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        address:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-      required:
-      - country_name
-    ReservationExtraFee:
-      type: object
-      properties:
-        amount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        paid_to:
-          $ref: '#/components/schemas/PaidToEnum'
-        extra_fee:
-          $ref: '#/components/schemas/ExtraFee'
-        vat_rate:
-          type: number
-          format: double
-          readOnly: true
-      required:
-      - amount
-      - extra_fee
-      - vat_rate
     BlockedReasonEnum:
       enum:
       - HOST_STAY
@@ -265,6 +163,14 @@ components:
         * `BLOCKED_BY_HOST` - Blocked by owner
 
         * `UPSELLING_REQUEST` - Upselling request'
+    PaidToEnum:
+      enum:
+      - HOST
+      - PROPERTY_MANAGER
+      type: string
+      description: '* `HOST` - Owner
+
+        * `PROPERTY_MANAGER` - Property manager'
     IdTypeEnum:
       enum:
       - P
@@ -278,9 +184,25 @@ components:
         * `B` - National ID card
 
         * `O` - Other'
-    BlankEnum:
-      enum:
-      - ''
+    ReservationExtraFee:
+      type: object
+      properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        paid_to:
+          $ref: '#/components/schemas/PaidToEnum'
+        extra_fee:
+          $ref: '#/components/schemas/ExtraFee'
+        vat_rate:
+          type: number
+          format: double
+          readOnly: true
+      required:
+      - amount
+      - extra_fee
+      - vat_rate
     ExtraFee:
       type: object
       properties:
@@ -293,64 +215,6 @@ components:
       required:
       - id
       - name
-    InvoicingGuestRegistration:
-      type: object
-      properties:
-        first_name:
-          type:
-          - string
-          - 'null'
-          pattern: ^([a-zA-Z\u00e7\u00c7\u00e3\u00c3\u00e1\u00c1\u00e0\u00c0\u00e9\u00c9\u00ea\u00ca\u00ed\u00cd\u00f5\u00d5\u00f4\u00d4\u00f3\u00d3\u00fa\u00da' ]|-)+$
-          maxLength: 40
-        last_name:
-          type:
-          - string
-          - 'null'
-          pattern: ^([a-zA-Z\u00e7\u00c7\u00e3\u00c3\u00e1\u00c1\u00e0\u00c0\u00e9\u00c9\u00ea\u00ca\u00ed\u00cd\u00f5\u00d5\u00f4\u00d4\u00f3\u00d3\u00fa\u00da' ]|-)+$
-          maxLength: 40
-        date_of_birth:
-          type:
-          - string
-          - 'null'
-          format: date
-        nationality_code:
-          type: string
-          default: ''
-        residence_country_code:
-          type: string
-          default: ''
-        id_type:
-          title: Travel document type
-          oneOf:
-          - $ref: '#/components/schemas/IdTypeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        id_number:
-          type:
-          - string
-          - 'null'
-          title: Travel document number
-          pattern: ^[a-zA-Z0-9]+$
-          maxLength: 16
-        country_code:
-          type: string
-          default: ''
-        check_in_date:
-          type:
-          - string
-          - 'null'
-          format: date
-        check_out_date:
-          type:
-          - string
-          - 'null'
-          format: date
-        is_primary_guest:
-          type: boolean
-          readOnly: true
-          description: Whether this guest is the primary (first) registered guest.
-      required:
-      - is_primary_guest
     InvoicingReservation:
       type: object
       properties:
@@ -510,14 +374,150 @@ components:
       - reservation_status
       - source
       - total_paid_by_guest
-    PaidToEnum:
+    BlankEnum:
       enum:
-      - HOST
-      - PROPERTY_MANAGER
+      - ''
+    PaginatedInvoicingReservationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoicingReservation'
+        limit:
+          type: integer
+          example: 2000
+    InvoicingGuestRegistration:
+      type: object
+      properties:
+        first_name:
+          type:
+          - string
+          - 'null'
+          pattern: ^([a-zA-Z\u00e7\u00c7\u00e3\u00c3\u00e1\u00c1\u00e0\u00c0\u00e9\u00c9\u00ea\u00ca\u00ed\u00cd\u00f5\u00d5\u00f4\u00d4\u00f3\u00d3\u00fa\u00da' ]|-)+$
+          maxLength: 40
+        last_name:
+          type:
+          - string
+          - 'null'
+          pattern: ^([a-zA-Z\u00e7\u00c7\u00e3\u00c3\u00e1\u00c1\u00e0\u00c0\u00e9\u00c9\u00ea\u00ca\u00ed\u00cd\u00f5\u00d5\u00f4\u00d4\u00f3\u00d3\u00fa\u00da' ]|-)+$
+          maxLength: 40
+        date_of_birth:
+          type:
+          - string
+          - 'null'
+          format: date
+        nationality_code:
+          type: string
+          default: ''
+        residence_country_code:
+          type: string
+          default: ''
+        id_type:
+          title: Travel document type
+          oneOf:
+          - $ref: '#/components/schemas/IdTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        id_number:
+          type:
+          - string
+          - 'null'
+          title: Travel document number
+          pattern: ^[a-zA-Z0-9]+$
+          maxLength: 16
+        country_code:
+          type: string
+          default: ''
+        check_in_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        check_out_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        is_primary_guest:
+          type: boolean
+          readOnly: true
+          description: Whether this guest is the primary (first) registered guest.
+      required:
+      - is_primary_guest
+    GuestInvoice:
+      type: object
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          title: Recipient email
+          maxLength: 254
+        country_name:
+          type: string
+          readOnly: true
+        city:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 75
+        company:
+          type:
+          - string
+          - 'null'
+          title: Company name
+          maxLength: 255
+        tax_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        address:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+      required:
+      - country_name
+    NullEnum:
+      enum:
+      - null
+    ReservationStatusEnum:
+      enum:
+      - pending
+      - accepted
+      - cancelled
       type: string
-      description: '* `HOST` - Owner
+      description: '* `pending` - pending
 
-        * `PROPERTY_MANAGER` - Property manager'
+        * `accepted` - accepted
+
+        * `cancelled` - cancelled'
   securitySchemes:
     basicAuth:
       type: http

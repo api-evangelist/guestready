@@ -97,6 +97,14 @@ components:
         * `missing_data` - Missing data
 
         * `failed_to_onboard` - Failed to onboard'
+    SynchronizationCategoryEnum:
+      enum:
+      - FULL_SYNC
+      - PARTIAL_SYNC
+      type: string
+      description: '* `FULL_SYNC` - Full synchronisation
+
+        * `PARTIAL_SYNC` - Partial synchronisation'
     RentalAccount:
       type: object
       properties:
@@ -165,14 +173,6 @@ components:
         limit:
           type: integer
           example: 10
-    SynchronizationCategoryEnum:
-      enum:
-      - FULL_SYNC
-      - PARTIAL_SYNC
-      type: string
-      description: '* `FULL_SYNC` - Full synchronisation
-
-        * `PARTIAL_SYNC` - Partial synchronisation'
   securitySchemes:
     basicAuth:
       type: http

@@ -218,6 +218,106 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PaginatedIcalSyncList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IcalSync'
+        limit:
+          type: integer
+          example: 50
+    IcalSync:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        rental_name:
+          type: string
+          readOnly: true
+        platform_id:
+          type: integer
+        platform_name:
+          type: string
+          readOnly: true
+        ical_url:
+          type: string
+          format: uri
+          title: ICal Import URL
+          description: The URL to fetch the iCal calendar from
+          maxLength: 200
+        import_summary_as_guest_name:
+          type: boolean
+          description: If enabled, the event summary will be used as guest name in blocked notes
+        is_active:
+          type: boolean
+          title: Active
+          description: Only active syncs will be processed
+        last_sync_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          title: Last sync time (UTC)
+          description: Timestamp of the last successful sync
+        last_sync_attempt_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+          title: Last sync attempt time (UTC)
+          description: Timestamp of the last sync attempt, regardless of outcome
+        last_sync_error:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created
+      - ical_url
+      - id
+      - last_sync_at
+      - last_sync_attempt_at
+      - last_sync_error
+      - modified
+      - platform_id
+      - platform_name
+      - rental_id
+      - rental_name
     PatchedUpdateIcalSync:
       type: object
       properties:
@@ -354,106 +454,6 @@ components:
       - platform_name
       - rental_id
       - rental_name
-    IcalSync:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        rental_name:
-          type: string
-          readOnly: true
-        platform_id:
-          type: integer
-        platform_name:
-          type: string
-          readOnly: true
-        ical_url:
-          type: string
-          format: uri
-          title: ICal Import URL
-          description: The URL to fetch the iCal calendar from
-          maxLength: 200
-        import_summary_as_guest_name:
-          type: boolean
-          description: If enabled, the event summary will be used as guest name in blocked notes
-        is_active:
-          type: boolean
-          title: Active
-          description: Only active syncs will be processed
-        last_sync_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-          title: Last sync time (UTC)
-          description: Timestamp of the last successful sync
-        last_sync_attempt_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          readOnly: true
-          title: Last sync attempt time (UTC)
-          description: Timestamp of the last sync attempt, regardless of outcome
-        last_sync_error:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-      - created
-      - ical_url
-      - id
-      - last_sync_at
-      - last_sync_attempt_at
-      - last_sync_error
-      - modified
-      - platform_id
-      - platform_name
-      - rental_id
-      - rental_name
-    PaginatedIcalSyncList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/IcalSync'
-        limit:
-          type: integer
-          example: 50
   securitySchemes:
     basicAuth:
       type: http

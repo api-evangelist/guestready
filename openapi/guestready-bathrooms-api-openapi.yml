@@ -255,34 +255,6 @@ components:
         toilet:
           type: boolean
           default: false
-    PaginatedBathroomList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bathroom'
-        limit:
-          type: integer
-          example: 50
     Bathroom:
       type: object
       properties:
@@ -326,6 +298,34 @@ components:
       required:
       - id
       - rental_id
+    PaginatedBathroomList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bathroom'
+        limit:
+          type: integer
+          example: 50
   securitySchemes:
     basicAuth:
       type: http
