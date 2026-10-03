@@ -188,20 +188,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaymentCollectionMethodEnum:
-      enum:
-      - CASH
-      - BANK_TRANSFER
-      - CHEQUE
-      - STRIPE
-      type: string
-      description: '* `CASH` - Cash
-
-        * `BANK_TRANSFER` - Bank Transfer
-
-        * `CHEQUE` - Cheque
-
-        * `STRIPE` - Stripe'
     CurrencyD53Enum:
       enum:
       - AED
@@ -264,6 +250,34 @@ components:
         * `THB` - THB
 
         * `USD` - USD'
+    PaginatedPaymentAcceptanceTransactionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentAcceptanceTransaction'
+        limit:
+          type: integer
+          example: 100
     PaymentAcceptanceTransaction:
       type: object
       properties:
@@ -331,34 +345,20 @@ components:
       - payment_collection_method
       - reservation
       - voucher
-    PaginatedPaymentAcceptanceTransactionList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentAcceptanceTransaction'
-        limit:
-          type: integer
-          example: 100
+    PaymentCollectionMethodEnum:
+      enum:
+      - CASH
+      - BANK_TRANSFER
+      - CHEQUE
+      - STRIPE
+      type: string
+      description: '* `CASH` - Cash
+
+        * `BANK_TRANSFER` - Bank Transfer
+
+        * `CHEQUE` - Cheque
+
+        * `STRIPE` - Stripe'
   securitySchemes:
     basicAuth:
       type: http

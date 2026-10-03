@@ -147,17 +147,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    IsAvailableEnum:
-      enum:
-      - AVAILABLE
-      - BOOKED
-      - UNAVAILABLE
-      type: string
-      description: '* `AVAILABLE` - AVAILABLE
-
-        * `BOOKED` - BOOKED
-
-        * `UNAVAILABLE` - UNAVAILABLE'
     PaginatedDailyPriceList:
       type: object
       required:
@@ -186,6 +175,17 @@ components:
         limit:
           type: integer
           example: 365
+    IsAvailableEnum:
+      enum:
+      - AVAILABLE
+      - BOOKED
+      - UNAVAILABLE
+      type: string
+      description: '* `AVAILABLE` - AVAILABLE
+
+        * `BOOKED` - BOOKED
+
+        * `UNAVAILABLE` - UNAVAILABLE'
     DailyPrice:
       type: object
       properties:

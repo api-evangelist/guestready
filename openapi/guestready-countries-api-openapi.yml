@@ -74,18 +74,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Country:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 200
-      required:
-      - id
-      - name
     PaginatedCountryList:
       type: object
       required:
@@ -114,6 +102,18 @@ components:
         limit:
           type: integer
           example: 10
+    Country:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+      required:
+      - id
+      - name
   securitySchemes:
     basicAuth:
       type: http

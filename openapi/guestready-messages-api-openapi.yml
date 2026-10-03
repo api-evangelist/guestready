@@ -190,81 +190,6 @@ paths:
           description: ''
 components:
   schemas:
-    Message:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        conversation_id:
-          type: integer
-          readOnly: true
-        sender:
-          allOf:
-          - $ref: '#/components/schemas/SenderEnum'
-          readOnly: true
-        content:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        channel:
-          readOnly: true
-          oneOf:
-          - $ref: '#/components/schemas/ChannelEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        sent_at:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-      - channel
-      - content
-      - conversation_id
-      - id
-      - sender
-      - sent_at
-    ChannelEnum:
-      enum:
-      - airbnb
-      - homeaway
-      - vrbo
-      - vrbo_qa
-      - email
-      - sms
-      - booking
-      - booking-com
-      - booking-qa
-      - internal
-      - whatsapp
-      - guestspace
-      - support
-      type: string
-      description: '* `airbnb` - Airbnb
-
-        * `homeaway` - HomeAway
-
-        * `vrbo` - VRBO
-
-        * `vrbo_qa` - VRBO (QA)
-
-        * `email` - Email
-
-        * `sms` - SMS
-
-        * `booking` - Booking.com (Channel-Manager)
-
-        * `booking-com` - Booking.com
-
-        * `booking-qa` - Booking.com QA
-
-        * `internal` - Internal
-
-        * `whatsapp` - WhatsApp
-
-        * `guestspace` - Guest space
-
-        * `support` - Support'
     MessageCreate:
       type: object
       properties:
@@ -318,6 +243,81 @@ components:
     NullEnum:
       enum:
       - null
+    ChannelEnum:
+      enum:
+      - airbnb
+      - homeaway
+      - vrbo
+      - vrbo_qa
+      - email
+      - sms
+      - booking
+      - booking-com
+      - booking-qa
+      - internal
+      - whatsapp
+      - guestspace
+      - support
+      type: string
+      description: '* `airbnb` - Airbnb
+
+        * `homeaway` - HomeAway
+
+        * `vrbo` - VRBO
+
+        * `vrbo_qa` - VRBO (QA)
+
+        * `email` - Email
+
+        * `sms` - SMS
+
+        * `booking` - Booking.com (Channel-Manager)
+
+        * `booking-com` - Booking.com
+
+        * `booking-qa` - Booking.com QA
+
+        * `internal` - Internal
+
+        * `whatsapp` - WhatsApp
+
+        * `guestspace` - Guest space
+
+        * `support` - Support'
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        conversation_id:
+          type: integer
+          readOnly: true
+        sender:
+          allOf:
+          - $ref: '#/components/schemas/SenderEnum'
+          readOnly: true
+        content:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        channel:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ChannelEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - channel
+      - content
+      - conversation_id
+      - id
+      - sender
+      - sent_at
   securitySchemes:
     basicAuth:
       type: http

@@ -68,6 +68,19 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    BedType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Bed type name, e.g. "SINGLE", "DOUBLE".
+          maxLength: 255
+      required:
+      - id
+      - name
     PaginatedBedTypeList:
       type: object
       required:
@@ -96,19 +109,6 @@ components:
         limit:
           type: integer
           example: 50
-    BedType:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          description: Bed type name, e.g. "SINGLE", "DOUBLE".
-          maxLength: 255
-      required:
-      - id
-      - name
   securitySchemes:
     basicAuth:
       type: http

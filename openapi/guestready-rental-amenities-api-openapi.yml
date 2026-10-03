@@ -217,6 +217,51 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PatchedBookingsyncRentalAmenity:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        amenity_key:
+          type: string
+        type_name:
+          type: string
+          readOnly: true
+        details:
+          type:
+          - string
+          - 'null'
+          description: Describe how to use the amenity
+        location:
+          type:
+          - string
+          - 'null'
+        model:
+          type:
+          - string
+          - 'null'
+        brand:
+          type:
+          - string
+          - 'null'
+        extra_information: {}
+        serial_number:
+          type:
+          - string
+          - 'null'
+        metadata_values:
+          type: object
+          additionalProperties: true
+          example:
+            wifi_speed: 100
+            parking_type: garage
+          readOnly: true
+          description: Key-value map of metadata for this rental amenity. Keys correspond to the `key` field on the amenity's metadata schema, available via GET /api/v3/amenities/. On write (POST/PUT/PATCH), send the full dict — omitted keys are deleted (full replace semantics). Unknown keys are silently ignored.
     BookingsyncRentalAmenity:
       type: object
       properties:
@@ -268,51 +313,6 @@ components:
       - metadata_values
       - rental_id
       - type_name
-    PatchedBookingsyncRentalAmenity:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        amenity_key:
-          type: string
-        type_name:
-          type: string
-          readOnly: true
-        details:
-          type:
-          - string
-          - 'null'
-          description: Describe how to use the amenity
-        location:
-          type:
-          - string
-          - 'null'
-        model:
-          type:
-          - string
-          - 'null'
-        brand:
-          type:
-          - string
-          - 'null'
-        extra_information: {}
-        serial_number:
-          type:
-          - string
-          - 'null'
-        metadata_values:
-          type: object
-          additionalProperties: true
-          example:
-            wifi_speed: 100
-            parking_type: garage
-          readOnly: true
-          description: Key-value map of metadata for this rental amenity. Keys correspond to the `key` field on the amenity's metadata schema, available via GET /api/v3/amenities/. On write (POST/PUT/PATCH), send the full dict — omitted keys are deleted (full replace semantics). Unknown keys are silently ignored.
     PaginatedBookingsyncRentalAmenityList:
       type: object
       required:

@@ -197,68 +197,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CurrencyD53Enum:
-      enum:
-      - AED
-      - AUD
-      - BRL
-      - CAD
-      - CHF
-      - CZK
-      - EUR
-      - GBP
-      - HKD
-      - IDR
-      - ILS
-      - JPY
-      - KRW
-      - MAD
-      - MYR
-      - PLN
-      - RUB
-      - SAR
-      - THB
-      - USD
-      type: string
-      description: '* `AED` - AED
-
-        * `AUD` - AUD
-
-        * `BRL` - BRL
-
-        * `CAD` - CAD
-
-        * `CHF` - CHF
-
-        * `CZK` - CZK
-
-        * `EUR` - EUR
-
-        * `GBP` - GBP
-
-        * `HKD` - HKD
-
-        * `IDR` - IDR
-
-        * `ILS` - ILS
-
-        * `JPY` - JPY
-
-        * `KRW` - KRW
-
-        * `MAD` - MAD
-
-        * `MYR` - MYR
-
-        * `PLN` - PLN
-
-        * `RUB` - RUB
-
-        * `SAR` - SAR
-
-        * `THB` - THB
-
-        * `USD` - USD'
     PatchedPricingConfiguration:
       type: object
       properties:
@@ -416,34 +354,6 @@ components:
         user:
           type: string
           readOnly: true
-    PaginatedPricingConfigurationList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricingConfiguration'
-        limit:
-          type: integer
-          example: 50
     PricingConfiguration:
       type: object
       properties:
@@ -610,12 +520,102 @@ components:
       - pricing_calendar
       - rental_id
       - user
-    BlankEnum:
-      enum:
-      - ''
+    PaginatedPricingConfigurationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingConfiguration'
+        limit:
+          type: integer
+          example: 50
     NullEnum:
       enum:
       - null
+    CurrencyD53Enum:
+      enum:
+      - AED
+      - AUD
+      - BRL
+      - CAD
+      - CHF
+      - CZK
+      - EUR
+      - GBP
+      - HKD
+      - IDR
+      - ILS
+      - JPY
+      - KRW
+      - MAD
+      - MYR
+      - PLN
+      - RUB
+      - SAR
+      - THB
+      - USD
+      type: string
+      description: '* `AED` - AED
+
+        * `AUD` - AUD
+
+        * `BRL` - BRL
+
+        * `CAD` - CAD
+
+        * `CHF` - CHF
+
+        * `CZK` - CZK
+
+        * `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `HKD` - HKD
+
+        * `IDR` - IDR
+
+        * `ILS` - ILS
+
+        * `JPY` - JPY
+
+        * `KRW` - KRW
+
+        * `MAD` - MAD
+
+        * `MYR` - MYR
+
+        * `PLN` - PLN
+
+        * `RUB` - RUB
+
+        * `SAR` - SAR
+
+        * `THB` - THB
+
+        * `USD` - USD'
+    BlankEnum:
+      enum:
+      - ''
   securitySchemes:
     basicAuth:
       type: http

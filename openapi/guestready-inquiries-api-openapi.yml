@@ -98,6 +98,96 @@ paths:
           description: ''
 components:
   schemas:
+    PaginatedInquiryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Inquiry'
+        limit:
+          type: integer
+          example: 50
+    InquiryOriginEnum:
+      enum:
+      - channel_manager
+      - bookingsync_inbox
+      - airbnb_message
+      - airbnb_email
+      - airbnb_tentative
+      - booking-com
+      - homeaway
+      - homeaway_tentative
+      - tripadvisor
+      - email
+      - messenger
+      - whatsapp
+      - sms
+      - notification
+      - event
+      - airbnb_review
+      - guestspace
+      - twilio
+      - booking_widget
+      - support
+      type: string
+      description: '* `channel_manager` - Platform
+
+        * `bookingsync_inbox` - BookingSync
+
+        * `airbnb_message` - Airbnb
+
+        * `airbnb_email` - Airbnb
+
+        * `airbnb_tentative` - Airbnb
+
+        * `booking-com` - Booking.com
+
+        * `homeaway` - HomeAway
+
+        * `homeaway_tentative` - HomeAway
+
+        * `tripadvisor` - TripAdvisor
+
+        * `email` - Email
+
+        * `messenger` - Messenger
+
+        * `whatsapp` - WhatsApp
+
+        * `sms` - SMS
+
+        * `notification` - Email
+
+        * `event` - Email
+
+        * `airbnb_review` - Airbnb
+
+        * `guestspace` - Guest space
+
+        * `twilio` - SMS
+
+        * `booking_widget` - Direct booking widget
+
+        * `support` - Support'
     Inquiry:
       type: object
       properties:
@@ -199,96 +289,6 @@ components:
       - origin
       - rental_id
       - status
-    PaginatedInquiryList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Inquiry'
-        limit:
-          type: integer
-          example: 50
-    InquiryOriginEnum:
-      enum:
-      - channel_manager
-      - bookingsync_inbox
-      - airbnb_message
-      - airbnb_email
-      - airbnb_tentative
-      - booking-com
-      - homeaway
-      - homeaway_tentative
-      - tripadvisor
-      - email
-      - messenger
-      - whatsapp
-      - sms
-      - notification
-      - event
-      - airbnb_review
-      - guestspace
-      - twilio
-      - booking_widget
-      - support
-      type: string
-      description: '* `channel_manager` - Platform
-
-        * `bookingsync_inbox` - BookingSync
-
-        * `airbnb_message` - Airbnb
-
-        * `airbnb_email` - Airbnb
-
-        * `airbnb_tentative` - Airbnb
-
-        * `booking-com` - Booking.com
-
-        * `homeaway` - HomeAway
-
-        * `homeaway_tentative` - HomeAway
-
-        * `tripadvisor` - TripAdvisor
-
-        * `email` - Email
-
-        * `messenger` - Messenger
-
-        * `whatsapp` - WhatsApp
-
-        * `sms` - SMS
-
-        * `notification` - Email
-
-        * `event` - Email
-
-        * `airbnb_review` - Airbnb
-
-        * `guestspace` - Guest space
-
-        * `twilio` - SMS
-
-        * `booking_widget` - Direct booking widget
-
-        * `support` - Support'
     InquiryStatusEnum:
       enum:
       - inquiry

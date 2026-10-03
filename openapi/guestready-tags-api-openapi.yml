@@ -152,57 +152,35 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ColorEnum:
-      enum:
-      - orange
-      - red
-      - pink
-      - violet
-      - blue
-      - green
-      - gray
-      type: string
-      description: '* `orange` - Orange
-
-        * `red` - Red
-
-        * `pink` - Pink
-
-        * `violet` - Violet
-
-        * `blue` - Blue
-
-        * `green` - Green
-
-        * `gray` - Gray'
-    PaginatedRentalTagList:
+    PatchedRentalTag:
       type: object
-      required:
-      - count
-      - results
       properties:
-        count:
+        id:
           type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/RentalTag'
-        limit:
-          type: integer
-          example: 50
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        color:
+          allOf:
+          - $ref: '#/components/schemas/ColorEnum'
+          default: gray
+          description: 'Tag color. Defaults to `gray` if omitted. Valid choices: orange, red, pink, violet, blue, green, gray.
+
+
+            * `orange` - Orange
+
+            * `red` - Red
+
+            * `pink` - Pink
+
+            * `violet` - Violet
+
+            * `blue` - Blue
+
+            * `green` - Green
+
+            * `gray` - Gray'
     RentalTag:
       type: object
       properties:
@@ -235,35 +213,57 @@ components:
       required:
       - id
       - name
-    PatchedRentalTag:
+    PaginatedRentalTagList:
       type: object
+      required:
+      - count
+      - results
       properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 50
-        color:
-          allOf:
-          - $ref: '#/components/schemas/ColorEnum'
-          default: gray
-          description: 'Tag color. Defaults to `gray` if omitted. Valid choices: orange, red, pink, violet, blue, green, gray.
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalTag'
+        limit:
+          type: integer
+          example: 50
+    ColorEnum:
+      enum:
+      - orange
+      - red
+      - pink
+      - violet
+      - blue
+      - green
+      - gray
+      type: string
+      description: '* `orange` - Orange
 
+        * `red` - Red
 
-            * `orange` - Orange
+        * `pink` - Pink
 
-            * `red` - Red
+        * `violet` - Violet
 
-            * `pink` - Pink
+        * `blue` - Blue
 
-            * `violet` - Violet
+        * `green` - Green
 
-            * `blue` - Blue
-
-            * `green` - Green
-
-            * `gray` - Gray'
+        * `gray` - Gray'
   securitySchemes:
     basicAuth:
       type: http

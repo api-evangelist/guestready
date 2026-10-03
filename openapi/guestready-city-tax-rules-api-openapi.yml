@@ -109,6 +109,25 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    TaxableBaseEnum:
+      enum:
+      - RENTAL_INCOME
+      - ACCOMMODATION
+      type: string
+      description: '* `RENTAL_INCOME` - Rental income only
+
+        * `ACCOMMODATION` - Rental income + cleaning fee'
+    ChargeTypeEnum:
+      enum:
+      - PER_ADULT
+      - PER_ROOM
+      - PER_NIGHT
+      type: string
+      description: '* `PER_ADULT` - Per adult / per night
+
+        * `PER_ROOM` - Per room / per night
+
+        * `PER_NIGHT` - Per night'
     ChargeWithEnum:
       enum:
       - FIXED
@@ -117,6 +136,12 @@ components:
       description: '* `FIXED` - Fixed
 
         * `PERCENTAGE` - Percentage'
+    NullEnum:
+      enum:
+      - null
+    BlankEnum:
+      enum:
+      - ''
     CurrencyD53Enum:
       enum:
       - AED
@@ -179,17 +204,6 @@ components:
         * `THB` - THB
 
         * `USD` - USD'
-    TaxableBaseEnum:
-      enum:
-      - RENTAL_INCOME
-      - ACCOMMODATION
-      type: string
-      description: '* `RENTAL_INCOME` - Rental income only
-
-        * `ACCOMMODATION` - Rental income + cleaning fee'
-    BlankEnum:
-      enum:
-      - ''
     PaginatedCityRuleList:
       type: object
       required:
@@ -363,20 +377,6 @@ components:
       - currency
       - id
       - name
-    ChargeTypeEnum:
-      enum:
-      - PER_ADULT
-      - PER_ROOM
-      - PER_NIGHT
-      type: string
-      description: '* `PER_ADULT` - Per adult / per night
-
-        * `PER_ROOM` - Per room / per night
-
-        * `PER_NIGHT` - Per night'
-    NullEnum:
-      enum:
-      - null
   securitySchemes:
     basicAuth:
       type: http

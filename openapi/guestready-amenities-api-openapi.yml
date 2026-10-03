@@ -70,25 +70,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    BookingsyncAmenity:
-      type: object
-      properties:
-        key:
-          type: string
-          maxLength: 100
-        title:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/AmenityMetadata'
-          readOnly: true
-      required:
-      - key
-      - metadata
     AmenityMetadata:
       type: object
       properties:
@@ -115,6 +96,25 @@ components:
       - key
       - options
       - type
+    BookingsyncAmenity:
+      type: object
+      properties:
+        key:
+          type: string
+          maxLength: 100
+        title:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/AmenityMetadata'
+          readOnly: true
+      required:
+      - key
+      - metadata
     PaginatedBookingsyncAmenityList:
       type: object
       required:

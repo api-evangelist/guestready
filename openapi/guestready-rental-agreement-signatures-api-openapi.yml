@@ -227,6 +227,56 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PatchedRentalAgreementSignature:
+      type: object
+      description: 'Scopes the writable ``reservation`` field to the caller''s rentals.
+
+
+        Requires ``user_rentals`` in the serializer context. An unowned or
+
+        non-existent reservation pk then fails ``reservation`` field validation
+
+        identically (before any auto-generated ``UniqueValidator`` runs), so the
+
+        existence of other tenants'' reservations -- and whether they already have
+
+        a related record -- cannot be enumerated from the response.'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        reservation:
+          type: integer
+        pdf_file:
+          type: string
+          format: uri
+        url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        guest_name:
+          type: string
+          default: ''
+          maxLength: 255
+        guest_email:
+          type: string
+          default: ''
+          maxLength: 255
+        guest_phone:
+          type: string
+          maxLength: 50
+        language:
+          type: string
+          maxLength: 10
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
     PaginatedRentalAgreementSignatureList:
       type: object
       required:
@@ -312,56 +362,6 @@ components:
       - pdf_file
       - reservation
       - url
-    PatchedRentalAgreementSignature:
-      type: object
-      description: 'Scopes the writable ``reservation`` field to the caller''s rentals.
-
-
-        Requires ``user_rentals`` in the serializer context. An unowned or
-
-        non-existent reservation pk then fails ``reservation`` field validation
-
-        identically (before any auto-generated ``UniqueValidator`` runs), so the
-
-        existence of other tenants'' reservations -- and whether they already have
-
-        a related record -- cannot be enumerated from the response.'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        reservation:
-          type: integer
-        pdf_file:
-          type: string
-          format: uri
-        url:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        guest_name:
-          type: string
-          default: ''
-          maxLength: 255
-        guest_email:
-          type: string
-          default: ''
-          maxLength: 255
-        guest_phone:
-          type: string
-          maxLength: 50
-        language:
-          type: string
-          maxLength: 10
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
   securitySchemes:
     basicAuth:
       type: http

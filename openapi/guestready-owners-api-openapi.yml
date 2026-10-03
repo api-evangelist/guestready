@@ -336,6 +336,42 @@ components:
         open_dates_notification:
           type: boolean
           description: Periodically send a notification to the owner if not enough dates are open
+    GenderEnum:
+      enum:
+      - M
+      - F
+      type: string
+      description: '* `M` - Male
+
+        * `F` - Female'
+    PaginatedOwnerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Owner'
+        limit:
+          type: integer
+          example: 10
     TypeF08Enum:
       enum:
       - NATURAL
@@ -350,91 +386,7 @@ components:
         * `ORGANIZATION` - Organization entity
 
         * `SOLETRADER` - Soletrader entity'
-    CreateOwnerDefaultLocaleEnum:
-      enum:
-      - en
-      - fr
-      - pt
-      - es
-      - it
-      - ar
-      - de
-      - pl
-      - nl
-      type: string
-      description: '* `en` - en
-
-        * `fr` - fr
-
-        * `pt` - pt
-
-        * `es` - es
-
-        * `it` - it
-
-        * `ar` - ar
-
-        * `de` - de
-
-        * `pl` - pl
-
-        * `nl` - nl'
-    OwnerDefaultLocaleEnum:
-      enum:
-      - en
-      - fr
-      - pt
-      - es
-      - it
-      - ar
-      - de
-      - pl
-      - nl
-      type: string
-      description: '* `en` - English
-
-        * `fr` - French
-
-        * `pt` - Portuguese
-
-        * `es` - Spanish
-
-        * `it` - Italian
-
-        * `ar` - Arabic
-
-        * `de` - German
-
-        * `pl` - Polish
-
-        * `nl` - Dutch'
-    BankAccountCurrencyEnum:
-      enum:
-      - EUR
-      - GBP
-      - USD
-      - AED
-      - SAR
-      - INR
-      - QAR
-      type: string
-      description: '* `EUR` - EUR
-
-        * `GBP` - GBP
-
-        * `USD` - USD
-
-        * `AED` - AED
-
-        * `SAR` - SAR
-
-        * `INR` - INR
-
-        * `QAR` - QAR'
-    BlankEnum:
-      enum:
-      - ''
-    CreateOwner:
+    Owner:
       type: object
       properties:
         name:
@@ -447,14 +399,21 @@ components:
         email:
           type: string
           format: email
+          readOnly: true
         user_name:
           type: string
+          readOnly: true
         phone:
           type: string
+          title: Phone number
+          pattern: ^\+\d{8,15}$
+          maxLength: 160
         property_manager:
           type: string
         default_locale:
-          $ref: '#/components/schemas/CreateOwnerDefaultLocaleEnum'
+          allOf:
+          - $ref: '#/components/schemas/OwnerDefaultLocaleEnum'
+          title: Default language
         type:
           $ref: '#/components/schemas/TypeF08Enum'
         gender:
@@ -602,48 +561,9 @@ components:
       required:
       - default_locale
       - email
-      - first_name
-      - last_name
       - name
       - phone
-      - property_manager
       - user_name
-    PaginatedOwnerList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Owner'
-        limit:
-          type: integer
-          example: 10
-    GenderEnum:
-      enum:
-      - M
-      - F
-      type: string
-      description: '* `M` - Male
-
-        * `F` - Female'
     BankCountryEnum:
       enum:
       - AF
@@ -1396,7 +1316,59 @@ components:
     NullEnum:
       enum:
       - null
-    Owner:
+    BankAccountCurrencyEnum:
+      enum:
+      - EUR
+      - GBP
+      - USD
+      - AED
+      - SAR
+      - INR
+      - QAR
+      type: string
+      description: '* `EUR` - EUR
+
+        * `GBP` - GBP
+
+        * `USD` - USD
+
+        * `AED` - AED
+
+        * `SAR` - SAR
+
+        * `INR` - INR
+
+        * `QAR` - QAR'
+    CreateOwnerDefaultLocaleEnum:
+      enum:
+      - en
+      - fr
+      - pt
+      - es
+      - it
+      - ar
+      - de
+      - pl
+      - nl
+      type: string
+      description: '* `en` - en
+
+        * `fr` - fr
+
+        * `pt` - pt
+
+        * `es` - es
+
+        * `it` - it
+
+        * `ar` - ar
+
+        * `de` - de
+
+        * `pl` - pl
+
+        * `nl` - nl'
+    CreateOwner:
       type: object
       properties:
         name:
@@ -1409,21 +1381,14 @@ components:
         email:
           type: string
           format: email
-          readOnly: true
         user_name:
           type: string
-          readOnly: true
         phone:
           type: string
-          title: Phone number
-          pattern: ^\+\d{8,15}$
-          maxLength: 160
         property_manager:
           type: string
         default_locale:
-          allOf:
-          - $ref: '#/components/schemas/OwnerDefaultLocaleEnum'
-          title: Default language
+          $ref: '#/components/schemas/CreateOwnerDefaultLocaleEnum'
         type:
           $ref: '#/components/schemas/TypeF08Enum'
         gender:
@@ -1571,9 +1536,44 @@ components:
       required:
       - default_locale
       - email
+      - first_name
+      - last_name
       - name
       - phone
+      - property_manager
       - user_name
+    BlankEnum:
+      enum:
+      - ''
+    OwnerDefaultLocaleEnum:
+      enum:
+      - en
+      - fr
+      - pt
+      - es
+      - it
+      - ar
+      - de
+      - pl
+      - nl
+      type: string
+      description: '* `en` - English
+
+        * `fr` - French
+
+        * `pt` - Portuguese
+
+        * `es` - Spanish
+
+        * `it` - Italian
+
+        * `ar` - Arabic
+
+        * `de` - German
+
+        * `pl` - Polish
+
+        * `nl` - Dutch'
   securitySchemes:
     basicAuth:
       type: http

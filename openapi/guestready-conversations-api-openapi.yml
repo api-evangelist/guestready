@@ -233,79 +233,7 @@ paths:
           description: ''
 components:
   schemas:
-    StatusFa3Enum:
-      enum:
-      - merged
-      - opened
-      - closed
-      type: string
-      description: '* `merged` - Merged
-
-        * `opened` - Opened
-
-        * `closed` - Closed'
-    ConversationCreate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/StatusFa3Enum'
-        rental_ids:
-          type: array
-          items:
-            type: integer
-          writeOnly: true
-        reservation_ids:
-          type: array
-          items:
-            type: integer
-          writeOnly: true
-        default_channel:
-          type:
-          - string
-          - 'null'
-          maxLength: 250
-      required:
-      - id
-    PatchedSetConversationFlag:
-      type: object
-      description: 'Write serializer for the ``set_flag`` action: one field, no silent no-op.
-
-
-        Bound to the conversation instance (like the incident status-change
-
-        serializers): ``update`` delegates to ``SetConversationFlagService``, so this
-
-        path produces exactly the mailbox''s side effects -- the conversation event
-
-        and the note on every ticket raised from the conversation.
-
-
-        ``flag_id`` is REQUIRED and nullable, and the two are not the same thing:
-
-        ``null`` removes the flag, while omitting the field is a 400. A missing
-
-        field must never read as "leave it alone" on a single-field write -- an
-
-        agent that meant to clear a flag and dropped the key would otherwise get a
-
-        200 back for a call that changed nothing.
-
-
-        The queryset is unscoped, like the ``flag_id`` filter and the
-
-        ``conversation_flags`` resource: ``ConversationFlag`` is global reference
-
-        data, so narrowing it per tenant would only 400 a valid id.'
-      properties:
-        flag_id:
-          type:
-          - integer
-          - 'null'
-          description: Id of the triage flag to put on the conversation, or null to remove the flag. List the ids with the conversation_flags resource.
-    PaginatedConversationList:
+    PaginatedConversationFlagList:
       type: object
       required:
       - count
@@ -329,10 +257,43 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/Conversation'
+            $ref: '#/components/schemas/ConversationFlag'
         limit:
           type: integer
           example: 50
+    ConversationFlag:
+      type: object
+      description: 'A triage flag, named AS THE CALLER''S PROPERTY MANAGER SEES IT.
+
+
+        The rows themselves are global reference data (every tenant flags against
+
+        the same handful of flags), but the ``name`` is per-property-manager:
+
+        ``PropertyManagerConversationFlag`` renames a flag for one tenant, and that
+
+        rename is what the mailbox shows and what an operations lead says. So ``name``
+
+        is resolved the same way here as on ``ConversationSerializer.flag_name`` --
+
+        the two must agree, or "the Pink queue" resolves to a different id depending
+
+        on which endpoint answered.'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        class_name:
+          type: string
+          readOnly: true
+          description: Colour of the flag (for example 'pink', 'green'). Stable across renames, unlike name.
+      required:
+      - class_name
+      - id
+      - name
     Conversation:
       type: object
       properties:
@@ -445,40 +406,54 @@ components:
       - reservation_ids
       - snooze_until
       - status
-    ConversationFlag:
+    PatchedSetConversationFlag:
       type: object
-      description: 'A triage flag, named AS THE CALLER''S PROPERTY MANAGER SEES IT.
+      description: 'Write serializer for the ``set_flag`` action: one field, no silent no-op.
 
 
-        The rows themselves are global reference data (every tenant flags against
+        Bound to the conversation instance (like the incident status-change
 
-        the same handful of flags), but the ``name`` is per-property-manager:
+        serializers): ``update`` delegates to ``SetConversationFlagService``, so this
 
-        ``PropertyManagerConversationFlag`` renames a flag for one tenant, and that
+        path produces exactly the mailbox''s side effects -- the conversation event
 
-        rename is what the mailbox shows and what an operations lead says. So ``name``
+        and the note on every ticket raised from the conversation.
 
-        is resolved the same way here as on ``ConversationSerializer.flag_name`` --
 
-        the two must agree, or "the Pink queue" resolves to a different id depending
+        ``flag_id`` is REQUIRED and nullable, and the two are not the same thing:
 
-        on which endpoint answered.'
+        ``null`` removes the flag, while omitting the field is a 400. A missing
+
+        field must never read as "leave it alone" on a single-field write -- an
+
+        agent that meant to clear a flag and dropped the key would otherwise get a
+
+        200 back for a call that changed nothing.
+
+
+        The queryset is unscoped, like the ``flag_id`` filter and the
+
+        ``conversation_flags`` resource: ``ConversationFlag`` is global reference
+
+        data, so narrowing it per tenant would only 400 a valid id.'
       properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          readOnly: true
-        class_name:
-          type: string
-          readOnly: true
-          description: Colour of the flag (for example 'pink', 'green'). Stable across renames, unlike name.
-      required:
-      - class_name
-      - id
-      - name
-    PaginatedConversationFlagList:
+        flag_id:
+          type:
+          - integer
+          - 'null'
+          description: Id of the triage flag to put on the conversation, or null to remove the flag. List the ids with the conversation_flags resource.
+    StatusFa3Enum:
+      enum:
+      - merged
+      - opened
+      - closed
+      type: string
+      description: '* `merged` - Merged
+
+        * `opened` - Opened
+
+        * `closed` - Closed'
+    PaginatedConversationList:
       type: object
       required:
       - count
@@ -502,10 +477,35 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/ConversationFlag'
+            $ref: '#/components/schemas/Conversation'
         limit:
           type: integer
           example: 50
+    ConversationCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusFa3Enum'
+        rental_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+        reservation_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+        default_channel:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+      required:
+      - id
   securitySchemes:
     basicAuth:
       type: http

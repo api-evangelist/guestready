@@ -121,50 +121,22 @@ components:
       required:
       - name
       - rating
-    PaginatedGuestReviewList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/GuestReview'
-        limit:
-          type: integer
-          example: 200
-    ReviewReply:
+    ReviewReplyAuthor:
       type: object
       properties:
-        message:
+        username:
           type: string
-        submitted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        author:
-          allOf:
-          - $ref: '#/components/schemas/ReviewReplyAuthor'
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
       required:
-      - author
-      - message
+      - username
     GuestReview:
       type: object
       properties:
@@ -237,22 +209,50 @@ components:
       - replies
       - reservation_id
       - reservation_platform_name
-    ReviewReplyAuthor:
+    PaginatedGuestReviewList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuestReview'
+        limit:
+          type: integer
+          example: 200
+    ReviewReply:
       type: object
       properties:
-        username:
+        message:
           type: string
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-          pattern: ^[\w.@+-]+$
-          maxLength: 150
-        first_name:
-          type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
+        submitted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        author:
+          allOf:
+          - $ref: '#/components/schemas/ReviewReplyAuthor'
       required:
-      - username
+      - author
+      - message
   securitySchemes:
     basicAuth:
       type: http

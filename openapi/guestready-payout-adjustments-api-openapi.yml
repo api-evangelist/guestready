@@ -176,33 +176,67 @@ paths:
           description: ''
 components:
   schemas:
-    PayoutAdjustmentAccountingInvoice:
+    InternalCategoryEnum:
+      enum:
+      - airbnb_resolution
+      - mission_charge
+      type: string
+      description: '* `airbnb_resolution` - airbnb_resolution
+
+        * `mission_charge` - mission_charge'
+    PayoutAdjustmentStatusEnum:
+      enum:
+      - inactive
+      - paid
+      - not_paid
+      type: string
+      description: '* `inactive` - Inactive
+
+        * `paid` - Paid
+
+        * `not_paid` - Not Paid'
+    PaginatedPayoutAdjustmentList:
       type: object
+      required:
+      - count
+      - results
       properties:
-        serie:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        emmission_date:
-          type:
-          - string
-          - 'null'
-          format: date
-        category:
+        count:
           type: integer
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-        pdf:
+          example: 123
+        next:
           type:
           - string
           - 'null'
           format: uri
-      required:
-      - category
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayoutAdjustment'
+        limit:
+          type: integer
+          example: 100
+    PayoutAdjustmentTypeEnum:
+      enum:
+      - CHARGE
+      - REFUND
+      type: string
+      description: '* `CHARGE` - Charge
+
+        * `REFUND` - Refund'
+    BlankEnum:
+      enum:
+      - ''
+    NullEnum:
+      enum:
+      - null
     CurrencyD53Enum:
       enum:
       - AED
@@ -265,48 +299,71 @@ components:
         * `THB` - THB
 
         * `USD` - USD'
-    PayoutAdjustmentStatusEnum:
+    PayoutAdjustmentCategoryEnum:
       enum:
-      - inactive
-      - paid
-      - not_paid
+      - cleaning
+      - maintenance
+      - improvement
+      - quality_check
+      - issue_resolution
+      - onboarding_fee
+      - utility_bill
+      - unit_permits
+      - reservation_cancellation
+      - advance_payment_for_decoration_project
+      - decoration_project
+      - commission_offer
+      - fin_ops
+      - pest_control
+      - deep_cleaning
+      - guest_request
+      - tpl_insurance
+      - service_charge
+      - local_tax
+      - termination_fee
+      - others
       type: string
-      description: '* `inactive` - Inactive
+      description: '* `cleaning` - Cleaning
 
-        * `paid` - Paid
+        * `maintenance` - Maintenance
 
-        * `not_paid` - Not Paid'
-    PaginatedPayoutAdjustmentList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PayoutAdjustment'
-        limit:
-          type: integer
-          example: 100
-    BlankEnum:
-      enum:
-      - ''
+        * `improvement` - Improvement/Furniture
+
+        * `quality_check` - Quality Check
+
+        * `issue_resolution` - Resolution adjustment
+
+        * `onboarding_fee` - Onboarding fee
+
+        * `utility_bill` - Utility bill
+
+        * `unit_permits` - Unit permits
+
+        * `reservation_cancellation` - Reservation cancellation
+
+        * `advance_payment_for_decoration_project` - Advance Payment for Decoration Project/Equipment
+
+        * `decoration_project` - Decoration Project/Equipment
+
+        * `commission_offer` - Commission Offer
+
+        * `fin_ops` - FinOps
+
+        * `pest_control` - Pest control
+
+        * `deep_cleaning` - Deep cleaning
+
+        * `guest_request` - Guest Request
+
+        * `tpl_insurance` - TPL Insurance
+
+        * `service_charge` - Service Charge
+
+        * `local_tax` - Local Tax
+
+        * `termination_fee` - Termination Fee
+
+        * `others` - Others'
     PayoutAdjustment:
       type: object
       properties:
@@ -435,90 +492,33 @@ components:
       - invoices
       - owner
       - property
-    InternalCategoryEnum:
-      enum:
-      - airbnb_resolution
-      - mission_charge
-      type: string
-      description: '* `airbnb_resolution` - airbnb_resolution
-
-        * `mission_charge` - mission_charge'
-    PayoutAdjustmentCategoryEnum:
-      enum:
-      - cleaning
-      - maintenance
-      - improvement
-      - quality_check
-      - issue_resolution
-      - onboarding_fee
-      - utility_bill
-      - unit_permits
-      - reservation_cancellation
-      - advance_payment_for_decoration_project
-      - decoration_project
-      - commission_offer
-      - fin_ops
-      - pest_control
-      - deep_cleaning
-      - guest_request
-      - tpl_insurance
-      - service_charge
-      - local_tax
-      - termination_fee
-      - others
-      type: string
-      description: '* `cleaning` - Cleaning
-
-        * `maintenance` - Maintenance
-
-        * `improvement` - Improvement/Furniture
-
-        * `quality_check` - Quality Check
-
-        * `issue_resolution` - Resolution adjustment
-
-        * `onboarding_fee` - Onboarding fee
-
-        * `utility_bill` - Utility bill
-
-        * `unit_permits` - Unit permits
-
-        * `reservation_cancellation` - Reservation cancellation
-
-        * `advance_payment_for_decoration_project` - Advance Payment for Decoration Project/Equipment
-
-        * `decoration_project` - Decoration Project/Equipment
-
-        * `commission_offer` - Commission Offer
-
-        * `fin_ops` - FinOps
-
-        * `pest_control` - Pest control
-
-        * `deep_cleaning` - Deep cleaning
-
-        * `guest_request` - Guest Request
-
-        * `tpl_insurance` - TPL Insurance
-
-        * `service_charge` - Service Charge
-
-        * `local_tax` - Local Tax
-
-        * `termination_fee` - Termination Fee
-
-        * `others` - Others'
-    PayoutAdjustmentTypeEnum:
-      enum:
-      - CHARGE
-      - REFUND
-      type: string
-      description: '* `CHARGE` - Charge
-
-        * `REFUND` - Refund'
-    NullEnum:
-      enum:
-      - null
+    PayoutAdjustmentAccountingInvoice:
+      type: object
+      properties:
+        serie:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        emmission_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        category:
+          type: integer
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        pdf:
+          type:
+          - string
+          - 'null'
+          format: uri
+      required:
+      - category
   securitySchemes:
     basicAuth:
       type: http

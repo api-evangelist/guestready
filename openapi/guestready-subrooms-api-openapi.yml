@@ -245,6 +245,17 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PrivacyEnum:
+      enum:
+      - PRIVATE
+      - SHARED
+      - ENSUITE
+      type: string
+      description: '* `PRIVATE` - Private
+
+        * `SHARED` - Shared
+
+        * `ENSUITE` - Ensuite'
     LocationEnum:
       enum:
       - ENSUITE
@@ -338,33 +349,6 @@ components:
           items:
             $ref: '#/components/schemas/Bed'
           description: Beds in this room.
-    Bed:
-      type: object
-      properties:
-        bed_type:
-          type: string
-      required:
-      - bed_type
-    SubroomWindowCoverageEnum:
-      enum:
-      - SHUTTER
-      - ESHUTTER
-      - CURTAIN
-      - STORE
-      - NOTHING
-      type: string
-      description: '* `SHUTTER` - Shutter
-
-        * `ESHUTTER` - Electronic Shutter
-
-        * `CURTAIN` - Curtain
-
-        * `STORE` - Store
-
-        * `NOTHING` - No Coverage'
-    NullEnum:
-      enum:
-      - null
     Subroom:
       type: object
       properties:
@@ -440,6 +424,33 @@ components:
       - position
       - rental_id
       - subroom_type
+    Bed:
+      type: object
+      properties:
+        bed_type:
+          type: string
+      required:
+      - bed_type
+    SubroomWindowCoverageEnum:
+      enum:
+      - SHUTTER
+      - ESHUTTER
+      - CURTAIN
+      - STORE
+      - NOTHING
+      type: string
+      description: '* `SHUTTER` - Shutter
+
+        * `ESHUTTER` - Electronic Shutter
+
+        * `CURTAIN` - Curtain
+
+        * `STORE` - Store
+
+        * `NOTHING` - No Coverage'
+    NullEnum:
+      enum:
+      - null
     PaginatedSubroomList:
       type: object
       required:
@@ -468,17 +479,6 @@ components:
         limit:
           type: integer
           example: 50
-    PrivacyEnum:
-      enum:
-      - PRIVATE
-      - SHARED
-      - ENSUITE
-      type: string
-      description: '* `PRIVATE` - Private
-
-        * `SHARED` - Shared
-
-        * `ENSUITE` - Ensuite'
   securitySchemes:
     basicAuth:
       type: http

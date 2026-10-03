@@ -69,20 +69,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    LOSRental:
-      type: object
-      properties:
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-          readOnly: true
-        los_url:
-          type: string
-          readOnly: true
-      required:
-      - los_url
-      - rental_id
     PaginatedLOSRentalList:
       type: object
       required:
@@ -111,6 +97,20 @@ components:
         limit:
           type: integer
           example: 50
+    LOSRental:
+      type: object
+      properties:
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+          readOnly: true
+        los_url:
+          type: string
+          readOnly: true
+      required:
+      - los_url
+      - rental_id
   securitySchemes:
     basicAuth:
       type: http

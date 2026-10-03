@@ -460,86 +460,6 @@ paths:
           description: ''
 components:
   schemas:
-    PaginatedIssueList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Issue'
-        limit:
-          type: integer
-          example: 50
-    IssueOriginEnum:
-      enum:
-      - GUEST_DAMAGES
-      - GUEST_REPORTED
-      - HOST_REPORTED
-      - AGENT_REPORTED
-      - PROPERTY_CHECK
-      - OVERUSE
-      - UNKNOWN
-      - CLEANING_TEAM_REPORTED
-      - REVIEW
-      - INBOX_THREAD_CREATED
-      - MISSION_INCIDENT_REPORTED
-      - COURTESY_CALL
-      type: string
-      description: '* `GUEST_DAMAGES` - Guest damages
-
-        * `GUEST_REPORTED` - Reported by guest
-
-        * `HOST_REPORTED` - Reported by owner
-
-        * `AGENT_REPORTED` - Reported by agent
-
-        * `PROPERTY_CHECK` - Property check
-
-        * `OVERUSE` - Overuse
-
-        * `UNKNOWN` - Unknown
-
-        * `CLEANING_TEAM_REPORTED` - Reported by cleaning team
-
-        * `REVIEW` - Guest review
-
-        * `INBOX_THREAD_CREATED` - Created from inbox thread
-
-        * `MISSION_INCIDENT_REPORTED` - Reported by agent through mission incident
-
-        * `COURTESY_CALL` - Courtesy call'
-    PriorityLevelEnum:
-      enum:
-      - LV1_EMERGENCY
-      - LV2_HIGH
-      - LV3_MEDIUM
-      - LV4_LOW
-      type: string
-      description: '* `LV1_EMERGENCY` - Urgent
-
-        * `LV2_HIGH` - High
-
-        * `LV3_MEDIUM` - Mid
-
-        * `LV4_LOW` - Low'
     IssueNote:
       type: object
       description: 'A note on a ticket: the internal, append-only activity log of the ticket.
@@ -587,23 +507,6 @@ components:
       - id
       - issue
       - note
-    IssueStatusEnum:
-      enum:
-      - OPEN
-      - ONGOING_RESOLUTION
-      - CLOSED
-      - ON_HOLD
-      - FINANCIAL_REVIEW
-      type: string
-      description: '* `OPEN` - Open
-
-        * `ONGOING_RESOLUTION` - Ongoing resolution
-
-        * `CLOSED` - Closed
-
-        * `ON_HOLD` - On hold
-
-        * `FINANCIAL_REVIEW` - Under financial review'
     Issue:
       type: object
       properties:
@@ -809,6 +712,89 @@ components:
           type: integer
           example: 50
           description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+    PriorityLevelEnum:
+      enum:
+      - LV1_EMERGENCY
+      - LV2_HIGH
+      - LV3_MEDIUM
+      - LV4_LOW
+      type: string
+      description: '* `LV1_EMERGENCY` - Urgent
+
+        * `LV2_HIGH` - High
+
+        * `LV3_MEDIUM` - Mid
+
+        * `LV4_LOW` - Low'
+    IssueStatusEnum:
+      enum:
+      - OPEN
+      - ONGOING_RESOLUTION
+      - CLOSED
+      - ON_HOLD
+      - FINANCIAL_REVIEW
+      type: string
+      description: '* `OPEN` - Open
+
+        * `ONGOING_RESOLUTION` - Ongoing resolution
+
+        * `CLOSED` - Closed
+
+        * `ON_HOLD` - On hold
+
+        * `FINANCIAL_REVIEW` - Under financial review'
+    IssueOriginEnum:
+      enum:
+      - GUEST_DAMAGES
+      - GUEST_REPORTED
+      - HOST_REPORTED
+      - AGENT_REPORTED
+      - PROPERTY_CHECK
+      - OVERUSE
+      - UNKNOWN
+      - CLEANING_TEAM_REPORTED
+      - REVIEW
+      - INBOX_THREAD_CREATED
+      - MISSION_INCIDENT_REPORTED
+      - COURTESY_CALL
+      type: string
+      description: '* `GUEST_DAMAGES` - Guest damages
+
+        * `GUEST_REPORTED` - Reported by guest
+
+        * `HOST_REPORTED` - Reported by owner
+
+        * `AGENT_REPORTED` - Reported by agent
+
+        * `PROPERTY_CHECK` - Property check
+
+        * `OVERUSE` - Overuse
+
+        * `UNKNOWN` - Unknown
+
+        * `CLEANING_TEAM_REPORTED` - Reported by cleaning team
+
+        * `REVIEW` - Guest review
+
+        * `INBOX_THREAD_CREATED` - Created from inbox thread
+
+        * `MISSION_INCIDENT_REPORTED` - Reported by agent through mission incident
+
+        * `COURTESY_CALL` - Courtesy call'
+    SupportUserGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the support-user group, usually naming a team and the region it covers (for example 'Owner Success France').
+          maxLength: 100
+      required:
+      - id
     PatchedIssue:
       type: object
       properties:
@@ -953,20 +939,34 @@ components:
         user:
           type: string
           readOnly: true
-    SupportUserGroup:
+    PaginatedIssueList:
       type: object
+      required:
+      - count
+      - results
       properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        name:
+          example: 123
+        next:
           type:
           - string
           - 'null'
-          description: Name of the support-user group, usually naming a team and the region it covers (for example 'Owner Success France').
-          maxLength: 100
-      required:
-      - id
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue'
+        limit:
+          type: integer
+          example: 50
   securitySchemes:
     basicAuth:
       type: http

@@ -215,18 +215,6 @@ components:
       - id
       - rental
       - reservation_platform
-    ReservationPlatformBrief:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          maxLength: 50
-      required:
-      - id
-      - name
     Listing:
       type: object
       properties:
@@ -290,6 +278,18 @@ components:
       - reservation_platform
       - title
       - url
+    ReservationPlatformBrief:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - id
+      - name
     PaginatedListingList:
       type: object
       required:

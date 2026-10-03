@@ -185,34 +185,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedPaymentLinkList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PaymentLink'
-        limit:
-          type: integer
-          example: 100
     PaymentLinkCurrencyEnum:
       enum:
       - EUR
@@ -233,46 +205,6 @@ components:
         * `CHF` - CHF
 
         * `SAR` - SAR'
-    Status1a4Enum:
-      enum:
-      - AUTHORIZED
-      - NOT_PAID
-      - PAID
-      - FAILED
-      - VOIDED
-      - PROCESSED
-      type: string
-      description: '* `AUTHORIZED` - Authorized
-
-        * `NOT_PAID` - Not paid
-
-        * `PAID` - Paid
-
-        * `FAILED` - Failed
-
-        * `VOIDED` - Voided
-
-        * `PROCESSED` - Processed'
-    PaymentLinkCategoryEnum:
-      enum:
-      - EXTRA_SERVICES
-      - DAMAGES
-      - RESERVATION_PAYMENT
-      - CITY_TAX
-      - SECURITY_DEPOSIT
-      - OTHER
-      type: string
-      description: '* `EXTRA_SERVICES` - Extra services
-
-        * `DAMAGES` - Damages
-
-        * `RESERVATION_PAYMENT` - Reservation payment
-
-        * `CITY_TAX` - City tax
-
-        * `SECURITY_DEPOSIT` - Security deposit
-
-        * `OTHER` - Other'
     PaymentLink:
       type: object
       properties:
@@ -387,6 +319,74 @@ components:
       - reservation
       - short_uuid
       - uuid
+    PaymentLinkCategoryEnum:
+      enum:
+      - EXTRA_SERVICES
+      - DAMAGES
+      - RESERVATION_PAYMENT
+      - CITY_TAX
+      - SECURITY_DEPOSIT
+      - OTHER
+      type: string
+      description: '* `EXTRA_SERVICES` - Extra services
+
+        * `DAMAGES` - Damages
+
+        * `RESERVATION_PAYMENT` - Reservation payment
+
+        * `CITY_TAX` - City tax
+
+        * `SECURITY_DEPOSIT` - Security deposit
+
+        * `OTHER` - Other'
+    Status1a4Enum:
+      enum:
+      - AUTHORIZED
+      - NOT_PAID
+      - PAID
+      - FAILED
+      - VOIDED
+      - PROCESSED
+      type: string
+      description: '* `AUTHORIZED` - Authorized
+
+        * `NOT_PAID` - Not paid
+
+        * `PAID` - Paid
+
+        * `FAILED` - Failed
+
+        * `VOIDED` - Voided
+
+        * `PROCESSED` - Processed'
+    PaginatedPaymentLinkList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentLink'
+        limit:
+          type: integer
+          example: 100
   securitySchemes:
     basicAuth:
       type: http

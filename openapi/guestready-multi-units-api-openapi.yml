@@ -224,7 +224,46 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    UpdateMultiUnit:
+    PaginatedMultiUnitList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiUnit'
+        limit:
+          type: integer
+          example: 50
+    MultiUnitStatusEnum:
+      enum:
+      - INACTIVE
+      - ACTIVE
+      - ONBOARDING
+      type: string
+      description: '* `INACTIVE` - INACTIVE
+
+        * `ACTIVE` - ACTIVE
+
+        * `ONBOARDING` - ONBOARDING'
+    PatchedUpdateMultiUnit:
       type: object
       description: 'Partially update a parent/child multi-unit.
 
@@ -252,15 +291,7 @@ components:
             type: string
             title: Contract number
           description: Ids of the properties (rentals) to group under the multi-unit, including the main unit and at least one sub-unit. Must be provided together with main_unit. A property not already in this multi-unit must not belong to another one and must share the main unit's address or sit within the configured distance of it. Newly added properties have their future reservations' calendars blocked and removed ones unblocked.
-    MultiUnitTypeEnum:
-      enum:
-      - PARENT_CHILD
-      - HOTEL
-      type: string
-      description: '* `PARENT_CHILD` - PARENT_CHILD
-
-        * `HOTEL` - HOTEL'
-    PatchedUpdateMultiUnit:
+    UpdateMultiUnit:
       type: object
       description: 'Partially update a parent/child multi-unit.
 
@@ -405,45 +436,14 @@ components:
       - main_unit
       - name
       - rentals
-    PaginatedMultiUnitList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultiUnit'
-        limit:
-          type: integer
-          example: 50
-    MultiUnitStatusEnum:
+    MultiUnitTypeEnum:
       enum:
-      - INACTIVE
-      - ACTIVE
-      - ONBOARDING
+      - PARENT_CHILD
+      - HOTEL
       type: string
-      description: '* `INACTIVE` - INACTIVE
+      description: '* `PARENT_CHILD` - PARENT_CHILD
 
-        * `ACTIVE` - ACTIVE
-
-        * `ONBOARDING` - ONBOARDING'
+        * `HOTEL` - HOTEL'
   securitySchemes:
     basicAuth:
       type: http

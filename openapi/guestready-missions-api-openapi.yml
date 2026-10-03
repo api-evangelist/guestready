@@ -468,174 +468,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Agent:
-      type: object
-      description: 'Read-only lookup: who the caller may put on a mission, and their id.
-
-
-        An allowlist, not the model: no phone, address, date of birth or identity
-
-        document. ``antennes`` renders whatever ``AgentsViewSet`` prefetched, which is
-
-        where its scoping lives.'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        first_name:
-          type: string
-          readOnly: true
-        last_name:
-          type: string
-          readOnly: true
-        status:
-          allOf:
-          - $ref: '#/components/schemas/AgentStatusEnum'
-          description: 'Whether the agent is still working: ACTIVE or INACTIVE. Assigning a mission does NOT check this, so an INACTIVE agent must be filtered out here rather than relied on to be refused.
-
-
-            * `ACTIVE` - Active
-
-            * `INACTIVE` - Inactive'
-        antennes:
-          type: array
-          items:
-            type: integer
-            title: Offices
-          title: Offices
-          description: Ids of the offices the agent works for, restricted to the offices you have access to. A mission can only be assigned to an agent of the mission's own office.
-        type_mission:
-          type: array
-          items:
-            type: integer
-            title: Mission types
-          title: Mission types
-          description: Ids of the mission types the agent is qualified for (list them with the type_missions resource). A mission can only be assigned to an agent qualified for its type.
-      required:
-      - antennes
-      - first_name
-      - id
-      - last_name
-    MissionPayoutAdjustmentCategoryEnum:
-      enum:
-      - cleaning
-      - maintenance
-      - improvement
-      - quality_check
-      - issue_resolution
-      - onboarding_fee
-      - utility_bill
-      - unit_permits
-      - reservation_cancellation
-      - advance_payment_for_decoration_project
-      - decoration_project
-      - commission_offer
-      - fin_ops
-      - pest_control
-      - deep_cleaning
-      - guest_request
-      - tpl_insurance
-      - service_charge
-      - local_tax
-      - termination_fee
-      - others
-      type: string
-      description: '* `cleaning` - cleaning
-
-        * `maintenance` - maintenance
-
-        * `improvement` - improvement
-
-        * `quality_check` - quality_check
-
-        * `issue_resolution` - issue_resolution
-
-        * `onboarding_fee` - onboarding_fee
-
-        * `utility_bill` - utility_bill
-
-        * `unit_permits` - unit_permits
-
-        * `reservation_cancellation` - reservation_cancellation
-
-        * `advance_payment_for_decoration_project` - advance_payment_for_decoration_project
-
-        * `decoration_project` - decoration_project
-
-        * `commission_offer` - commission_offer
-
-        * `fin_ops` - fin_ops
-
-        * `pest_control` - pest_control
-
-        * `deep_cleaning` - deep_cleaning
-
-        * `guest_request` - guest_request
-
-        * `tpl_insurance` - tpl_insurance
-
-        * `service_charge` - service_charge
-
-        * `local_tax` - local_tax
-
-        * `termination_fee` - termination_fee
-
-        * `others` - others'
-    AgentStatusEnum:
-      enum:
-      - ACTIVE
-      - INACTIVE
-      type: string
-      description: '* `ACTIVE` - Active
-
-        * `INACTIVE` - Inactive'
-    MissionStatusEnum:
-      enum:
-      - NEW
-      - ASSIGNED
-      - PENDING_CH
-      - CANCELLED
-      - ARCHIVED
-      type: string
-      description: '* `NEW` - New
-
-        * `ASSIGNED` - Assigned
-
-        * `PENDING_CH` - Awaiting validation after a change
-
-        * `CANCELLED` - Cancelled
-
-        * `ARCHIVED` - Archived'
-    KeyCollectionCode:
-      type: object
-      properties:
-        key_name:
-          type: string
-          readOnly: true
-        store_name:
-          type: string
-          readOnly: true
-        store_address:
-          type: string
-          readOnly: true
-        store_time:
-          type: string
-          readOnly: true
-        code:
-          type: string
-          maxLength: 50
-        access_link:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-      required:
-      - code
-      - key_name
-      - store_address
-      - store_name
-      - store_time
     Mission:
       type: object
       properties:
@@ -826,35 +658,6 @@ components:
       - start
       - updated_at
       - user
-    PaginatedMissionList:
-      type: object
-      required:
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Mission'
-        limit:
-          type: integer
-          example: 50
-          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
     MissionPayoutAdjustment:
       type: object
       properties:
@@ -959,54 +762,101 @@ components:
       - price_of_purchase_note
       - property
       - service_fee
-    RequestedMaintenanceJobEnum:
+    MissionPayoutAdjustmentCategoryEnum:
+      enum:
+      - cleaning
+      - maintenance
+      - improvement
+      - quality_check
+      - issue_resolution
+      - onboarding_fee
+      - utility_bill
+      - unit_permits
+      - reservation_cancellation
+      - advance_payment_for_decoration_project
+      - decoration_project
+      - commission_offer
+      - fin_ops
+      - pest_control
+      - deep_cleaning
+      - guest_request
+      - tpl_insurance
+      - service_charge
+      - local_tax
+      - termination_fee
+      - others
       type: string
-      enum:
-      - Handyman
-      - Plumber
-      - Gas Engineer
-      - A/C and HIU Specialist
-      - Locksmith
-      - Pest Control
-      - Window Cleaner
-      - Roofing
-      - Gardening
-      - Painter / Decorator
-      - Electrician
-      - Appliance Engineer
-      - Compliance (EICR,GSC,EPC,PAT)
-      - Boiler Service
-      - Drainage Specialist
-      - General Builder
-      - Disposals / Collections
-    ActiveStatusEnum:
-      enum:
-      - PENDING
-      - DOING
-      - DONE
-      type: string
-      description: '* `PENDING` - PENDING
+      description: '* `cleaning` - cleaning
 
-        * `DOING` - DOING
+        * `maintenance` - maintenance
 
-        * `DONE` - DONE'
-    ChargedToEnum:
-      enum:
-      - PROPERTY_MANAGER
-      - OWNER
-      - GUEST
-      - PROVIDERS
-      type: string
-      description: '* `PROPERTY_MANAGER` - Property Manager
+        * `improvement` - improvement
 
-        * `OWNER` - Owner
+        * `quality_check` - quality_check
 
-        * `GUEST` - Guest
+        * `issue_resolution` - issue_resolution
 
-        * `PROVIDERS` - Providers'
-    BlankEnum:
-      enum:
-      - ''
+        * `onboarding_fee` - onboarding_fee
+
+        * `utility_bill` - utility_bill
+
+        * `unit_permits` - unit_permits
+
+        * `reservation_cancellation` - reservation_cancellation
+
+        * `advance_payment_for_decoration_project` - advance_payment_for_decoration_project
+
+        * `decoration_project` - decoration_project
+
+        * `commission_offer` - commission_offer
+
+        * `fin_ops` - fin_ops
+
+        * `pest_control` - pest_control
+
+        * `deep_cleaning` - deep_cleaning
+
+        * `guest_request` - guest_request
+
+        * `tpl_insurance` - tpl_insurance
+
+        * `service_charge` - service_charge
+
+        * `local_tax` - local_tax
+
+        * `termination_fee` - termination_fee
+
+        * `others` - others'
+    KeyCollectionCode:
+      type: object
+      properties:
+        key_name:
+          type: string
+          readOnly: true
+        store_name:
+          type: string
+          readOnly: true
+        store_address:
+          type: string
+          readOnly: true
+        store_time:
+          type: string
+          readOnly: true
+        code:
+          type: string
+          maxLength: 50
+        access_link:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+      required:
+      - code
+      - key_name
+      - store_address
+      - store_name
+      - store_time
     PatchedMission:
       type: object
       properties:
@@ -1182,6 +1032,31 @@ components:
         user:
           type: string
           readOnly: true
+    AgentStatusEnum:
+      enum:
+      - ACTIVE
+      - INACTIVE
+      type: string
+      description: '* `ACTIVE` - Active
+
+        * `INACTIVE` - Inactive'
+    MissionStatusEnum:
+      enum:
+      - NEW
+      - ASSIGNED
+      - PENDING_CH
+      - CANCELLED
+      - ARCHIVED
+      type: string
+      description: '* `NEW` - New
+
+        * `ASSIGNED` - Assigned
+
+        * `PENDING_CH` - Awaiting validation after a change
+
+        * `CANCELLED` - Cancelled
+
+        * `ARCHIVED` - Archived'
     PatchedUpdateMissionEndTime:
       type: object
       description: 'Base for the update_start_time / update_end_time actions.
@@ -1206,9 +1081,54 @@ components:
           type: string
           format: date-time
           description: New mission end date and time. The UTC offset is required, e.g. 2026-07-04T11:00:00+00:00 or 2026-07-04T13:00:00+02:00.
-    NullEnum:
-      enum:
-      - null
+    Agent:
+      type: object
+      description: 'Read-only lookup: who the caller may put on a mission, and their id.
+
+
+        An allowlist, not the model: no phone, address, date of birth or identity
+
+        document. ``antennes`` renders whatever ``AgentsViewSet`` prefetched, which is
+
+        where its scoping lives.'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/AgentStatusEnum'
+          description: 'Whether the agent is still working: ACTIVE or INACTIVE. Assigning a mission does NOT check this, so an INACTIVE agent must be filtered out here rather than relied on to be refused.
+
+
+            * `ACTIVE` - Active
+
+            * `INACTIVE` - Inactive'
+        antennes:
+          type: array
+          items:
+            type: integer
+            title: Offices
+          title: Offices
+          description: Ids of the offices the agent works for, restricted to the offices you have access to. A mission can only be assigned to an agent of the mission's own office.
+        type_mission:
+          type: array
+          items:
+            type: integer
+            title: Mission types
+          title: Mission types
+          description: Ids of the mission types the agent is qualified for (list them with the type_missions resource). A mission can only be assigned to an agent qualified for its type.
+      required:
+      - antennes
+      - first_name
+      - id
+      - last_name
     PaymentStatusEnum:
       enum:
       - NOT_PAID
@@ -1217,6 +1137,52 @@ components:
       description: '* `NOT_PAID` - Not paid
 
         * `PAID` - Paid'
+    ActiveStatusEnum:
+      enum:
+      - PENDING
+      - DOING
+      - DONE
+      type: string
+      description: '* `PENDING` - PENDING
+
+        * `DOING` - DOING
+
+        * `DONE` - DONE'
+    BlankEnum:
+      enum:
+      - ''
+    NullEnum:
+      enum:
+      - null
+    PaginatedMissionList:
+      type: object
+      required:
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mission'
+        limit:
+          type: integer
+          example: 50
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
     PatchedUpdateMissionStartTime:
       type: object
       description: 'Base for the update_start_time / update_end_time actions.
@@ -1241,6 +1207,20 @@ components:
           type: string
           format: date-time
           description: New mission start date and time. The UTC offset is required, e.g. 2026-07-04T09:00:00+00:00 or 2026-07-04T11:00:00+02:00.
+    ChargedToEnum:
+      enum:
+      - PROPERTY_MANAGER
+      - OWNER
+      - GUEST
+      - PROVIDERS
+      type: string
+      description: '* `PROPERTY_MANAGER` - Property Manager
+
+        * `OWNER` - Owner
+
+        * `GUEST` - Guest
+
+        * `PROVIDERS` - Providers'
     PaginatedAgentList:
       type: object
       required:
@@ -1269,6 +1249,26 @@ components:
         limit:
           type: integer
           example: 50
+    RequestedMaintenanceJobEnum:
+      type: string
+      enum:
+      - Handyman
+      - Plumber
+      - Gas Engineer
+      - A/C and HIU Specialist
+      - Locksmith
+      - Pest Control
+      - Window Cleaner
+      - Roofing
+      - Gardening
+      - Painter / Decorator
+      - Electrician
+      - Appliance Engineer
+      - Compliance (EICR,GSC,EPC,PAT)
+      - Boiler Service
+      - Drainage Specialist
+      - General Builder
+      - Disposals / Collections
   securitySchemes:
     basicAuth:
       type: http

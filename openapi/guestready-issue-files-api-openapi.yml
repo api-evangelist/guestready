@@ -179,40 +179,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    IssueFile:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        file:
-          type: string
-          format: uri
-        tag:
-          oneOf:
-          - $ref: '#/components/schemas/TagEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        url:
-          type: string
-          readOnly: true
-        title:
-          type:
-          - string
-          - 'null'
-          maxLength: 50
-        issue:
-          type:
-          - integer
-          - 'null'
-        user:
-          type: string
-          readOnly: true
-      required:
-      - file
-      - id
-      - url
-      - user
     PatchedIssueFile:
       type: object
       properties:
@@ -262,12 +228,43 @@ components:
         * `INVOICE` - Invoice
 
         * `REPORT` - Report'
-    BlankEnum:
-      enum:
-      - ''
     NullEnum:
       enum:
       - null
+    IssueFile:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        file:
+          type: string
+          format: uri
+        tag:
+          oneOf:
+          - $ref: '#/components/schemas/TagEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        url:
+          type: string
+          readOnly: true
+        title:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        issue:
+          type:
+          - integer
+          - 'null'
+        user:
+          type: string
+          readOnly: true
+      required:
+      - file
+      - id
+      - url
+      - user
     PaginatedIssueFileList:
       type: object
       required:
@@ -296,6 +293,9 @@ components:
         limit:
           type: integer
           example: 50
+    BlankEnum:
+      enum:
+      - ''
   securitySchemes:
     basicAuth:
       type: http

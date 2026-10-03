@@ -215,46 +215,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PatchedBathroom:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        hair_dryer:
-          type: boolean
-          default: false
-        shower:
-          type: boolean
-          default: false
-        bath:
-          type: boolean
-          default: false
-        jacuzzi:
-          type: boolean
-          default: false
-        spa_bath:
-          type: boolean
-          default: false
-        mirror:
-          type: boolean
-          default: false
-        toothbrush_holder:
-          type: boolean
-          default: false
-        wastebasket:
-          type: boolean
-          default: false
-        towel_warmer:
-          type: boolean
-          default: false
-        toilet:
-          type: boolean
-          default: false
     Bathroom:
       type: object
       properties:
@@ -298,6 +258,46 @@ components:
       required:
       - id
       - rental_id
+    PatchedBathroom:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        hair_dryer:
+          type: boolean
+          default: false
+        shower:
+          type: boolean
+          default: false
+        bath:
+          type: boolean
+          default: false
+        jacuzzi:
+          type: boolean
+          default: false
+        spa_bath:
+          type: boolean
+          default: false
+        mirror:
+          type: boolean
+          default: false
+        toothbrush_holder:
+          type: boolean
+          default: false
+        wastebasket:
+          type: boolean
+          default: false
+        towel_warmer:
+          type: boolean
+          default: false
+        toilet:
+          type: boolean
+          default: false
     PaginatedBathroomList:
       type: object
       required:

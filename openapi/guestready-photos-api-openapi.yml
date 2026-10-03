@@ -198,50 +198,34 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PatchedUpdatePhoto:
+    PaginatedPhotoList:
       type: object
+      required:
+      - count
+      - results
       properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        category:
-          oneOf:
-          - $ref: '#/components/schemas/CategoryC86Enum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        kind:
-          type: string
-          description: "Valid choices: \n- balcony_terrace\n- bathroom\n- beach\n- bedroom\n- building\n- dining area\n- Facade_Entrance\n- floor_plan\n- garden\n- inside\n- kitchen\n- livingroom\n- neighbourhood\n- outside\n- parking\n- patio\n- safety\n- surroundings\n- swimming_pool\n- view"
-        kind_verbose:
-          type: string
-          readOnly: true
-        position:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: 1
-        subroom_id:
-          type:
-          - integer
-          - 'null'
-          description: Id of the room of the property this photo shows, e.g. a bedroom or a bathroom. Use the /api/v3/subrooms/ endpoint to list the rooms of a property. The room must belong to the same property as the photo. Send null to unassign the photo from its room. Moving a photo to another property clears the room assignment.
-        subroom_type:
+          example: 123
+        next:
           type:
           - string
           - 'null'
-          readOnly: true
-          description: Room type of the assigned room, e.g. "BEDROOM", "BATHROOM". Read-only, null when the photo is not assigned to a room.
-        subroom_position:
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
           type:
-          - integer
+          - string
           - 'null'
-          readOnly: true
-          description: Position of the assigned room within its property. Read-only, null when the photo is not assigned to a room.
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Photo'
+        limit:
+          type: integer
+          example: 50
     Photo:
       type: object
       properties:
@@ -346,45 +330,61 @@ components:
       - rental_id
       - subroom_position
       - subroom_type
+    NullEnum:
+      enum:
+      - null
+    BlankEnum:
+      enum:
+      - ''
+    PatchedUpdatePhoto:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        category:
+          oneOf:
+          - $ref: '#/components/schemas/CategoryC86Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        kind:
+          type: string
+          description: "Valid choices: \n- balcony_terrace\n- bathroom\n- beach\n- bedroom\n- building\n- dining area\n- Facade_Entrance\n- floor_plan\n- garden\n- inside\n- kitchen\n- livingroom\n- neighbourhood\n- outside\n- parking\n- patio\n- safety\n- surroundings\n- swimming_pool\n- view"
+        kind_verbose:
+          type: string
+          readOnly: true
+        position:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: 1
+        subroom_id:
+          type:
+          - integer
+          - 'null'
+          description: Id of the room of the property this photo shows, e.g. a bedroom or a bathroom. Use the /api/v3/subrooms/ endpoint to list the rooms of a property. The room must belong to the same property as the photo. Send null to unassign the photo from its room. Moving a photo to another property clears the room assignment.
+        subroom_type:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Room type of the assigned room, e.g. "BEDROOM", "BATHROOM". Read-only, null when the photo is not assigned to a room.
+        subroom_position:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: Position of the assigned room within its property. Read-only, null when the photo is not assigned to a room.
     CategoryC86Enum:
       enum:
       - COVID
       type: string
       description: '* `COVID` - covid'
-    BlankEnum:
-      enum:
-      - ''
-    PaginatedPhotoList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Photo'
-        limit:
-          type: integer
-          example: 50
-    NullEnum:
-      enum:
-      - null
   securitySchemes:
     basicAuth:
       type: http

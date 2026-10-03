@@ -289,6 +289,80 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    CheckInStepAttachment:
+      type: object
+      properties:
+        image:
+          type:
+          - string
+          - 'null'
+          format: uri
+        file:
+          type:
+          - string
+          - 'null'
+          format: uri
+        image_or_file:
+          type:
+          - string
+          - 'null'
+          format: uri
+    PatchedCheckInStep:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+        order:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+          title: Ordering index
+        attachment:
+          allOf:
+          - $ref: '#/components/schemas/CheckInStepAttachment'
+        show_for_check_in_type:
+          description: 'If not set, the step will be shown for all check-in types.
+
+
+            * `SELF_CHECK_IN` - Self check-in
+
+            * `IN_PERSON` - In-person check-in'
+          oneOf:
+          - $ref: '#/components/schemas/ShowForCheckInTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        content_en:
+          type: string
+        content_fr:
+          type: string
+        content_pt:
+          type: string
+        content_es:
+          type: string
+        content_it:
+          type: string
+        content_ar:
+          type: string
+        content_de:
+          type: string
+        content_pl:
+          type: string
+        content_nl:
+          type: string
+    OrderCheckInSteps:
+      type: object
+      properties:
+        rental_id:
+          type: string
+        step_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - rental_id
+      - step_ids
     CheckInStep:
       type: object
       properties:
@@ -335,79 +409,6 @@ components:
           type: string
       required:
       - order
-    ShowForCheckInTypeEnum:
-      enum:
-      - SELF_CHECK_IN
-      - IN_PERSON
-      type: string
-      description: '* `SELF_CHECK_IN` - Self check-in
-
-        * `IN_PERSON` - In-person check-in'
-    CheckInStepAttachment:
-      type: object
-      properties:
-        image:
-          type:
-          - string
-          - 'null'
-          format: uri
-        file:
-          type:
-          - string
-          - 'null'
-          format: uri
-        image_or_file:
-          type:
-          - string
-          - 'null'
-          format: uri
-    BlankEnum:
-      enum:
-      - ''
-    PatchedCheckInStep:
-      type: object
-      properties:
-        id:
-          type:
-          - integer
-          - 'null'
-        order:
-          type: integer
-          maximum: 32767
-          minimum: -32768
-          title: Ordering index
-        attachment:
-          allOf:
-          - $ref: '#/components/schemas/CheckInStepAttachment'
-        show_for_check_in_type:
-          description: 'If not set, the step will be shown for all check-in types.
-
-
-            * `SELF_CHECK_IN` - Self check-in
-
-            * `IN_PERSON` - In-person check-in'
-          oneOf:
-          - $ref: '#/components/schemas/ShowForCheckInTypeEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        content_en:
-          type: string
-        content_fr:
-          type: string
-        content_pt:
-          type: string
-        content_es:
-          type: string
-        content_it:
-          type: string
-        content_ar:
-          type: string
-        content_de:
-          type: string
-        content_pl:
-          type: string
-        content_nl:
-          type: string
     PaginatedCheckInStepList:
       type: object
       required:
@@ -436,21 +437,20 @@ components:
         limit:
           type: integer
           example: 50
-    OrderCheckInSteps:
-      type: object
-      properties:
-        rental_id:
-          type: string
-        step_ids:
-          type: array
-          items:
-            type: integer
-      required:
-      - rental_id
-      - step_ids
+    ShowForCheckInTypeEnum:
+      enum:
+      - SELF_CHECK_IN
+      - IN_PERSON
+      type: string
+      description: '* `SELF_CHECK_IN` - Self check-in
+
+        * `IN_PERSON` - In-person check-in'
     NullEnum:
       enum:
       - null
+    BlankEnum:
+      enum:
+      - ''
   securitySchemes:
     basicAuth:
       type: http

@@ -38,9 +38,9 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    NullEnum:
+    BlankEnum:
       enum:
-      - null
+      - ''
     IdTypeEnum:
       enum:
       - P
@@ -54,9 +54,6 @@ components:
         * `B` - National ID card
 
         * `O` - Other'
-    BlankEnum:
-      enum:
-      - ''
     PortugalRegisteredGuestData:
       type: object
       properties:
@@ -145,6 +142,9 @@ components:
       required:
       - is_primary_guest
       - pk
+    NullEnum:
+      enum:
+      - null
   securitySchemes:
     basicAuth:
       type: http

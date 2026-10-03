@@ -77,24 +77,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    UnblockCalendar:
-      type: object
-      properties:
-        rental_id:
-          type: string
-          description: Id of the property (rental) whose calendar the date range applies to.
-        start_date:
-          type: string
-          format: date-time
-          description: Start of the date range (ISO 8601, e.g. 2026-07-01T14:00:00). The range is interpreted by calendar date, and this date must fall strictly before the end date, so the range spans at least one night.
-        end_date:
-          type: string
-          format: date-time
-          description: End of the date range (ISO 8601, e.g. 2026-07-05T11:00:00). Its calendar date must fall strictly after the start date.
-      required:
-      - end_date
-      - rental_id
-      - start_date
     BlockedReasonEnum:
       enum:
       - HOST_STAY
@@ -118,9 +100,14 @@ components:
         * `BLOCKED_BY_HOST` - Blocked by owner
 
         * `UPSELLING_REQUEST` - Upselling request'
-    BlankEnum:
+    ReturnCleaningEnum:
       enum:
-      - ''
+      - FULL_OWNER
+      - FULL_PROPERTY_MANAGER
+      type: string
+      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
+
+        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding'
     BlockCalendar:
       type: object
       properties:
@@ -188,14 +175,24 @@ components:
       - end_date
       - rental_id
       - start_date
-    ReturnCleaningEnum:
-      enum:
-      - FULL_OWNER
-      - FULL_PROPERTY_MANAGER
-      type: string
-      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
-
-        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding'
+    UnblockCalendar:
+      type: object
+      properties:
+        rental_id:
+          type: string
+          description: Id of the property (rental) whose calendar the date range applies to.
+        start_date:
+          type: string
+          format: date-time
+          description: Start of the date range (ISO 8601, e.g. 2026-07-01T14:00:00). The range is interpreted by calendar date, and this date must fall strictly before the end date, so the range spans at least one night.
+        end_date:
+          type: string
+          format: date-time
+          description: End of the date range (ISO 8601, e.g. 2026-07-05T11:00:00). Its calendar date must fall strictly after the start date.
+      required:
+      - end_date
+      - rental_id
+      - start_date
     DepartureCleaningEnum:
       enum:
       - FULL_OWNER
@@ -213,6 +210,9 @@ components:
         * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
 
         * `NO_CLEANING` - No cleaning'
+    BlankEnum:
+      enum:
+      - ''
   securitySchemes:
     basicAuth:
       type: http
