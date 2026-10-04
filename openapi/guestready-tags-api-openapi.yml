@@ -213,6 +213,29 @@ components:
       required:
       - id
       - name
+    ColorEnum:
+      enum:
+      - orange
+      - red
+      - pink
+      - violet
+      - blue
+      - green
+      - gray
+      type: string
+      description: '* `orange` - Orange
+
+        * `red` - Red
+
+        * `pink` - Pink
+
+        * `violet` - Violet
+
+        * `blue` - Blue
+
+        * `green` - Green
+
+        * `gray` - Gray'
     PaginatedRentalTagList:
       type: object
       required:
@@ -241,29 +264,6 @@ components:
         limit:
           type: integer
           example: 50
-    ColorEnum:
-      enum:
-      - orange
-      - red
-      - pink
-      - violet
-      - blue
-      - green
-      - gray
-      type: string
-      description: '* `orange` - Orange
-
-        * `red` - Red
-
-        * `pink` - Pink
-
-        * `violet` - Violet
-
-        * `blue` - Blue
-
-        * `green` - Green
-
-        * `gray` - Gray'
   securitySchemes:
     basicAuth:
       type: http

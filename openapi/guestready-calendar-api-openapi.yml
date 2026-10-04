@@ -77,37 +77,9 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    BlockedReasonEnum:
+    BlankEnum:
       enum:
-      - HOST_STAY
-      - MAINTENANCE
-      - OTHER
-      - PARTIAL_OCCUPANCY
-      - FULL_OCCUPANCY
-      - BLOCKED_BY_HOST
-      - UPSELLING_REQUEST
-      type: string
-      description: '* `HOST_STAY` - Owner stay
-
-        * `MAINTENANCE` - Maintenance
-
-        * `OTHER` - Other
-
-        * `PARTIAL_OCCUPANCY` - Partially occupied
-
-        * `FULL_OCCUPANCY` - Fully occupied
-
-        * `BLOCKED_BY_HOST` - Blocked by owner
-
-        * `UPSELLING_REQUEST` - Upselling request'
-    ReturnCleaningEnum:
-      enum:
-      - FULL_OWNER
-      - FULL_PROPERTY_MANAGER
-      type: string
-      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
-
-        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding'
+      - ''
     BlockCalendar:
       type: object
       properties:
@@ -175,6 +147,46 @@ components:
       - end_date
       - rental_id
       - start_date
+    DepartureCleaningEnum:
+      enum:
+      - FULL_OWNER
+      - FULL_PROPERTY_MANAGER
+      - DELIVERY
+      - CLEANING_ONLY
+      - NO_CLEANING
+      type: string
+      description: '* `FULL_OWNER` - Full cleaning + Owner bedding
+
+        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding
+
+        * `DELIVERY` - Delivery (No cleaning + Property manager bedding)
+
+        * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
+
+        * `NO_CLEANING` - No cleaning'
+    BlockedReasonEnum:
+      enum:
+      - HOST_STAY
+      - MAINTENANCE
+      - OTHER
+      - PARTIAL_OCCUPANCY
+      - FULL_OCCUPANCY
+      - BLOCKED_BY_HOST
+      - UPSELLING_REQUEST
+      type: string
+      description: '* `HOST_STAY` - Owner stay
+
+        * `MAINTENANCE` - Maintenance
+
+        * `OTHER` - Other
+
+        * `PARTIAL_OCCUPANCY` - Partially occupied
+
+        * `FULL_OCCUPANCY` - Fully occupied
+
+        * `BLOCKED_BY_HOST` - Blocked by owner
+
+        * `UPSELLING_REQUEST` - Upselling request'
     UnblockCalendar:
       type: object
       properties:
@@ -193,26 +205,14 @@ components:
       - end_date
       - rental_id
       - start_date
-    DepartureCleaningEnum:
+    ReturnCleaningEnum:
       enum:
       - FULL_OWNER
       - FULL_PROPERTY_MANAGER
-      - DELIVERY
-      - CLEANING_ONLY
-      - NO_CLEANING
       type: string
       description: '* `FULL_OWNER` - Full cleaning + Owner bedding
 
-        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding
-
-        * `DELIVERY` - Delivery (No cleaning + Property manager bedding)
-
-        * `CLEANING_ONLY` - Cleaning only (Full cleaning + Owner bedding)
-
-        * `NO_CLEANING` - No cleaning'
-    BlankEnum:
-      enum:
-      - ''
+        * `FULL_PROPERTY_MANAGER` - Full cleaning + Property manager bedding'
   securitySchemes:
     basicAuth:
       type: http

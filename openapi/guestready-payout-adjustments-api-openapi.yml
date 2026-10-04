@@ -176,53 +176,6 @@ paths:
           description: ''
 components:
   schemas:
-    InternalCategoryEnum:
-      enum:
-      - airbnb_resolution
-      - mission_charge
-      type: string
-      description: '* `airbnb_resolution` - airbnb_resolution
-
-        * `mission_charge` - mission_charge'
-    PayoutAdjustmentStatusEnum:
-      enum:
-      - inactive
-      - paid
-      - not_paid
-      type: string
-      description: '* `inactive` - Inactive
-
-        * `paid` - Paid
-
-        * `not_paid` - Not Paid'
-    PaginatedPayoutAdjustmentList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PayoutAdjustment'
-        limit:
-          type: integer
-          example: 100
     PayoutAdjustmentTypeEnum:
       enum:
       - CHARGE
@@ -234,9 +187,6 @@ components:
     BlankEnum:
       enum:
       - ''
-    NullEnum:
-      enum:
-      - null
     CurrencyD53Enum:
       enum:
       - AED
@@ -364,6 +314,17 @@ components:
         * `termination_fee` - Termination Fee
 
         * `others` - Others'
+    PayoutAdjustmentStatusEnum:
+      enum:
+      - inactive
+      - paid
+      - not_paid
+      type: string
+      description: '* `inactive` - Inactive
+
+        * `paid` - Paid
+
+        * `not_paid` - Not Paid'
     PayoutAdjustment:
       type: object
       properties:
@@ -492,6 +453,45 @@ components:
       - invoices
       - owner
       - property
+    NullEnum:
+      enum:
+      - null
+    InternalCategoryEnum:
+      enum:
+      - airbnb_resolution
+      - mission_charge
+      type: string
+      description: '* `airbnb_resolution` - airbnb_resolution
+
+        * `mission_charge` - mission_charge'
+    PaginatedPayoutAdjustmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayoutAdjustment'
+        limit:
+          type: integer
+          example: 100
     PayoutAdjustmentAccountingInvoice:
       type: object
       properties:

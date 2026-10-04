@@ -460,53 +460,262 @@ paths:
           description: ''
 components:
   schemas:
-    IssueNote:
+    PaginatedIssueNoteList:
       type: object
-      description: 'A note on a ticket: the internal, append-only activity log of the ticket.
-
-
-        The author is server-controlled -- the viewset sets it from the authenticated
-
-        caller -- so a client cannot attribute a note to somebody else. ``issue`` IS
-
-        writable here (unlike the ticket-nested shape this replaced, where it came
-
-        from the URL), and its write queryset is scoped to the caller''s own tickets,
-
-        same as every writable relation on ``IssueSerializer``.'
+      required:
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssueNote'
+        limit:
+          type: integer
+          example: 50
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+    PatchedIssue:
+      type: object
       properties:
         id:
           type: integer
           readOnly: true
-        issue:
-          type: integer
-          description: Id of the ticket the note belongs to.
-        note:
-          type: string
-          description: Text of the note to add to the ticket.
-        created_by:
+        host:
           type:
           - integer
           - 'null'
-          readOnly: true
-          description: Id of the user who wrote the note, if still known.
-        created_by_name:
+          title: Owner
+          description: Id of the property owner the ticket is about.
+        rental:
           type:
           - string
           - 'null'
-          readOnly: true
-        created_at:
+          title: Property
+          description: Id of the property (rental) the ticket is about. At least one of rental, host, issue_mission, mission_incident, reservation, or guest_review is required.
+        issue_mission:
+          type:
+          - integer
+          - 'null'
+          title: Mission
+          description: Id of the mission the ticket relates to, if any.
+        mission_incident:
+          type:
+          - integer
+          - 'null'
+          description: 'Id of the mission incident the ticket is raised from — a problem a field agent reported during a mission. This is NOT issue_mission, which takes a mission id. When set, the incident''s photo and attachments are copied onto the ticket, and a new incident is marked as having a ticket. An archived or closed incident keeps its status: linking a ticket never reopens it.'
+        reservation:
+          type:
+          - integer
+          - 'null'
+          description: Id of the reservation (booking) concerned, if any.
+        guest_review:
+          type:
+          - integer
+          - 'null'
+          description: Id of the guest review the ticket relates to, if any.
+        assignees:
+          type: array
+          items:
+            type: integer
+          description: Ids of the users to assign the ticket to.
+        group_assignees:
+          type: array
+          items:
+            type: integer
+          description: Ids of the support-user groups to assign the ticket to.
+        status:
+          allOf:
+          - $ref: '#/components/schemas/IssueStatusEnum'
+          description: 'Workflow state of the ticket; defaults to OPEN. FINANCIAL_REVIEW means the ticket is under financial review.
+
+
+            * `OPEN` - Open
+
+            * `ONGOING_RESOLUTION` - Ongoing resolution
+
+            * `CLOSED` - Closed
+
+            * `ON_HOLD` - On hold
+
+            * `FINANCIAL_REVIEW` - Under financial review'
+        priority_level:
+          allOf:
+          - $ref: '#/components/schemas/PriorityLevelEnum'
+          description: 'Urgency of the ticket, from LV1_EMERGENCY (most urgent) to LV4_LOW (least urgent). Defaults to LV4_LOW.
+
+
+            * `LV1_EMERGENCY` - Urgent
+
+            * `LV2_HIGH` - High
+
+            * `LV3_MEDIUM` - Mid
+
+            * `LV4_LOW` - Low'
+        category:
+          type: integer
+          description: Id of the ticket category. Must be a child category (one that itself has a parent category).
+        due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Date the ticket is due (YYYY-MM-DD).
+        intervention_allowed:
+          type: boolean
+          title: Guest allowed intervention during their stay
+          description: Whether the guest permits intervention at the property during their stay. Defaults to false.
+        title:
+          type:
+          - string
+          - 'null'
+          description: Short title of the ticket, shown as its headline in ticket lists. Optional, up to 100 characters; the description goes in creation_comment.
+          maxLength: 100
+        creation_comment:
+          type:
+          - string
+          - 'null'
+          title: Description
+          description: Opening comment describing the problem, shown on the ticket.
+        origin:
+          allOf:
+          - $ref: '#/components/schemas/IssueOriginEnum'
+          description: 'How the ticket was reported, i.e. where it originated. Defaults to UNKNOWN.
+
+
+            * `GUEST_DAMAGES` - Guest damages
+
+            * `GUEST_REPORTED` - Reported by guest
+
+            * `HOST_REPORTED` - Reported by owner
+
+            * `AGENT_REPORTED` - Reported by agent
+
+            * `PROPERTY_CHECK` - Property check
+
+            * `OVERUSE` - Overuse
+
+            * `UNKNOWN` - Unknown
+
+            * `CLEANING_TEAM_REPORTED` - Reported by cleaning team
+
+            * `REVIEW` - Guest review
+
+            * `INBOX_THREAD_CREATED` - Created from inbox thread
+
+            * `MISSION_INCIDENT_REPORTED` - Reported by agent through mission incident
+
+            * `COURTESY_CALL` - Courtesy call'
+        parent_issue:
+          type:
+          - integer
+          - 'null'
+          title: Parent ticket
+          description: Id of the parent ticket, when creating a sub-ticket.
+        keep_ticket_after_rental_offboarding:
+          type: boolean
+          title: Ticket should stay open after property offboarding
+          description: When true, the ticket stays open after its property is offboarded instead of being closed automatically. Defaults to false.
+        user:
           type: string
-          format: date-time
           readOnly: true
-          description: When the note was written.
+    PaginatedSupportUserGroupList:
+      type: object
       required:
-      - created_at
-      - created_by
-      - created_by_name
-      - id
-      - issue
-      - note
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportUserGroup'
+        limit:
+          type: integer
+          example: 50
+    IssueOriginEnum:
+      enum:
+      - GUEST_DAMAGES
+      - GUEST_REPORTED
+      - HOST_REPORTED
+      - AGENT_REPORTED
+      - PROPERTY_CHECK
+      - OVERUSE
+      - UNKNOWN
+      - CLEANING_TEAM_REPORTED
+      - REVIEW
+      - INBOX_THREAD_CREATED
+      - MISSION_INCIDENT_REPORTED
+      - COURTESY_CALL
+      type: string
+      description: '* `GUEST_DAMAGES` - Guest damages
+
+        * `GUEST_REPORTED` - Reported by guest
+
+        * `HOST_REPORTED` - Reported by owner
+
+        * `AGENT_REPORTED` - Reported by agent
+
+        * `PROPERTY_CHECK` - Property check
+
+        * `OVERUSE` - Overuse
+
+        * `UNKNOWN` - Unknown
+
+        * `CLEANING_TEAM_REPORTED` - Reported by cleaning team
+
+        * `REVIEW` - Guest review
+
+        * `INBOX_THREAD_CREATED` - Created from inbox thread
+
+        * `MISSION_INCIDENT_REPORTED` - Reported by agent through mission incident
+
+        * `COURTESY_CALL` - Courtesy call'
+    IssueStatusEnum:
+      enum:
+      - OPEN
+      - ONGOING_RESOLUTION
+      - CLOSED
+      - ON_HOLD
+      - FINANCIAL_REVIEW
+      type: string
+      description: '* `OPEN` - Open
+
+        * `ONGOING_RESOLUTION` - Ongoing resolution
+
+        * `CLOSED` - Closed
+
+        * `ON_HOLD` - On hold
+
+        * `FINANCIAL_REVIEW` - Under financial review'
     Issue:
       type: object
       properties:
@@ -655,132 +864,53 @@ components:
       - category
       - id
       - user
-    PaginatedSupportUserGroupList:
+    IssueNote:
       type: object
-      required:
-      - count
-      - results
+      description: 'A note on a ticket: the internal, append-only activity log of the ticket.
+
+
+        The author is server-controlled -- the viewset sets it from the authenticated
+
+        caller -- so a client cannot attribute a note to somebody else. ``issue`` IS
+
+        writable here (unlike the ticket-nested shape this replaced, where it came
+
+        from the URL), and its write queryset is scoped to the caller''s own tickets,
+
+        same as every writable relation on ``IssueSerializer``.'
       properties:
-        count:
+        id:
           type: integer
-          example: 123
-        next:
+          readOnly: true
+        issue:
+          type: integer
+          description: Id of the ticket the note belongs to.
+        note:
+          type: string
+          description: Text of the note to add to the ticket.
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: Id of the user who wrote the note, if still known.
+        created_by_name:
           type:
           - string
           - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SupportUserGroup'
-        limit:
-          type: integer
-          example: 50
-    PaginatedIssueNoteList:
-      type: object
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the note was written.
       required:
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssueNote'
-        limit:
-          type: integer
-          example: 50
-          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
-    PriorityLevelEnum:
-      enum:
-      - LV1_EMERGENCY
-      - LV2_HIGH
-      - LV3_MEDIUM
-      - LV4_LOW
-      type: string
-      description: '* `LV1_EMERGENCY` - Urgent
-
-        * `LV2_HIGH` - High
-
-        * `LV3_MEDIUM` - Mid
-
-        * `LV4_LOW` - Low'
-    IssueStatusEnum:
-      enum:
-      - OPEN
-      - ONGOING_RESOLUTION
-      - CLOSED
-      - ON_HOLD
-      - FINANCIAL_REVIEW
-      type: string
-      description: '* `OPEN` - Open
-
-        * `ONGOING_RESOLUTION` - Ongoing resolution
-
-        * `CLOSED` - Closed
-
-        * `ON_HOLD` - On hold
-
-        * `FINANCIAL_REVIEW` - Under financial review'
-    IssueOriginEnum:
-      enum:
-      - GUEST_DAMAGES
-      - GUEST_REPORTED
-      - HOST_REPORTED
-      - AGENT_REPORTED
-      - PROPERTY_CHECK
-      - OVERUSE
-      - UNKNOWN
-      - CLEANING_TEAM_REPORTED
-      - REVIEW
-      - INBOX_THREAD_CREATED
-      - MISSION_INCIDENT_REPORTED
-      - COURTESY_CALL
-      type: string
-      description: '* `GUEST_DAMAGES` - Guest damages
-
-        * `GUEST_REPORTED` - Reported by guest
-
-        * `HOST_REPORTED` - Reported by owner
-
-        * `AGENT_REPORTED` - Reported by agent
-
-        * `PROPERTY_CHECK` - Property check
-
-        * `OVERUSE` - Overuse
-
-        * `UNKNOWN` - Unknown
-
-        * `CLEANING_TEAM_REPORTED` - Reported by cleaning team
-
-        * `REVIEW` - Guest review
-
-        * `INBOX_THREAD_CREATED` - Created from inbox thread
-
-        * `MISSION_INCIDENT_REPORTED` - Reported by agent through mission incident
-
-        * `COURTESY_CALL` - Courtesy call'
+      - created_at
+      - created_by
+      - created_by_name
+      - id
+      - issue
+      - note
     SupportUserGroup:
       type: object
       properties:
@@ -795,150 +925,6 @@ components:
           maxLength: 100
       required:
       - id
-    PatchedIssue:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        host:
-          type:
-          - integer
-          - 'null'
-          title: Owner
-          description: Id of the property owner the ticket is about.
-        rental:
-          type:
-          - string
-          - 'null'
-          title: Property
-          description: Id of the property (rental) the ticket is about. At least one of rental, host, issue_mission, mission_incident, reservation, or guest_review is required.
-        issue_mission:
-          type:
-          - integer
-          - 'null'
-          title: Mission
-          description: Id of the mission the ticket relates to, if any.
-        mission_incident:
-          type:
-          - integer
-          - 'null'
-          description: 'Id of the mission incident the ticket is raised from — a problem a field agent reported during a mission. This is NOT issue_mission, which takes a mission id. When set, the incident''s photo and attachments are copied onto the ticket, and a new incident is marked as having a ticket. An archived or closed incident keeps its status: linking a ticket never reopens it.'
-        reservation:
-          type:
-          - integer
-          - 'null'
-          description: Id of the reservation (booking) concerned, if any.
-        guest_review:
-          type:
-          - integer
-          - 'null'
-          description: Id of the guest review the ticket relates to, if any.
-        assignees:
-          type: array
-          items:
-            type: integer
-          description: Ids of the users to assign the ticket to.
-        group_assignees:
-          type: array
-          items:
-            type: integer
-          description: Ids of the support-user groups to assign the ticket to.
-        status:
-          allOf:
-          - $ref: '#/components/schemas/IssueStatusEnum'
-          description: 'Workflow state of the ticket; defaults to OPEN. FINANCIAL_REVIEW means the ticket is under financial review.
-
-
-            * `OPEN` - Open
-
-            * `ONGOING_RESOLUTION` - Ongoing resolution
-
-            * `CLOSED` - Closed
-
-            * `ON_HOLD` - On hold
-
-            * `FINANCIAL_REVIEW` - Under financial review'
-        priority_level:
-          allOf:
-          - $ref: '#/components/schemas/PriorityLevelEnum'
-          description: 'Urgency of the ticket, from LV1_EMERGENCY (most urgent) to LV4_LOW (least urgent). Defaults to LV4_LOW.
-
-
-            * `LV1_EMERGENCY` - Urgent
-
-            * `LV2_HIGH` - High
-
-            * `LV3_MEDIUM` - Mid
-
-            * `LV4_LOW` - Low'
-        category:
-          type: integer
-          description: Id of the ticket category. Must be a child category (one that itself has a parent category).
-        due_date:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: Date the ticket is due (YYYY-MM-DD).
-        intervention_allowed:
-          type: boolean
-          title: Guest allowed intervention during their stay
-          description: Whether the guest permits intervention at the property during their stay. Defaults to false.
-        title:
-          type:
-          - string
-          - 'null'
-          description: Short title of the ticket, shown as its headline in ticket lists. Optional, up to 100 characters; the description goes in creation_comment.
-          maxLength: 100
-        creation_comment:
-          type:
-          - string
-          - 'null'
-          title: Description
-          description: Opening comment describing the problem, shown on the ticket.
-        origin:
-          allOf:
-          - $ref: '#/components/schemas/IssueOriginEnum'
-          description: 'How the ticket was reported, i.e. where it originated. Defaults to UNKNOWN.
-
-
-            * `GUEST_DAMAGES` - Guest damages
-
-            * `GUEST_REPORTED` - Reported by guest
-
-            * `HOST_REPORTED` - Reported by owner
-
-            * `AGENT_REPORTED` - Reported by agent
-
-            * `PROPERTY_CHECK` - Property check
-
-            * `OVERUSE` - Overuse
-
-            * `UNKNOWN` - Unknown
-
-            * `CLEANING_TEAM_REPORTED` - Reported by cleaning team
-
-            * `REVIEW` - Guest review
-
-            * `INBOX_THREAD_CREATED` - Created from inbox thread
-
-            * `MISSION_INCIDENT_REPORTED` - Reported by agent through mission incident
-
-            * `COURTESY_CALL` - Courtesy call'
-        parent_issue:
-          type:
-          - integer
-          - 'null'
-          title: Parent ticket
-          description: Id of the parent ticket, when creating a sub-ticket.
-        keep_ticket_after_rental_offboarding:
-          type: boolean
-          title: Ticket should stay open after property offboarding
-          description: When true, the ticket stays open after its property is offboarded instead of being closed automatically. Defaults to false.
-        user:
-          type: string
-          readOnly: true
     PaginatedIssueList:
       type: object
       required:
@@ -967,6 +953,20 @@ components:
         limit:
           type: integer
           example: 50
+    PriorityLevelEnum:
+      enum:
+      - LV1_EMERGENCY
+      - LV2_HIGH
+      - LV3_MEDIUM
+      - LV4_LOW
+      type: string
+      description: '* `LV1_EMERGENCY` - Urgent
+
+        * `LV2_HIGH` - High
+
+        * `LV3_MEDIUM` - Mid
+
+        * `LV4_LOW` - Low'
   securitySchemes:
     basicAuth:
       type: http

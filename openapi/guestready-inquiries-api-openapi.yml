@@ -98,96 +98,35 @@ paths:
           description: ''
 components:
   schemas:
-    PaginatedInquiryList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Inquiry'
-        limit:
-          type: integer
-          example: 50
-    InquiryOriginEnum:
+    InquiryStatusEnum:
       enum:
-      - channel_manager
-      - bookingsync_inbox
-      - airbnb_message
-      - airbnb_email
-      - airbnb_tentative
-      - booking-com
-      - homeaway
-      - homeaway_tentative
-      - tripadvisor
-      - email
-      - messenger
-      - whatsapp
-      - sms
-      - notification
-      - event
-      - airbnb_review
-      - guestspace
-      - twilio
-      - booking_widget
-      - support
+      - inquiry
+      - pending
+      - preapproved
+      - denied
+      - not_possible
+      - accepted
+      - cancelled
+      - special_offer
+      - not_found
       type: string
-      description: '* `channel_manager` - Platform
+      description: '* `inquiry` - Inquiry
 
-        * `bookingsync_inbox` - BookingSync
+        * `pending` - Pending
 
-        * `airbnb_message` - Airbnb
+        * `preapproved` - Pre-approved
 
-        * `airbnb_email` - Airbnb
+        * `denied` - Refused
 
-        * `airbnb_tentative` - Airbnb
+        * `not_possible` - Not possible
 
-        * `booking-com` - Booking.com
+        * `accepted` - Accepted
 
-        * `homeaway` - HomeAway
+        * `cancelled` - Cancelled
 
-        * `homeaway_tentative` - HomeAway
+        * `special_offer` - Special offer
 
-        * `tripadvisor` - TripAdvisor
-
-        * `email` - Email
-
-        * `messenger` - Messenger
-
-        * `whatsapp` - WhatsApp
-
-        * `sms` - SMS
-
-        * `notification` - Email
-
-        * `event` - Email
-
-        * `airbnb_review` - Airbnb
-
-        * `guestspace` - Guest space
-
-        * `twilio` - SMS
-
-        * `booking_widget` - Direct booking widget
-
-        * `support` - Support'
+        * `not_found` - Not found'
     Inquiry:
       type: object
       properties:
@@ -289,35 +228,96 @@ components:
       - origin
       - rental_id
       - status
-    InquiryStatusEnum:
+    PaginatedInquiryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Inquiry'
+        limit:
+          type: integer
+          example: 50
+    InquiryOriginEnum:
       enum:
-      - inquiry
-      - pending
-      - preapproved
-      - denied
-      - not_possible
-      - accepted
-      - cancelled
-      - special_offer
-      - not_found
+      - channel_manager
+      - bookingsync_inbox
+      - airbnb_message
+      - airbnb_email
+      - airbnb_tentative
+      - booking-com
+      - homeaway
+      - homeaway_tentative
+      - tripadvisor
+      - email
+      - messenger
+      - whatsapp
+      - sms
+      - notification
+      - event
+      - airbnb_review
+      - guestspace
+      - twilio
+      - booking_widget
+      - support
       type: string
-      description: '* `inquiry` - Inquiry
+      description: '* `channel_manager` - Platform
 
-        * `pending` - Pending
+        * `bookingsync_inbox` - BookingSync
 
-        * `preapproved` - Pre-approved
+        * `airbnb_message` - Airbnb
 
-        * `denied` - Refused
+        * `airbnb_email` - Airbnb
 
-        * `not_possible` - Not possible
+        * `airbnb_tentative` - Airbnb
 
-        * `accepted` - Accepted
+        * `booking-com` - Booking.com
 
-        * `cancelled` - Cancelled
+        * `homeaway` - HomeAway
 
-        * `special_offer` - Special offer
+        * `homeaway_tentative` - HomeAway
 
-        * `not_found` - Not found'
+        * `tripadvisor` - TripAdvisor
+
+        * `email` - Email
+
+        * `messenger` - Messenger
+
+        * `whatsapp` - WhatsApp
+
+        * `sms` - SMS
+
+        * `notification` - Email
+
+        * `event` - Email
+
+        * `airbnb_review` - Airbnb
+
+        * `guestspace` - Guest space
+
+        * `twilio` - SMS
+
+        * `booking_widget` - Direct booking widget
+
+        * `support` - Support'
   securitySchemes:
     basicAuth:
       type: http

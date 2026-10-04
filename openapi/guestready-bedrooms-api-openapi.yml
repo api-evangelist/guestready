@@ -215,54 +215,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    BedroomWindowCoverageEnum:
-      enum:
-      - SHUTTER
-      - ESHUTTER
-      - CURTAIN
-      - STORE
-      - NOTHING
-      type: string
-      description: '* `SHUTTER` - SHUTTER
-
-        * `ESHUTTER` - ESHUTTER
-
-        * `CURTAIN` - CURTAIN
-
-        * `STORE` - STORE
-
-        * `NOTHING` - NOTHING'
-    Bedroom:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        bedroom_type:
-          allOf:
-          - $ref: '#/components/schemas/BedroomTypeEnum'
-          default: BEDROOM
-        window_coverage:
-          oneOf:
-          - $ref: '#/components/schemas/BedroomWindowCoverageEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        universal_adapter:
-          type: boolean
-          readOnly: true
-          default: false
-        beds:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bed'
-      required:
-      - beds
-      - id
-      - rental_id
-      - universal_adapter
     PaginatedBedroomList:
       type: object
       required:
@@ -298,6 +250,37 @@ components:
           type: string
       required:
       - bed_type
+    Bedroom:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        bedroom_type:
+          allOf:
+          - $ref: '#/components/schemas/BedroomTypeEnum'
+          default: BEDROOM
+        window_coverage:
+          oneOf:
+          - $ref: '#/components/schemas/BedroomWindowCoverageEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        universal_adapter:
+          type: boolean
+          readOnly: true
+          default: false
+        beds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bed'
+      required:
+      - beds
+      - id
+      - rental_id
+      - universal_adapter
     PatchedBedroom:
       type: object
       properties:
@@ -324,9 +307,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Bed'
-    NullEnum:
-      enum:
-      - null
     BedroomTypeEnum:
       enum:
       - BEDROOM
@@ -335,6 +315,26 @@ components:
       description: '* `BEDROOM` - BEDROOM
 
         * `LIVINGROOM` - LIVINGROOM'
+    BedroomWindowCoverageEnum:
+      enum:
+      - SHUTTER
+      - ESHUTTER
+      - CURTAIN
+      - STORE
+      - NOTHING
+      type: string
+      description: '* `SHUTTER` - SHUTTER
+
+        * `ESHUTTER` - ESHUTTER
+
+        * `CURTAIN` - CURTAIN
+
+        * `STORE` - STORE
+
+        * `NOTHING` - NOTHING'
+    NullEnum:
+      enum:
+      - null
   securitySchemes:
     basicAuth:
       type: http

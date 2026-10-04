@@ -687,26 +687,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    StarsEnum:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      type: integer
-      description: '* `0` - No Stars
-
-        * `1` - 1 Star
-
-        * `2` - 2 Stars
-
-        * `3` - 3 Stars
-
-        * `4` - 4 Stars
-
-        * `5` - 5 Stars'
     CleaningFeeInvoicedToEnum:
       enum:
       - GUEST
@@ -715,32 +695,21 @@ components:
       description: '* `GUEST` - Guest
 
         * `HOST` - Owner'
-    RentalHistoryTypeEnum:
+    PropertyTypeEnum:
       enum:
-      - +
-      - '~'
-      - '-'
+      - PRIMARY
+      - OTHER
+      - SECONDARY
+      - UNKNOWN
       type: string
-      description: '* `+` - +
+      description: '* `PRIMARY` - Primary residence
 
-        * `~` - ~
+        * `OTHER` - Non-residential property (commercial/guest-room)
 
-        * `-` - -'
-    SelfCheckinEnum:
-      enum:
-      - FORBIDDEN
-      - POSSIBLE
-      - ALWAYS
-      - RECEPTION
-      type: string
-      description: '* `FORBIDDEN` - FORBIDDEN
+        * `SECONDARY` - Secondary residence
 
-        * `POSSIBLE` - POSSIBLE
-
-        * `ALWAYS` - ALWAYS
-
-        * `RECEPTION` - RECEPTION'
-    PatchedRentalUpsellingConfiguration:
+        * `UNKNOWN` - Unknown'
+    RentalUpsellingConfiguration:
       type: object
       properties:
         managed_upselling_configuration:
@@ -748,86 +717,6 @@ components:
           - integer
           - 'null'
           description: ID of the upselling configuration to assign to the property. Must be one of the configurations connected to the property's office. Pass null to clear the assignment.
-    MultiUnitRoleEnum:
-      enum:
-      - ROOM_TYPE
-      - INVENTORY
-      - PARENT
-      - CHILD
-      type: string
-      description: '* `ROOM_TYPE` - Room type
-
-        * `INVENTORY` - Inventory
-
-        * `PARENT` - Parent
-
-        * `CHILD` - Child'
-    SecurityDepositChargingRuleEnum:
-      enum:
-      - NEVER
-      - HIGH_RISK
-      - ALWAYS
-      type: string
-      description: '* `NEVER` - Never charge a security deposit
-
-        * `HIGH_RISK` - Only charge a security deposit in high-risk bookings
-
-        * `ALWAYS` - Always charge a security deposit'
-    GuestControl:
-      type: object
-      properties:
-        allows_children_as_host:
-          type: boolean
-          description: Is listing suitable for children (2-12 years)? If you selected false, this field is required to provide details about why the place is not suitable for children.
-        allows_infants_as_host:
-          type: boolean
-          description: Is listing suitable for infants (under 2 years)? If you selected false, this field is required to provide details about why the place is not suitable for infants.
-        allows_smoking_as_host:
-          type: boolean
-          description: Is smoking allowed in the property?
-        allows_pets_as_host:
-          type: boolean
-          description: Are pets allowed?
-        allows_events_as_host:
-          type: boolean
-          description: Are parties or events allowed?
-        children_not_allowed_details:
-          type:
-          - string
-          - 'null'
-          title: Why are children/infants not allowed?
-        pet_capacity:
-          type:
-          - integer
-          - 'null'
-          maximum: 5
-          minimum: 0
-        standard_phrases:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-            maxLength: 255
-        require_guest_address:
-          type:
-          - boolean
-          - 'null'
-        require_guest_contact_number:
-          type:
-          - boolean
-          - 'null'
-    TurnoverDaysEnum:
-      enum:
-      - 0
-      - 1
-      - 2
-      type: integer
-      description: '* `0` - 0
-
-        * `1` - 1
-
-        * `2` - 2'
     RentalCheckoutOptionTypes:
       type: object
       properties:
@@ -858,67 +747,7 @@ components:
           - string
           - 'null'
           title: Other requests on/before checking out
-    BuildingLegalStatusEnum:
-      enum:
-      - INDIVIDUAL
-      - CONDOMINIUM
-      type: string
-      description: '* `INDIVIDUAL` - Individual ownership
-
-        * `CONDOMINIUM` - Condominium regime'
-    RentalPhoto:
-      type: object
-      properties:
-        picture:
-          type: string
-          readOnly: true
-      required:
-      - picture
-    PropertyTypeEnum:
-      enum:
-      - PRIMARY
-      - OTHER
-      - SECONDARY
-      - UNKNOWN
-      type: string
-      description: '* `PRIMARY` - Primary residence
-
-        * `OTHER` - Non-residential property (commercial/guest-room)
-
-        * `SECONDARY` - Secondary residence
-
-        * `UNKNOWN` - Unknown'
-    Status075Enum:
-      enum:
-      - ACTIVE
-      - INACTIVE
-      - PENDING_DEACTIVATION
-      - PRE_ONBOARDING
-      type: string
-      description: '* `ACTIVE` - ACTIVE
-
-        * `INACTIVE` - INACTIVE
-
-        * `PENDING_DEACTIVATION` - PENDING_DEACTIVATION
-
-        * `PRE_ONBOARDING` - PRE_ONBOARDING'
-    InstantBookingChoicesEnum:
-      enum:
-      - 'OFF'
-      - EVERYONE
-      type: string
-      description: '* `OFF` - No one
-
-        * `EVERYONE` - Everyone'
-    TypeD5dEnum:
-      type: string
-      enum:
-      - akiles
-      - nuki
-      - ttlock
-      - omnitec
-      - salto_space
-    BlockRentalCalendar:
+    PatchedUnblockRentalCalendar:
       type: object
       properties:
         start_date:
@@ -927,41 +756,14 @@ components:
         end_date:
           type: string
           format: date-time
-        blocked_reason:
+    RentalPhoto:
+      type: object
+      properties:
+        picture:
           type: string
-        blocked_notes:
-          type: string
+          readOnly: true
       required:
-      - end_date
-      - start_date
-    PremiumClassEnum:
-      enum:
-      - DIAMOND
-      - GOLD
-      - SILVER
-      - BRONZE
-      - CLASSIC
-      type: string
-      description: '* `DIAMOND` - Diamond
-
-        * `GOLD` - Gold
-
-        * `SILVER` - Silver
-
-        * `BRONZE` - Bronze
-
-        * `CLASSIC` - Classic'
-    RentalCategoryEnum:
-      enum:
-      - SHORT-TERM
-      - MID-TERM
-      - LONG-TERM
-      type: string
-      description: '* `SHORT-TERM` - Short-term
-
-        * `MID-TERM` - Mid-term
-
-        * `LONG-TERM` - Long-term'
+      - picture
     CurrencyValueEnum:
       enum:
       - AED
@@ -1024,167 +826,6 @@ components:
         * `THB` - THB
 
         * `USD` - USD'
-    PublishedStatusEnum:
-      enum:
-      - NEW
-      - PENDING
-      - APPROVED
-      type: string
-      description: '* `NEW` - New
-
-        * `PENDING` - Pending activation
-
-        * `APPROVED` - Activated'
-    PaginatedRentalHistoryList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/RentalHistory'
-        limit:
-          type: integer
-          example: 50
-    CancellationPolicyCategoryEnum:
-      enum:
-      - flexible
-      - moderate
-      - strict
-      - firm
-      type: string
-      description: '* `flexible` - Flexible
-
-        * `moderate` - Moderate
-
-        * `strict` - Strict
-
-        * `firm` - Firm'
-    RentalUpsellingConfiguration:
-      type: object
-      properties:
-        managed_upselling_configuration:
-          type:
-          - integer
-          - 'null'
-          description: ID of the upselling configuration to assign to the property. Must be one of the configurations connected to the property's office. Pass null to clear the assignment.
-    KeyStrategyEnum:
-      enum:
-      - PADLOCK
-      - KEYNEST
-      - IGLOOHOME_KEYBOX
-      - IGLOOHOME_LOCK
-      - OFFICE
-      - NUKI_LOCK
-      - SEAM_INTEGRATED_LOCK
-      - KEY_STORAGE
-      - PERSONAL_CHECK_IN
-      - SMART_LOCK
-      - DUBAI_KEYLESS
-      - REMOTELOCK
-      - YACAN_LOCK
-      - MANAGED_SMART_LOCK
-      - OTHER
-      type: string
-      description: '* `PADLOCK` - Lockbox/Padlock
-
-        * `KEYNEST` - Keynest
-
-        * `IGLOOHOME_KEYBOX` - Igloohome KeyBox
-
-        * `IGLOOHOME_LOCK` - Igloohome Lock
-
-        * `OFFICE` - Office pick-up
-
-        * `NUKI_LOCK` - Nuki lock
-
-        * `SEAM_INTEGRATED_LOCK` - Integrated lock
-
-        * `KEY_STORAGE` - Key storage
-
-        * `PERSONAL_CHECK_IN` - Personal check-in
-
-        * `SMART_LOCK` - Smart lock (not synchronised with RentalReady)
-
-        * `DUBAI_KEYLESS` - Dubai Keyless
-
-        * `REMOTELOCK` - RemoteLock
-
-        * `YACAN_LOCK` - Yacan lock
-
-        * `MANAGED_SMART_LOCK` - Managed smart lock
-
-        * `OTHER` - Other'
-    RentalHistoryChange:
-      type: object
-      properties:
-        field:
-          type: string
-        field_name:
-          type: string
-        old:
-          type:
-          - string
-          - 'null'
-        new:
-          type:
-          - string
-          - 'null'
-      required:
-      - field
-      - field_name
-      - new
-      - old
-    PatchedBlockRentalCalendar:
-      type: object
-      properties:
-        start_date:
-          type: string
-          format: date-time
-        end_date:
-          type: string
-          format: date-time
-        blocked_reason:
-          type: string
-        blocked_notes:
-          type: string
-    PatchedUnblockRentalCalendar:
-      type: object
-      properties:
-        start_date:
-          type: string
-          format: date-time
-        end_date:
-          type: string
-          format: date-time
-    SmartLockAssign:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID of the smart lock to assign.
-      required:
-      - id
-    NullEnum:
-      enum:
-      - null
     PatchedRental:
       type: object
       description: Renders custom-field values under `custom_fields`, skipped on list actions.
@@ -2152,56 +1793,14 @@ components:
           additionalProperties: {}
           readOnly: true
           description: Custom field values set on this rental, keyed by field key. Only returned on detail views.
-    SecurityDepositChargingMethodEnum:
+    BuildingLegalStatusEnum:
       enum:
-      - NONE
-      - SWIKLY
-      - STRIPE
+      - INDIVIDUAL
+      - CONDOMINIUM
       type: string
-      description: '* `NONE` - No security deposit
+      description: '* `INDIVIDUAL` - Individual ownership
 
-        * `SWIKLY` - Swikly
-
-        * `STRIPE` - Stripe'
-    BlankEnum:
-      enum:
-      - ''
-    PaginatedRentalList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Rental'
-        limit:
-          type: integer
-          example: 50
-    CommissionCalculationEnum:
-      enum:
-      - PROPERTY_MANAGER
-      - OWNER
-      type: string
-      description: '* `PROPERTY_MANAGER` - Property Manager commission
-
-        * `OWNER` - Owner commission'
+        * `CONDOMINIUM` - Condominium regime'
     FrenchHotelNatureCategoryEnum:
       enum:
       - 1
@@ -2230,6 +1829,44 @@ components:
         * `8` - Camping or caravan site classified as 3, 4, and 5 stars and any other outdoor accommodation with equivalent characteristics
 
         * `9` - Marina'
+    PatchedRentalUpsellingConfiguration:
+      type: object
+      properties:
+        managed_upselling_configuration:
+          type:
+          - integer
+          - 'null'
+          description: ID of the upselling configuration to assign to the property. Must be one of the configurations connected to the property's office. Pass null to clear the assignment.
+    BlankEnum:
+      enum:
+      - ''
+    RentalListing:
+      type: object
+      properties:
+        language:
+          type: string
+          readOnly: true
+        headline:
+          type:
+          - string
+          - 'null'
+          maxLength: 75
+        summary:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+        space:
+          type:
+          - string
+          - 'null'
+        neighborhood:
+          type:
+          - string
+          - 'null'
+          title: Neighbourhood
+      required:
+      - language
     BuildingConstructionPeriodEnum:
       enum:
       - BEFORE_1949
@@ -2380,13 +2017,245 @@ components:
       - owner_name
       - postal_code
       - status
-    DisableProperty:
+    CommissionCalculationEnum:
+      enum:
+      - PROPERTY_MANAGER
+      - OWNER
+      type: string
+      description: '* `PROPERTY_MANAGER` - Property Manager commission
+
+        * `OWNER` - Owner commission'
+    RentalSmartLock:
       type: object
       properties:
-        reason:
+        id:
+          type: integer
+          readOnly: true
+        name:
           type: string
+          readOnly: true
+          description: Human-readable name including the provider prefix, e.g. 'Akiles - Cylindre V2 - 25 Feutrier 75018 Paris R+2'.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD5dEnum'
+          readOnly: true
+          description: Smart lock provider key (e.g. 'akiles'), or null when no provider is linked.
+        gadget_id:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Akiles gadget identifier as used by the Akiles platform, or null when no Akiles gadget is linked.
       required:
-      - reason
+      - gadget_id
+      - id
+      - name
+      - type
+    SmartLockAssign:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the smart lock to assign.
+      required:
+      - id
+    PremiumClassEnum:
+      enum:
+      - DIAMOND
+      - GOLD
+      - SILVER
+      - BRONZE
+      - CLASSIC
+      type: string
+      description: '* `DIAMOND` - Diamond
+
+        * `GOLD` - Gold
+
+        * `SILVER` - Silver
+
+        * `BRONZE` - Bronze
+
+        * `CLASSIC` - Classic'
+    SecurityDepositChargingRuleEnum:
+      enum:
+      - NEVER
+      - HIGH_RISK
+      - ALWAYS
+      type: string
+      description: '* `NEVER` - Never charge a security deposit
+
+        * `HIGH_RISK` - Only charge a security deposit in high-risk bookings
+
+        * `ALWAYS` - Always charge a security deposit'
+    KeyStrategyEnum:
+      enum:
+      - PADLOCK
+      - KEYNEST
+      - IGLOOHOME_KEYBOX
+      - IGLOOHOME_LOCK
+      - OFFICE
+      - NUKI_LOCK
+      - SEAM_INTEGRATED_LOCK
+      - KEY_STORAGE
+      - PERSONAL_CHECK_IN
+      - SMART_LOCK
+      - DUBAI_KEYLESS
+      - REMOTELOCK
+      - YACAN_LOCK
+      - MANAGED_SMART_LOCK
+      - OTHER
+      type: string
+      description: '* `PADLOCK` - Lockbox/Padlock
+
+        * `KEYNEST` - Keynest
+
+        * `IGLOOHOME_KEYBOX` - Igloohome KeyBox
+
+        * `IGLOOHOME_LOCK` - Igloohome Lock
+
+        * `OFFICE` - Office pick-up
+
+        * `NUKI_LOCK` - Nuki lock
+
+        * `SEAM_INTEGRATED_LOCK` - Integrated lock
+
+        * `KEY_STORAGE` - Key storage
+
+        * `PERSONAL_CHECK_IN` - Personal check-in
+
+        * `SMART_LOCK` - Smart lock (not synchronised with RentalReady)
+
+        * `DUBAI_KEYLESS` - Dubai Keyless
+
+        * `REMOTELOCK` - RemoteLock
+
+        * `YACAN_LOCK` - Yacan lock
+
+        * `MANAGED_SMART_LOCK` - Managed smart lock
+
+        * `OTHER` - Other'
+    MultiUnitRoleEnum:
+      enum:
+      - ROOM_TYPE
+      - INVENTORY
+      - PARENT
+      - CHILD
+      type: string
+      description: '* `ROOM_TYPE` - Room type
+
+        * `INVENTORY` - Inventory
+
+        * `PARENT` - Parent
+
+        * `CHILD` - Child'
+    PublishedStatusEnum:
+      enum:
+      - NEW
+      - PENDING
+      - APPROVED
+      type: string
+      description: '* `NEW` - New
+
+        * `PENDING` - Pending activation
+
+        * `APPROVED` - Activated'
+    GuestControl:
+      type: object
+      properties:
+        allows_children_as_host:
+          type: boolean
+          description: Is listing suitable for children (2-12 years)? If you selected false, this field is required to provide details about why the place is not suitable for children.
+        allows_infants_as_host:
+          type: boolean
+          description: Is listing suitable for infants (under 2 years)? If you selected false, this field is required to provide details about why the place is not suitable for infants.
+        allows_smoking_as_host:
+          type: boolean
+          description: Is smoking allowed in the property?
+        allows_pets_as_host:
+          type: boolean
+          description: Are pets allowed?
+        allows_events_as_host:
+          type: boolean
+          description: Are parties or events allowed?
+        children_not_allowed_details:
+          type:
+          - string
+          - 'null'
+          title: Why are children/infants not allowed?
+        pet_capacity:
+          type:
+          - integer
+          - 'null'
+          maximum: 5
+          minimum: 0
+        standard_phrases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            maxLength: 255
+        require_guest_address:
+          type:
+          - boolean
+          - 'null'
+        require_guest_contact_number:
+          type:
+          - boolean
+          - 'null'
+    TurnoverDaysEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      description: '* `0` - 0
+
+        * `1` - 1
+
+        * `2` - 2'
+    Status075Enum:
+      enum:
+      - ACTIVE
+      - INACTIVE
+      - PENDING_DEACTIVATION
+      - PRE_ONBOARDING
+      type: string
+      description: '* `ACTIVE` - ACTIVE
+
+        * `INACTIVE` - INACTIVE
+
+        * `PENDING_DEACTIVATION` - PENDING_DEACTIVATION
+
+        * `PRE_ONBOARDING` - PRE_ONBOARDING'
+    PaginatedRentalHistoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalHistory'
+        limit:
+          type: integer
+          example: 50
     RentalHistory:
       type: object
       properties:
@@ -2420,68 +2289,19 @@ components:
       - date
       - type
       - user
-    RentalInvoiceDetails:
+    PatchedBlockRentalCalendar:
       type: object
       properties:
-        business_name:
+        start_date:
           type: string
-          maxLength: 250
-        tax_number:
+          format: date-time
+        end_date:
           type: string
-          maxLength: 250
-        address_line_1:
+          format: date-time
+        blocked_reason:
           type: string
-          maxLength: 250
-        address_line_2:
+        blocked_notes:
           type: string
-          maxLength: 250
-        city:
-          type: string
-          maxLength: 250
-        postal_code:
-          type: string
-          maxLength: 10
-        country:
-          type: integer
-        logo:
-          type:
-          - string
-          - 'null'
-          format: uri
-      required:
-      - address_line_1
-      - address_line_2
-      - business_name
-      - city
-      - postal_code
-      - tax_number
-    RentalListing:
-      type: object
-      properties:
-        language:
-          type: string
-          readOnly: true
-        headline:
-          type:
-          - string
-          - 'null'
-          maxLength: 75
-        summary:
-          type:
-          - string
-          - 'null'
-          maxLength: 500
-        space:
-          type:
-          - string
-          - 'null'
-        neighborhood:
-          type:
-          - string
-          - 'null'
-          title: Neighbourhood
-      required:
-      - language
     Rental:
       type: object
       description: Renders custom-field values under `custom_fields`, skipped on list actions.
@@ -3496,32 +3316,212 @@ components:
       - temporary_comment
       - turnover_days
       - welcome_basket_description_local
-    RentalSmartLock:
+    NullEnum:
+      enum:
+      - null
+    CancellationPolicyCategoryEnum:
+      enum:
+      - flexible
+      - moderate
+      - strict
+      - firm
+      type: string
+      description: '* `flexible` - Flexible
+
+        * `moderate` - Moderate
+
+        * `strict` - Strict
+
+        * `firm` - Firm'
+    TypeD5dEnum:
+      type: string
+      enum:
+      - akiles
+      - nuki
+      - ttlock
+      - omnitec
+      - salto_space
+    RentalInvoiceDetails:
       type: object
       properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
+        business_name:
           type: string
-          readOnly: true
-          description: Human-readable name including the provider prefix, e.g. 'Akiles - Cylindre V2 - 25 Feutrier 75018 Paris R+2'.
-        type:
-          allOf:
-          - $ref: '#/components/schemas/TypeD5dEnum'
-          readOnly: true
-          description: Smart lock provider key (e.g. 'akiles'), or null when no provider is linked.
-        gadget_id:
+          maxLength: 250
+        tax_number:
+          type: string
+          maxLength: 250
+        address_line_1:
+          type: string
+          maxLength: 250
+        address_line_2:
+          type: string
+          maxLength: 250
+        city:
+          type: string
+          maxLength: 250
+        postal_code:
+          type: string
+          maxLength: 10
+        country:
+          type: integer
+        logo:
           type:
           - string
           - 'null'
-          readOnly: true
-          description: Akiles gadget identifier as used by the Akiles platform, or null when no Akiles gadget is linked.
+          format: uri
       required:
-      - gadget_id
-      - id
-      - name
-      - type
+      - address_line_1
+      - address_line_2
+      - business_name
+      - city
+      - postal_code
+      - tax_number
+    StarsEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      type: integer
+      description: '* `0` - No Stars
+
+        * `1` - 1 Star
+
+        * `2` - 2 Stars
+
+        * `3` - 3 Stars
+
+        * `4` - 4 Stars
+
+        * `5` - 5 Stars'
+    PaginatedRentalList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rental'
+        limit:
+          type: integer
+          example: 50
+    RentalHistoryChange:
+      type: object
+      properties:
+        field:
+          type: string
+        field_name:
+          type: string
+        old:
+          type:
+          - string
+          - 'null'
+        new:
+          type:
+          - string
+          - 'null'
+      required:
+      - field
+      - field_name
+      - new
+      - old
+    DisableProperty:
+      type: object
+      properties:
+        reason:
+          type: string
+      required:
+      - reason
+    SecurityDepositChargingMethodEnum:
+      enum:
+      - NONE
+      - SWIKLY
+      - STRIPE
+      type: string
+      description: '* `NONE` - No security deposit
+
+        * `SWIKLY` - Swikly
+
+        * `STRIPE` - Stripe'
+    RentalHistoryTypeEnum:
+      enum:
+      - +
+      - '~'
+      - '-'
+      type: string
+      description: '* `+` - +
+
+        * `~` - ~
+
+        * `-` - -'
+    RentalCategoryEnum:
+      enum:
+      - SHORT-TERM
+      - MID-TERM
+      - LONG-TERM
+      type: string
+      description: '* `SHORT-TERM` - Short-term
+
+        * `MID-TERM` - Mid-term
+
+        * `LONG-TERM` - Long-term'
+    SelfCheckinEnum:
+      enum:
+      - FORBIDDEN
+      - POSSIBLE
+      - ALWAYS
+      - RECEPTION
+      type: string
+      description: '* `FORBIDDEN` - FORBIDDEN
+
+        * `POSSIBLE` - POSSIBLE
+
+        * `ALWAYS` - ALWAYS
+
+        * `RECEPTION` - RECEPTION'
+    BlockRentalCalendar:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        blocked_reason:
+          type: string
+        blocked_notes:
+          type: string
+      required:
+      - end_date
+      - start_date
+    InstantBookingChoicesEnum:
+      enum:
+      - 'OFF'
+      - EVERYONE
+      type: string
+      description: '* `OFF` - No one
+
+        * `EVERYONE` - Everyone'
   securitySchemes:
     basicAuth:
       type: http

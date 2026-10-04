@@ -179,58 +179,9 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PatchedIssueFile:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        file:
-          type: string
-          format: uri
-        tag:
-          oneOf:
-          - $ref: '#/components/schemas/TagEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        url:
-          type: string
-          readOnly: true
-        title:
-          type:
-          - string
-          - 'null'
-          maxLength: 50
-        issue:
-          type:
-          - integer
-          - 'null'
-        user:
-          type: string
-          readOnly: true
-    TagEnum:
+    BlankEnum:
       enum:
-      - BEFORE
-      - DURING
-      - AFTER
-      - QUOTE
-      - INVOICE
-      - REPORT
-      type: string
-      description: '* `BEFORE` - Before the incident
-
-        * `DURING` - During the incident
-
-        * `AFTER` - After the incident
-
-        * `QUOTE` - Quote (cost estimation)
-
-        * `INVOICE` - Invoice
-
-        * `REPORT` - Report'
-    NullEnum:
-      enum:
-      - null
+      - ''
     IssueFile:
       type: object
       properties:
@@ -265,6 +216,26 @@ components:
       - id
       - url
       - user
+    TagEnum:
+      enum:
+      - BEFORE
+      - DURING
+      - AFTER
+      - QUOTE
+      - INVOICE
+      - REPORT
+      type: string
+      description: '* `BEFORE` - Before the incident
+
+        * `DURING` - During the incident
+
+        * `AFTER` - After the incident
+
+        * `QUOTE` - Quote (cost estimation)
+
+        * `INVOICE` - Invoice
+
+        * `REPORT` - Report'
     PaginatedIssueFileList:
       type: object
       required:
@@ -293,9 +264,38 @@ components:
         limit:
           type: integer
           example: 50
-    BlankEnum:
+    NullEnum:
       enum:
-      - ''
+      - null
+    PatchedIssueFile:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        file:
+          type: string
+          format: uri
+        tag:
+          oneOf:
+          - $ref: '#/components/schemas/TagEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        url:
+          type: string
+          readOnly: true
+        title:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        issue:
+          type:
+          - integer
+          - 'null'
+        user:
+          type: string
+          readOnly: true
   securitySchemes:
     basicAuth:
       type: http

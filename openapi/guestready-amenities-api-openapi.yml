@@ -70,6 +70,34 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PaginatedBookingsyncAmenityList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookingsyncAmenity'
+        limit:
+          type: integer
+          example: 50
     AmenityMetadata:
       type: object
       properties:
@@ -115,34 +143,6 @@ components:
       required:
       - key
       - metadata
-    PaginatedBookingsyncAmenityList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/BookingsyncAmenity'
-        limit:
-          type: integer
-          example: 50
   securitySchemes:
     basicAuth:
       type: http

@@ -206,6 +206,34 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PaginatedRateRuleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RateRule'
+        limit:
+          type: integer
+          example: 10
     PatchedRateRule:
       type: object
       properties:
@@ -252,34 +280,6 @@ components:
         variables: {}
         is_active:
           type: boolean
-    PaginatedRateRuleList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/RateRule'
-        limit:
-          type: integer
-          example: 10
     RateRule:
       type: object
       properties:

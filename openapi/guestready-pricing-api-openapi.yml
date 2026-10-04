@@ -197,163 +197,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PatchedPricingConfiguration:
-      type: object
-      properties:
-        pricing_calendar:
-          type: integer
-          readOnly: true
-        min_price:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          title: Minimum price
-        minimum_stay:
-          type: integer
-          maximum: 2147483647
-          minimum: 0
-          description: Define minimum stay on platforms (including Airbnb if you are using official API). If you choose 0, will default to 1 night for next 15 days then 2 nights after that. Always choose 2 for normal properties.
-        max_price:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          title: Maximum price
-        base_price:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          title: Price of a night
-        price_per_extra_person:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        mid_term_factor:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          title: Factor applied to the price for mid-term
-        min_price_profitability:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          readOnly: true
-          title: Profitability floor
-        adjustable_min_price:
-          type: boolean
-          title: Possibility to change minimum price
-        max_night_stay:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: 0
-          title: Maximum number of nights
-        booking_interval:
-          type: integer
-          maximum: 730
-          minimum: 30
-          description: Number of days priced in the future. Select a value between 30 and 730, default being 365. Airbnb and Booking.com allow up to 540 days.
-        include_time_factor:
-          type: boolean
-          title: Time factor
-          description: Reduce the price for last-minute reservations and increase the price of reservations booked in advance
-        include_seasonality_factor:
-          type: boolean
-          title: Events factor
-          description: Optimize the price for various events (new year, ...)
-        include_shortstay_factor:
-          type: boolean
-          title: Short availability factor
-          description: Reduce the price between two close bookings
-        include_geo_event_factor:
-          type: boolean
-          title: Local event factor
-          description: Optimize the price according on local events (concert, ...)
-        include_new_flat_factor:
-          type: boolean
-          title: New rental factor
-          description: Reduce the price for the first bookings
-        include_day_of_the_week_factor:
-          type: boolean
-          title: Day of the week factor
-          description: Optimize the price depending on the day of the week
-        include_one_night_gap_optimization:
-          type: boolean
-          title: 'Minimum stay: Short availability factor'
-          description: Reduces the minimum number of nights depending on the number of days available between bookings, the 'minimum stay' set on the property remaining the absolute minimum value.
-        include_monthly_seasonality_factor:
-          type: boolean
-          title: Seasonality factor
-          description: Seasonality per month.
-        include_daily_difference:
-          type: boolean
-          title: Daily difference
-          description: Add 1 or 0 to the price, day by day, to trigger a change in price on the platforms and improve the visibility of the listing.
-        include_min_stay_compression:
-          type: boolean
-          title: Minimum stay compression
-          description: If the guest want to book a duration lower than the minstay, he will have to pay for a minstay duration.
-        weekend_single_night_forbidden:
-          type: boolean
-          title: Forbid one night minimum stay for the weekend
-          description: Forbid one night minimum stay for the weekend
-        include_variable_min_stay:
-          type: boolean
-          title: Allow to set up periods of minstay
-          description: Activates the possibility of having different MinStays over a specific period. If the booking is taken in a long time, it is interesting to have a higher MinStay than for last minute bookings. This factor should ideally be coupled with 'Minimum Night Number Factor optimized' for optimal results.
-        include_occupancy_rate:
-          type: boolean
-          title: Occupancy rate factor
-          description: Optimize the pricing based on occupancy rate
-        include_automatic_midterm_pricing:
-          type: boolean
-          title: Automatic mid-term pricing
-          description: Automatically create the mid-term ranges and publish them to enable mid-term bookings
-        owner_instruction:
-          type:
-          - string
-          - 'null'
-          description: "\n                                         Fill this field if the owner has any specific instruction\n                                         the pricing strategy.Describe the pricing stragegy:\n                                         Imperative: give the precise objectives,\n                                         give REALISTIC minimum prices for margin of maneuver,\n                                         are they strict ? different high season/low season,\n                                         etc."
-        currency:
-          oneOf:
-          - $ref: '#/components/schemas/CurrencyD53Enum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        checkout_date_discount:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          title: Discount at checkout
-        yearly_max_days:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-          title: Maximum amount days booked as short stay per year
-        short_stay_maximum_days:
-          type:
-          - integer
-          - 'null'
-          maximum: 2147483647
-          minimum: -2147483648
-          title: Number of days after which the stay is a mid-term stay
-        airbnb_non_refundable_price_factor:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
-          description: Guests can book the non-refundable rate until the listing's cancellation policy kicks in and if the reservation's check-out date is within 60 days. Note that 1.0 = 0%,  0.9 = 10% and 0.1 = 90% discount. Please use it accordingly.
-        user:
-          type: string
-          readOnly: true
     PricingConfiguration:
       type: object
       properties:
@@ -520,37 +363,9 @@ components:
       - pricing_calendar
       - rental_id
       - user
-    PaginatedPricingConfigurationList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricingConfiguration'
-        limit:
-          type: integer
-          example: 50
-    NullEnum:
+    BlankEnum:
       enum:
-      - null
+      - ''
     CurrencyD53Enum:
       enum:
       - AED
@@ -613,9 +428,194 @@ components:
         * `THB` - THB
 
         * `USD` - USD'
-    BlankEnum:
+    PaginatedPricingConfigurationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingConfiguration'
+        limit:
+          type: integer
+          example: 50
+    PatchedPricingConfiguration:
+      type: object
+      properties:
+        pricing_calendar:
+          type: integer
+          readOnly: true
+        min_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Minimum price
+        minimum_stay:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: Define minimum stay on platforms (including Airbnb if you are using official API). If you choose 0, will default to 1 night for next 15 days then 2 nights after that. Always choose 2 for normal properties.
+        max_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Maximum price
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Price of a night
+        price_per_extra_person:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        mid_term_factor:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Factor applied to the price for mid-term
+        min_price_profitability:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          readOnly: true
+          title: Profitability floor
+        adjustable_min_price:
+          type: boolean
+          title: Possibility to change minimum price
+        max_night_stay:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: 0
+          title: Maximum number of nights
+        booking_interval:
+          type: integer
+          maximum: 730
+          minimum: 30
+          description: Number of days priced in the future. Select a value between 30 and 730, default being 365. Airbnb and Booking.com allow up to 540 days.
+        include_time_factor:
+          type: boolean
+          title: Time factor
+          description: Reduce the price for last-minute reservations and increase the price of reservations booked in advance
+        include_seasonality_factor:
+          type: boolean
+          title: Events factor
+          description: Optimize the price for various events (new year, ...)
+        include_shortstay_factor:
+          type: boolean
+          title: Short availability factor
+          description: Reduce the price between two close bookings
+        include_geo_event_factor:
+          type: boolean
+          title: Local event factor
+          description: Optimize the price according on local events (concert, ...)
+        include_new_flat_factor:
+          type: boolean
+          title: New rental factor
+          description: Reduce the price for the first bookings
+        include_day_of_the_week_factor:
+          type: boolean
+          title: Day of the week factor
+          description: Optimize the price depending on the day of the week
+        include_one_night_gap_optimization:
+          type: boolean
+          title: 'Minimum stay: Short availability factor'
+          description: Reduces the minimum number of nights depending on the number of days available between bookings, the 'minimum stay' set on the property remaining the absolute minimum value.
+        include_monthly_seasonality_factor:
+          type: boolean
+          title: Seasonality factor
+          description: Seasonality per month.
+        include_daily_difference:
+          type: boolean
+          title: Daily difference
+          description: Add 1 or 0 to the price, day by day, to trigger a change in price on the platforms and improve the visibility of the listing.
+        include_min_stay_compression:
+          type: boolean
+          title: Minimum stay compression
+          description: If the guest want to book a duration lower than the minstay, he will have to pay for a minstay duration.
+        weekend_single_night_forbidden:
+          type: boolean
+          title: Forbid one night minimum stay for the weekend
+          description: Forbid one night minimum stay for the weekend
+        include_variable_min_stay:
+          type: boolean
+          title: Allow to set up periods of minstay
+          description: Activates the possibility of having different MinStays over a specific period. If the booking is taken in a long time, it is interesting to have a higher MinStay than for last minute bookings. This factor should ideally be coupled with 'Minimum Night Number Factor optimized' for optimal results.
+        include_occupancy_rate:
+          type: boolean
+          title: Occupancy rate factor
+          description: Optimize the pricing based on occupancy rate
+        include_automatic_midterm_pricing:
+          type: boolean
+          title: Automatic mid-term pricing
+          description: Automatically create the mid-term ranges and publish them to enable mid-term bookings
+        owner_instruction:
+          type:
+          - string
+          - 'null'
+          description: "\n                                         Fill this field if the owner has any specific instruction\n                                         the pricing strategy.Describe the pricing stragegy:\n                                         Imperative: give the precise objectives,\n                                         give REALISTIC minimum prices for margin of maneuver,\n                                         are they strict ? different high season/low season,\n                                         etc."
+        currency:
+          oneOf:
+          - $ref: '#/components/schemas/CurrencyD53Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        checkout_date_discount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          title: Discount at checkout
+        yearly_max_days:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Maximum amount days booked as short stay per year
+        short_stay_maximum_days:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Number of days after which the stay is a mid-term stay
+        airbnb_non_refundable_price_factor:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+          description: Guests can book the non-refundable rate until the listing's cancellation policy kicks in and if the reservation's check-out date is within 60 days. Note that 1.0 = 0%,  0.9 = 10% and 0.1 = 90% discount. Please use it accordingly.
+        user:
+          type: string
+          readOnly: true
+    NullEnum:
       enum:
-      - ''
+      - null
   securitySchemes:
     basicAuth:
       type: http

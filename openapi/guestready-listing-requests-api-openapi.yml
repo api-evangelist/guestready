@@ -68,6 +68,40 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ListingRequestStatusEnum:
+      enum:
+      - NEW
+      - PENDING
+      - PENDING_LISTING
+      - PUBLISHED
+      - CANCELLED
+      type: string
+      description: '* `NEW` - New
+
+        * `PENDING` - Pending
+
+        * `PENDING_LISTING` - Pending listing
+
+        * `PUBLISHED` - Published
+
+        * `CANCELLED` - Cancelled'
+    SourceEnum:
+      enum:
+      - INTERCOM
+      - PHONECALL
+      - EMAIL
+      - MEETING
+      - BUTTON
+      type: string
+      description: '* `INTERCOM` - Intercom
+
+        * `PHONECALL` - Phone call
+
+        * `EMAIL` - Email
+
+        * `MEETING` - Meeting
+
+        * `BUTTON` - Button'
     ListingRequest:
       type: object
       properties:
@@ -103,40 +137,6 @@ components:
       - staff
       - status
       - user
-    ListingRequestStatusEnum:
-      enum:
-      - NEW
-      - PENDING
-      - PENDING_LISTING
-      - PUBLISHED
-      - CANCELLED
-      type: string
-      description: '* `NEW` - New
-
-        * `PENDING` - Pending
-
-        * `PENDING_LISTING` - Pending listing
-
-        * `PUBLISHED` - Published
-
-        * `CANCELLED` - Cancelled'
-    SourceEnum:
-      enum:
-      - INTERCOM
-      - PHONECALL
-      - EMAIL
-      - MEETING
-      - BUTTON
-      type: string
-      description: '* `INTERCOM` - Intercom
-
-        * `PHONECALL` - Phone call
-
-        * `EMAIL` - Email
-
-        * `MEETING` - Meeting
-
-        * `BUTTON` - Button'
     PaginatedListingRequestList:
       type: object
       required:

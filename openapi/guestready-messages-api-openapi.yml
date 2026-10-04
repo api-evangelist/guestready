@@ -190,20 +190,6 @@ paths:
           description: ''
 components:
   schemas:
-    MessageCreate:
-      type: object
-      properties:
-        conversation_id:
-          type: integer
-        content:
-          type: string
-        channel:
-          allOf:
-          - $ref: '#/components/schemas/ChannelEnum'
-          default: internal
-      required:
-      - content
-      - conversation_id
     PaginatedMessageList:
       type: object
       required:
@@ -232,6 +218,57 @@ components:
         limit:
           type: integer
           example: 50
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        conversation_id:
+          type: integer
+          readOnly: true
+        sender:
+          allOf:
+          - $ref: '#/components/schemas/SenderEnum'
+          readOnly: true
+        content:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        channel:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ChannelEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - channel
+      - content
+      - conversation_id
+      - id
+      - sender
+      - sent_at
+    MessageCreate:
+      type: object
+      properties:
+        conversation_id:
+          type: integer
+        content:
+          type: string
+        channel:
+          allOf:
+          - $ref: '#/components/schemas/ChannelEnum'
+          default: internal
+      required:
+      - content
+      - conversation_id
+    NullEnum:
+      enum:
+      - null
     SenderEnum:
       enum:
       - guest
@@ -240,9 +277,6 @@ components:
       description: '* `guest` - Guest
 
         * `staff` - Staff'
-    NullEnum:
-      enum:
-      - null
     ChannelEnum:
       enum:
       - airbnb
@@ -284,40 +318,6 @@ components:
         * `guestspace` - Guest space
 
         * `support` - Support'
-    Message:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        conversation_id:
-          type: integer
-          readOnly: true
-        sender:
-          allOf:
-          - $ref: '#/components/schemas/SenderEnum'
-          readOnly: true
-        content:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        channel:
-          readOnly: true
-          oneOf:
-          - $ref: '#/components/schemas/ChannelEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        sent_at:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-      - channel
-      - content
-      - conversation_id
-      - id
-      - sender
-      - sent_at
   securitySchemes:
     basicAuth:
       type: http

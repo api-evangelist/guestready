@@ -68,34 +68,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    IssueCategory:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          description: Name of the ticket category.
-          maxLength: 100
-        parent:
-          type:
-          - integer
-          - 'null'
-          description: Id of the parent category, or null when this is a top-level category.
-        full_name:
-          type:
-          - string
-          - 'null'
-          description: Full hierarchical name of the category, combining any parent categories with its own name (for example 'Plumbing > Leak').
-          maxLength: 300
-        user:
-          type: string
-          readOnly: true
-      required:
-      - id
-      - name
-      - user
     PaginatedIssueCategoryList:
       type: object
       required:
@@ -124,6 +96,34 @@ components:
         limit:
           type: integer
           example: 50
+    IssueCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Name of the ticket category.
+          maxLength: 100
+        parent:
+          type:
+          - integer
+          - 'null'
+          description: Id of the parent category, or null when this is a top-level category.
+        full_name:
+          type:
+          - string
+          - 'null'
+          description: Full hierarchical name of the category, combining any parent categories with its own name (for example 'Plumbing > Leak').
+          maxLength: 300
+        user:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - name
+      - user
   securitySchemes:
     basicAuth:
       type: http

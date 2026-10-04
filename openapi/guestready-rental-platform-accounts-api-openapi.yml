@@ -74,65 +74,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    RentalAccountStatusEnum:
-      enum:
-      - new
-      - listed
-      - unlisted
-      - suspended
-      - deleted
-      - missing_data
-      - failed_to_onboard
-      type: string
-      description: '* `new` - New
-
-        * `listed` - Listed
-
-        * `unlisted` - Unlisted
-
-        * `suspended` - Suspended
-
-        * `deleted` - Deleted
-
-        * `missing_data` - Missing data
-
-        * `failed_to_onboard` - Failed to onboard'
-    SynchronizationCategoryEnum:
-      enum:
-      - FULL_SYNC
-      - PARTIAL_SYNC
-      type: string
-      description: '* `FULL_SYNC` - Full synchronisation
-
-        * `PARTIAL_SYNC` - Partial synchronisation'
-    PaginatedRentalAccountList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/RentalAccount'
-        limit:
-          type: integer
-          example: 10
     RentalAccount:
       type: object
       properties:
@@ -173,6 +114,65 @@ components:
       - rental_id
       - reservation_platform_name
       - uuid
+    PaginatedRentalAccountList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalAccount'
+        limit:
+          type: integer
+          example: 10
+    SynchronizationCategoryEnum:
+      enum:
+      - FULL_SYNC
+      - PARTIAL_SYNC
+      type: string
+      description: '* `FULL_SYNC` - Full synchronisation
+
+        * `PARTIAL_SYNC` - Partial synchronisation'
+    RentalAccountStatusEnum:
+      enum:
+      - new
+      - listed
+      - unlisted
+      - suspended
+      - deleted
+      - missing_data
+      - failed_to_onboard
+      type: string
+      description: '* `new` - New
+
+        * `listed` - Listed
+
+        * `unlisted` - Unlisted
+
+        * `suspended` - Suspended
+
+        * `deleted` - Deleted
+
+        * `missing_data` - Missing data
+
+        * `failed_to_onboard` - Failed to onboard'
   securitySchemes:
     basicAuth:
       type: http

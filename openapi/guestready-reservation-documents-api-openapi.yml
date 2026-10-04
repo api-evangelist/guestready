@@ -179,6 +179,20 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    DocumentTypeEnum:
+      enum:
+      - CONTRACT
+      - INVENTORY
+      - LEGAL_DOCS
+      - OTHER
+      type: string
+      description: '* `CONTRACT` - Contract
+
+        * `INVENTORY` - Inventory
+
+        * `LEGAL_DOCS` - Legal documents
+
+        * `OTHER` - Other'
     ReservationDocument:
       type: object
       description: 'Scopes the writable ``reservation`` field to the caller''s rentals.
@@ -257,20 +271,6 @@ components:
         limit:
           type: integer
           example: 50
-    DocumentTypeEnum:
-      enum:
-      - CONTRACT
-      - INVENTORY
-      - LEGAL_DOCS
-      - OTHER
-      type: string
-      description: '* `CONTRACT` - Contract
-
-        * `INVENTORY` - Inventory
-
-        * `LEGAL_DOCS` - Legal documents
-
-        * `OTHER` - Other'
   securitySchemes:
     basicAuth:
       type: http

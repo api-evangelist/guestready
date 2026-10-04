@@ -41,19 +41,6 @@ components:
     BlankEnum:
       enum:
       - ''
-    IdTypeEnum:
-      enum:
-      - P
-      - B
-      - O
-      type: string
-      description: '* `` - Select a travel document type
-
-        * `P` - Passport
-
-        * `B` - National ID card
-
-        * `O` - Other'
     PortugalRegisteredGuestData:
       type: object
       properties:
@@ -142,6 +129,19 @@ components:
       required:
       - is_primary_guest
       - pk
+    IdTypeEnum:
+      enum:
+      - P
+      - B
+      - O
+      type: string
+      description: '* `` - Select a travel document type
+
+        * `P` - Passport
+
+        * `B` - National ID card
+
+        * `O` - Other'
     NullEnum:
       enum:
       - null

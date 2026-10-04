@@ -163,58 +163,18 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CreateListing:
+    ReservationPlatformBrief:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        reservation_platform:
-          type: integer
-        rental:
+        name:
           type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        title:
-          type:
-          - string
-          - 'null'
-          maxLength: 150
-        id_platform:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        id_platform_2:
-          type:
-          - string
-          - 'null'
-          description: Use only when platform has multiple IDs, eg. HomeAway
-          maxLength: 20
-        url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        is_active:
-          type: boolean
-        insurance:
-          type:
-          - integer
-          - 'null'
-        insurance_rate:
-          type:
-          - number
-          - 'null'
-          format: double
-          maximum: 1.0
-          minimum: 0.0
-          description: Insurance rate as invoiced to client
+          maxLength: 50
       required:
       - id
-      - rental
-      - reservation_platform
+      - name
     Listing:
       type: object
       properties:
@@ -278,18 +238,58 @@ components:
       - reservation_platform
       - title
       - url
-    ReservationPlatformBrief:
+    CreateListing:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        name:
+        reservation_platform:
+          type: integer
+        rental:
           type: string
-          maxLength: 50
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        title:
+          type:
+          - string
+          - 'null'
+          maxLength: 150
+        id_platform:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        id_platform_2:
+          type:
+          - string
+          - 'null'
+          description: Use only when platform has multiple IDs, eg. HomeAway
+          maxLength: 20
+        url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        is_active:
+          type: boolean
+        insurance:
+          type:
+          - integer
+          - 'null'
+        insurance_rate:
+          type:
+          - number
+          - 'null'
+          format: double
+          maximum: 1.0
+          minimum: 0.0
+          description: Insurance rate as invoiced to client
       required:
       - id
-      - name
+      - rental
+      - reservation_platform
     PaginatedListingList:
       type: object
       required:

@@ -226,23 +226,77 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    FieldTypeEnum:
-      enum:
-      - text
-      - number
-      - boolean
-      - date
-      - select
-      type: string
-      description: '* `text` - Text
-
-        * `number` - Number
-
-        * `boolean` - Boolean
-
-        * `date` - Date
-
-        * `select` - Select'
+    PatchedCustomFieldDefinition:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        entity_type:
+          $ref: '#/components/schemas/EntityTypeEnum'
+        key:
+          type: string
+          maxLength: 100
+        label:
+          type: string
+          maxLength: 255
+        field_type:
+          $ref: '#/components/schemas/FieldTypeEnum'
+        options:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+          description: List of allowed values. Required for 'select' field type, must be omitted or empty for other types.
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+    CustomFieldSearchResponse:
+      type: object
+      properties:
+        entity_type:
+          $ref: '#/components/schemas/EntityTypeEnum'
+        results:
+          type: array
+          items:
+            type: string
+          description: List of object IDs matching the search criteria.
+      required:
+      - entity_type
+      - results
+    PaginatedCustomFieldDefinitionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldDefinition'
+        limit:
+          type: integer
+          example: 100
     CustomFieldDefinition:
       type: object
       properties:
@@ -281,82 +335,28 @@ components:
       - key
       - label
       - modified
+    FieldTypeEnum:
+      enum:
+      - text
+      - number
+      - boolean
+      - date
+      - select
+      type: string
+      description: '* `text` - Text
+
+        * `number` - Number
+
+        * `boolean` - Boolean
+
+        * `date` - Date
+
+        * `select` - Select'
     EntityTypeEnum:
       type: string
       enum:
       - reservation
       - rental
-    CustomFieldSearchResponse:
-      type: object
-      properties:
-        entity_type:
-          $ref: '#/components/schemas/EntityTypeEnum'
-        results:
-          type: array
-          items:
-            type: string
-          description: List of object IDs matching the search criteria.
-      required:
-      - entity_type
-      - results
-    PatchedCustomFieldDefinition:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        entity_type:
-          $ref: '#/components/schemas/EntityTypeEnum'
-        key:
-          type: string
-          maxLength: 100
-        label:
-          type: string
-          maxLength: 255
-        field_type:
-          $ref: '#/components/schemas/FieldTypeEnum'
-        options:
-          type: array
-          items:
-            type: string
-            maxLength: 255
-          description: List of allowed values. Required for 'select' field type, must be omitted or empty for other types.
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
-    PaginatedCustomFieldDefinitionList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomFieldDefinition'
-        limit:
-          type: integer
-          example: 100
   securitySchemes:
     basicAuth:
       type: http

@@ -109,36 +109,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    TaxableBaseEnum:
-      enum:
-      - RENTAL_INCOME
-      - ACCOMMODATION
-      type: string
-      description: '* `RENTAL_INCOME` - Rental income only
-
-        * `ACCOMMODATION` - Rental income + cleaning fee'
-    ChargeTypeEnum:
-      enum:
-      - PER_ADULT
-      - PER_ROOM
-      - PER_NIGHT
-      type: string
-      description: '* `PER_ADULT` - Per adult / per night
-
-        * `PER_ROOM` - Per room / per night
-
-        * `PER_NIGHT` - Per night'
-    ChargeWithEnum:
-      enum:
-      - FIXED
-      - PERCENTAGE
-      type: string
-      description: '* `FIXED` - Fixed
-
-        * `PERCENTAGE` - Percentage'
-    NullEnum:
-      enum:
-      - null
     BlankEnum:
       enum:
       - ''
@@ -204,34 +174,6 @@ components:
         * `THB` - THB
 
         * `USD` - USD'
-    PaginatedCityRuleList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/CityRule'
-        limit:
-          type: integer
-          example: 50
     CityRule:
       type: object
       properties:
@@ -377,6 +319,64 @@ components:
       - currency
       - id
       - name
+    PaginatedCityRuleList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CityRule'
+        limit:
+          type: integer
+          example: 50
+    TaxableBaseEnum:
+      enum:
+      - RENTAL_INCOME
+      - ACCOMMODATION
+      type: string
+      description: '* `RENTAL_INCOME` - Rental income only
+
+        * `ACCOMMODATION` - Rental income + cleaning fee'
+    ChargeWithEnum:
+      enum:
+      - FIXED
+      - PERCENTAGE
+      type: string
+      description: '* `FIXED` - Fixed
+
+        * `PERCENTAGE` - Percentage'
+    ChargeTypeEnum:
+      enum:
+      - PER_ADULT
+      - PER_ROOM
+      - PER_NIGHT
+      type: string
+      description: '* `PER_ADULT` - Per adult / per night
+
+        * `PER_ROOM` - Per room / per night
+
+        * `PER_NIGHT` - Per night'
+    NullEnum:
+      enum:
+      - null
   securitySchemes:
     basicAuth:
       type: http

@@ -185,6 +185,26 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    Status1a4Enum:
+      enum:
+      - AUTHORIZED
+      - NOT_PAID
+      - PAID
+      - FAILED
+      - VOIDED
+      - PROCESSED
+      type: string
+      description: '* `AUTHORIZED` - Authorized
+
+        * `NOT_PAID` - Not paid
+
+        * `PAID` - Paid
+
+        * `FAILED` - Failed
+
+        * `VOIDED` - Voided
+
+        * `PROCESSED` - Processed'
     PaymentLinkCurrencyEnum:
       enum:
       - EUR
@@ -339,26 +359,6 @@ components:
         * `SECURITY_DEPOSIT` - Security deposit
 
         * `OTHER` - Other'
-    Status1a4Enum:
-      enum:
-      - AUTHORIZED
-      - NOT_PAID
-      - PAID
-      - FAILED
-      - VOIDED
-      - PROCESSED
-      type: string
-      description: '* `AUTHORIZED` - Authorized
-
-        * `NOT_PAID` - Not paid
-
-        * `PAID` - Paid
-
-        * `FAILED` - Failed
-
-        * `VOIDED` - Voided
-
-        * `PROCESSED` - Processed'
     PaginatedPaymentLinkList:
       type: object
       required:

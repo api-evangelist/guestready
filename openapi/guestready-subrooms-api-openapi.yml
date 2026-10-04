@@ -245,6 +245,58 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    Bed:
+      type: object
+      properties:
+        bed_type:
+          type: string
+      required:
+      - bed_type
+    SubroomWindowCoverageEnum:
+      enum:
+      - SHUTTER
+      - ESHUTTER
+      - CURTAIN
+      - STORE
+      - NOTHING
+      type: string
+      description: '* `SHUTTER` - Shutter
+
+        * `ESHUTTER` - Electronic Shutter
+
+        * `CURTAIN` - Curtain
+
+        * `STORE` - Store
+
+        * `NOTHING` - No Coverage'
+    PaginatedSubroomList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subroom'
+        limit:
+          type: integer
+          example: 50
     PrivacyEnum:
       enum:
       - PRIVATE
@@ -256,99 +308,6 @@ components:
         * `SHARED` - Shared
 
         * `ENSUITE` - Ensuite'
-    LocationEnum:
-      enum:
-      - ENSUITE
-      - NEXT_DOOR
-      - DOWN_THE_HALL
-      - OPPOSITE_THE_ROOM
-      - IN_THE_HALLWAY
-      - OTHER
-      - INSIDE_THE_UNIT
-      type: string
-      description: '* `ENSUITE` - Ensuite
-
-        * `NEXT_DOOR` - Next door
-
-        * `DOWN_THE_HALL` - Down the hall
-
-        * `OPPOSITE_THE_ROOM` - Opposite to the room
-
-        * `IN_THE_HALLWAY` - In the hallway
-
-        * `OTHER` - Other
-
-        * `INSIDE_THE_UNIT` - Inside the unit'
-    PatchedSubroom:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: Id of the property (rental) this room belongs to.
-        subroom_type:
-          type: string
-          description: Room type, given by its name (e.g. BEDROOM, BATHROOM). Use the /api/v3/subroom_types/ endpoint to list available values.
-        position:
-          type: integer
-          readOnly: true
-          description: Position of the room within its property, assigned automatically in creation order.
-        privacy:
-          allOf:
-          - $ref: '#/components/schemas/PrivacyEnum'
-          default: PRIVATE
-          description: 'Privacy level of the room for the guest. Defaults to PRIVATE.
-
-
-            * `PRIVATE` - Private
-
-            * `SHARED` - Shared
-
-            * `ENSUITE` - Ensuite'
-        location:
-          description: 'Location of the room relative to the space it serves, such as a bathroom relative to its bedroom. Optional.
-
-
-            * `ENSUITE` - Ensuite
-
-            * `NEXT_DOOR` - Next door
-
-            * `DOWN_THE_HALL` - Down the hall
-
-            * `OPPOSITE_THE_ROOM` - Opposite to the room
-
-            * `IN_THE_HALLWAY` - In the hallway
-
-            * `OTHER` - Other
-
-            * `INSIDE_THE_UNIT` - Inside the unit'
-          oneOf:
-          - $ref: '#/components/schemas/LocationEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        window_coverage:
-          description: 'Type of window covering in the room. Optional.
-
-
-            * `SHUTTER` - Shutter
-
-            * `ESHUTTER` - Electronic Shutter
-
-            * `CURTAIN` - Curtain
-
-            * `STORE` - Store
-
-            * `NOTHING` - No Coverage'
-          oneOf:
-          - $ref: '#/components/schemas/SubroomWindowCoverageEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        beds:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bed'
-          description: Beds in this room.
     Subroom:
       type: object
       properties:
@@ -424,61 +383,102 @@ components:
       - position
       - rental_id
       - subroom_type
-    Bed:
-      type: object
-      properties:
-        bed_type:
-          type: string
-      required:
-      - bed_type
-    SubroomWindowCoverageEnum:
+    LocationEnum:
       enum:
-      - SHUTTER
-      - ESHUTTER
-      - CURTAIN
-      - STORE
-      - NOTHING
+      - ENSUITE
+      - NEXT_DOOR
+      - DOWN_THE_HALL
+      - OPPOSITE_THE_ROOM
+      - IN_THE_HALLWAY
+      - OTHER
+      - INSIDE_THE_UNIT
       type: string
-      description: '* `SHUTTER` - Shutter
+      description: '* `ENSUITE` - Ensuite
 
-        * `ESHUTTER` - Electronic Shutter
+        * `NEXT_DOOR` - Next door
 
-        * `CURTAIN` - Curtain
+        * `DOWN_THE_HALL` - Down the hall
 
-        * `STORE` - Store
+        * `OPPOSITE_THE_ROOM` - Opposite to the room
 
-        * `NOTHING` - No Coverage'
+        * `IN_THE_HALLWAY` - In the hallway
+
+        * `OTHER` - Other
+
+        * `INSIDE_THE_UNIT` - Inside the unit'
     NullEnum:
       enum:
       - null
-    PaginatedSubroomList:
+    PatchedSubroom:
       type: object
-      required:
-      - count
-      - results
       properties:
-        count:
+        id:
           type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: Id of the property (rental) this room belongs to.
+        subroom_type:
+          type: string
+          description: Room type, given by its name (e.g. BEDROOM, BATHROOM). Use the /api/v3/subroom_types/ endpoint to list available values.
+        position:
+          type: integer
+          readOnly: true
+          description: Position of the room within its property, assigned automatically in creation order.
+        privacy:
+          allOf:
+          - $ref: '#/components/schemas/PrivacyEnum'
+          default: PRIVATE
+          description: 'Privacy level of the room for the guest. Defaults to PRIVATE.
+
+
+            * `PRIVATE` - Private
+
+            * `SHARED` - Shared
+
+            * `ENSUITE` - Ensuite'
+        location:
+          description: 'Location of the room relative to the space it serves, such as a bathroom relative to its bedroom. Optional.
+
+
+            * `ENSUITE` - Ensuite
+
+            * `NEXT_DOOR` - Next door
+
+            * `DOWN_THE_HALL` - Down the hall
+
+            * `OPPOSITE_THE_ROOM` - Opposite to the room
+
+            * `IN_THE_HALLWAY` - In the hallway
+
+            * `OTHER` - Other
+
+            * `INSIDE_THE_UNIT` - Inside the unit'
+          oneOf:
+          - $ref: '#/components/schemas/LocationEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        window_coverage:
+          description: 'Type of window covering in the room. Optional.
+
+
+            * `SHUTTER` - Shutter
+
+            * `ESHUTTER` - Electronic Shutter
+
+            * `CURTAIN` - Curtain
+
+            * `STORE` - Store
+
+            * `NOTHING` - No Coverage'
+          oneOf:
+          - $ref: '#/components/schemas/SubroomWindowCoverageEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        beds:
           type: array
           items:
-            $ref: '#/components/schemas/Subroom'
-        limit:
-          type: integer
-          example: 50
+            $ref: '#/components/schemas/Bed'
+          description: Beds in this room.
   securitySchemes:
     basicAuth:
       type: http

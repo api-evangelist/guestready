@@ -194,6 +194,34 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PaginatedDescriptionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Description'
+        limit:
+          type: integer
+          example: 50
     UpdateDescription:
       type: object
       properties:
@@ -303,34 +331,6 @@ components:
           - string
           - 'null'
           description: Any other useful details about the property not covered by the other sections.
-    PaginatedDescriptionList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Description'
-        limit:
-          type: integer
-          example: 50
     Description:
       type: object
       properties:

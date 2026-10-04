@@ -203,6 +203,30 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PatchedSmartScheduler:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+        mission_template:
+          type: integer
+        schedule:
+          type: integer
+        default_agent:
+          type:
+          - integer
+          - 'null'
+        initial_run:
+          type: string
+          format: date-time
+        is_active:
+          type: boolean
+          title: Is active?
     SmartScheduler:
       type: object
       properties:
@@ -232,30 +256,6 @@ components:
       - mission_template
       - rental
       - schedule
-    PatchedSmartScheduler:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-        mission_template:
-          type: integer
-        schedule:
-          type: integer
-        default_agent:
-          type:
-          - integer
-          - 'null'
-        initial_run:
-          type: string
-          format: date-time
-        is_active:
-          type: boolean
-          title: Is active?
     PaginatedSmartSchedulerList:
       type: object
       required:

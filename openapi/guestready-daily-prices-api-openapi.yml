@@ -147,6 +147,35 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    DailyPrice:
+      type: object
+      properties:
+        is_available:
+          allOf:
+          - $ref: '#/components/schemas/IsAvailableEnum'
+          readOnly: true
+        date:
+          type: string
+          format: date
+        price:
+          type: number
+          format: double
+        minimum_stay:
+          type: integer
+        pricing_calendar:
+          type: integer
+          readOnly: true
+        rental_id:
+          type: string
+        user:
+          type: string
+          readOnly: true
+      required:
+      - is_available
+      - price
+      - pricing_calendar
+      - rental_id
+      - user
     PaginatedDailyPriceList:
       type: object
       required:
@@ -186,35 +215,6 @@ components:
         * `BOOKED` - BOOKED
 
         * `UNAVAILABLE` - UNAVAILABLE'
-    DailyPrice:
-      type: object
-      properties:
-        is_available:
-          allOf:
-          - $ref: '#/components/schemas/IsAvailableEnum'
-          readOnly: true
-        date:
-          type: string
-          format: date
-        price:
-          type: number
-          format: double
-        minimum_stay:
-          type: integer
-        pricing_calendar:
-          type: integer
-          readOnly: true
-        rental_id:
-          type: string
-        user:
-          type: string
-          readOnly: true
-      required:
-      - is_available
-      - price
-      - pricing_calendar
-      - rental_id
-      - user
   securitySchemes:
     basicAuth:
       type: http

@@ -91,6 +91,40 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    SmartLockList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+          description: Human-readable name including the provider prefix, e.g. 'Akiles - Cylindre V2 - 25 Feutrier 75018 Paris R+2'.
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeD5dEnum'
+          readOnly: true
+          description: Smart lock provider key (e.g. 'akiles'), or null when no provider is linked.
+        gadget_id:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+          description: Akiles gadget identifier as used by the Akiles platform, or null for non-Akiles locks.
+      required:
+      - gadget_id
+      - id
+      - name
+      - type
+    TypeD5dEnum:
+      type: string
+      enum:
+      - akiles
+      - nuki
+      - ttlock
+      - omnitec
+      - salto_space
     PaginatedSmartLockListList:
       type: object
       required:
@@ -119,40 +153,6 @@ components:
         limit:
           type: integer
           example: 200
-    TypeD5dEnum:
-      type: string
-      enum:
-      - akiles
-      - nuki
-      - ttlock
-      - omnitec
-      - salto_space
-    SmartLockList:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-          readOnly: true
-          description: Human-readable name including the provider prefix, e.g. 'Akiles - Cylindre V2 - 25 Feutrier 75018 Paris R+2'.
-        type:
-          allOf:
-          - $ref: '#/components/schemas/TypeD5dEnum'
-          readOnly: true
-          description: Smart lock provider key (e.g. 'akiles'), or null when no provider is linked.
-        gadget_id:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-          description: Akiles gadget identifier as used by the Akiles platform, or null for non-Akiles locks.
-      required:
-      - gadget_id
-      - id
-      - name
-      - type
   securitySchemes:
     basicAuth:
       type: http
