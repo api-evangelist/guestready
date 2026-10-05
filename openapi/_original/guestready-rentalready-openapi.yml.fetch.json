@@ -1,0 +1,12 @@
+{
+ "url": "https://pms.rentalready.io/api/v3/schema/",
+ "requested_url": "https://pms.rentalready.io/api/v3/schema/",
+ "status": 200,
+ "content_type": "application/yaml; charset=utf-8",
+ "bytes": 713965,
+ "sha256": "747915bf35a6b21e07ce6a08b8421bdb0cbb7dfa33a100f1408bf292c1d7f043",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.93), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
