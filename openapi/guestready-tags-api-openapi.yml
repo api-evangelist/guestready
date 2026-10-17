@@ -152,6 +152,29 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ColorEnum:
+      enum:
+      - orange
+      - red
+      - pink
+      - violet
+      - blue
+      - green
+      - gray
+      type: string
+      description: '* `orange` - Orange
+
+        * `red` - Red
+
+        * `pink` - Pink
+
+        * `violet` - Violet
+
+        * `blue` - Blue
+
+        * `green` - Green
+
+        * `gray` - Gray'
     PatchedRentalTag:
       type: object
       properties:
@@ -181,6 +204,34 @@ components:
             * `green` - Green
 
             * `gray` - Gray'
+    PaginatedRentalTagList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalTag'
+        limit:
+          type: integer
+          example: 50
     RentalTag:
       type: object
       properties:
@@ -213,57 +264,6 @@ components:
       required:
       - id
       - name
-    ColorEnum:
-      enum:
-      - orange
-      - red
-      - pink
-      - violet
-      - blue
-      - green
-      - gray
-      type: string
-      description: '* `orange` - Orange
-
-        * `red` - Red
-
-        * `pink` - Pink
-
-        * `violet` - Violet
-
-        * `blue` - Blue
-
-        * `green` - Green
-
-        * `gray` - Gray'
-    PaginatedRentalTagList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/RentalTag'
-        limit:
-          type: integer
-          example: 50
   securitySchemes:
     basicAuth:
       type: http

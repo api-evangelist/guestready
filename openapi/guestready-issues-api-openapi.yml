@@ -460,15 +460,15 @@ paths:
           description: ''
 components:
   schemas:
-    PaginatedIssueNoteList:
+    PaginatedSupportUserGroupList:
       type: object
       required:
+      - count
       - results
       properties:
         count:
           type: integer
           example: 123
-          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
         next:
           type:
           - string
@@ -484,11 +484,10 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/IssueNote'
+            $ref: '#/components/schemas/SupportUserGroup'
         limit:
           type: integer
           example: 50
-          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
     PatchedIssue:
       type: object
       properties:
@@ -633,7 +632,7 @@ components:
         user:
           type: string
           readOnly: true
-    PaginatedSupportUserGroupList:
+    PaginatedIssueList:
       type: object
       required:
       - count
@@ -657,7 +656,7 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/SupportUserGroup'
+            $ref: '#/components/schemas/Issue'
         limit:
           type: integer
           example: 50
@@ -716,6 +715,82 @@ components:
         * `ON_HOLD` - On hold
 
         * `FINANCIAL_REVIEW` - Under financial review'
+    PaginatedIssueNoteList:
+      type: object
+      required:
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssueNote'
+        limit:
+          type: integer
+          example: 50
+          description: Only present when paginating with `limit`/`offset`, not with `cursor`.
+    IssueNote:
+      type: object
+      description: 'A note on a ticket: the internal, append-only activity log of the ticket.
+
+
+        The author is server-controlled -- the viewset sets it from the authenticated
+
+        caller -- so a client cannot attribute a note to somebody else. ``issue`` IS
+
+        writable here (unlike the ticket-nested shape this replaced, where it came
+
+        from the URL), and its write queryset is scoped to the caller''s own tickets,
+
+        same as every writable relation on ``IssueSerializer``.'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        issue:
+          type: integer
+          description: Id of the ticket the note belongs to.
+        note:
+          type: string
+          description: Text of the note to add to the ticket.
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: Id of the user who wrote the note, if still known.
+        created_by_name:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the note was written.
+      required:
+      - created_at
+      - created_by
+      - created_by_name
+      - id
+      - issue
+      - note
     Issue:
       type: object
       properties:
@@ -864,95 +939,6 @@ components:
       - category
       - id
       - user
-    IssueNote:
-      type: object
-      description: 'A note on a ticket: the internal, append-only activity log of the ticket.
-
-
-        The author is server-controlled -- the viewset sets it from the authenticated
-
-        caller -- so a client cannot attribute a note to somebody else. ``issue`` IS
-
-        writable here (unlike the ticket-nested shape this replaced, where it came
-
-        from the URL), and its write queryset is scoped to the caller''s own tickets,
-
-        same as every writable relation on ``IssueSerializer``.'
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        issue:
-          type: integer
-          description: Id of the ticket the note belongs to.
-        note:
-          type: string
-          description: Text of the note to add to the ticket.
-        created_by:
-          type:
-          - integer
-          - 'null'
-          readOnly: true
-          description: Id of the user who wrote the note, if still known.
-        created_by_name:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-          description: When the note was written.
-      required:
-      - created_at
-      - created_by
-      - created_by_name
-      - id
-      - issue
-      - note
-    SupportUserGroup:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the support-user group, usually naming a team and the region it covers (for example 'Owner Success France').
-          maxLength: 100
-      required:
-      - id
-    PaginatedIssueList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Issue'
-        limit:
-          type: integer
-          example: 50
     PriorityLevelEnum:
       enum:
       - LV1_EMERGENCY
@@ -967,6 +953,20 @@ components:
         * `LV3_MEDIUM` - Mid
 
         * `LV4_LOW` - Low'
+    SupportUserGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the support-user group, usually naming a team and the region it covers (for example 'Owner Success France').
+          maxLength: 100
+      required:
+      - id
   securitySchemes:
     basicAuth:
       type: http

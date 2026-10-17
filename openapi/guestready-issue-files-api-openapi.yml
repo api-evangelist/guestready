@@ -179,9 +179,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    BlankEnum:
-      enum:
-      - ''
     IssueFile:
       type: object
       properties:
@@ -216,26 +213,35 @@ components:
       - id
       - url
       - user
-    TagEnum:
-      enum:
-      - BEFORE
-      - DURING
-      - AFTER
-      - QUOTE
-      - INVOICE
-      - REPORT
-      type: string
-      description: '* `BEFORE` - Before the incident
-
-        * `DURING` - During the incident
-
-        * `AFTER` - After the incident
-
-        * `QUOTE` - Quote (cost estimation)
-
-        * `INVOICE` - Invoice
-
-        * `REPORT` - Report'
+    PatchedIssueFile:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        file:
+          type: string
+          format: uri
+        tag:
+          oneOf:
+          - $ref: '#/components/schemas/TagEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        url:
+          type: string
+          readOnly: true
+        title:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+        issue:
+          type:
+          - integer
+          - 'null'
+        user:
+          type: string
+          readOnly: true
     PaginatedIssueFileList:
       type: object
       required:
@@ -267,35 +273,29 @@ components:
     NullEnum:
       enum:
       - null
-    PatchedIssueFile:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        file:
-          type: string
-          format: uri
-        tag:
-          oneOf:
-          - $ref: '#/components/schemas/TagEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        url:
-          type: string
-          readOnly: true
-        title:
-          type:
-          - string
-          - 'null'
-          maxLength: 50
-        issue:
-          type:
-          - integer
-          - 'null'
-        user:
-          type: string
-          readOnly: true
+    TagEnum:
+      enum:
+      - BEFORE
+      - DURING
+      - AFTER
+      - QUOTE
+      - INVOICE
+      - REPORT
+      type: string
+      description: '* `BEFORE` - Before the incident
+
+        * `DURING` - During the incident
+
+        * `AFTER` - After the incident
+
+        * `QUOTE` - Quote (cost estimation)
+
+        * `INVOICE` - Invoice
+
+        * `REPORT` - Report'
+    BlankEnum:
+      enum:
+      - ''
   securitySchemes:
     basicAuth:
       type: http

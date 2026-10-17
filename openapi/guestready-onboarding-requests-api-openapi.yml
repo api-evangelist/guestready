@@ -96,6 +96,17 @@ components:
         limit:
           type: integer
           example: 10
+    OnboardingRequestStatusEnum:
+      enum:
+      - OPEN
+      - CLOSE
+      - DECLINED
+      type: string
+      description: '* `OPEN` - Open
+
+        * `CLOSE` - Close
+
+        * `DECLINED` - Declined'
     OnboardingRequest:
       type: object
       properties:
@@ -137,17 +148,6 @@ components:
       - requested_by
       - status
       - user
-    OnboardingRequestStatusEnum:
-      enum:
-      - OPEN
-      - CLOSE
-      - DECLINED
-      type: string
-      description: '* `OPEN` - Open
-
-        * `CLOSE` - Close
-
-        * `DECLINED` - Declined'
   securitySchemes:
     basicAuth:
       type: http

@@ -190,93 +190,6 @@ paths:
           description: ''
 components:
   schemas:
-    PaginatedMessageList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-        limit:
-          type: integer
-          example: 50
-    Message:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        conversation_id:
-          type: integer
-          readOnly: true
-        sender:
-          allOf:
-          - $ref: '#/components/schemas/SenderEnum'
-          readOnly: true
-        content:
-          type:
-          - string
-          - 'null'
-          readOnly: true
-        channel:
-          readOnly: true
-          oneOf:
-          - $ref: '#/components/schemas/ChannelEnum'
-          - $ref: '#/components/schemas/NullEnum'
-        sent_at:
-          type: string
-          format: date-time
-          readOnly: true
-      required:
-      - channel
-      - content
-      - conversation_id
-      - id
-      - sender
-      - sent_at
-    MessageCreate:
-      type: object
-      properties:
-        conversation_id:
-          type: integer
-        content:
-          type: string
-        channel:
-          allOf:
-          - $ref: '#/components/schemas/ChannelEnum'
-          default: internal
-      required:
-      - content
-      - conversation_id
-    NullEnum:
-      enum:
-      - null
-    SenderEnum:
-      enum:
-      - guest
-      - staff
-      type: string
-      description: '* `guest` - Guest
-
-        * `staff` - Staff'
     ChannelEnum:
       enum:
       - airbnb
@@ -318,6 +231,93 @@ components:
         * `guestspace` - Guest space
 
         * `support` - Support'
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        conversation_id:
+          type: integer
+          readOnly: true
+        sender:
+          allOf:
+          - $ref: '#/components/schemas/SenderEnum'
+          readOnly: true
+        content:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        channel:
+          readOnly: true
+          oneOf:
+          - $ref: '#/components/schemas/ChannelEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - channel
+      - content
+      - conversation_id
+      - id
+      - sender
+      - sent_at
+    PaginatedMessageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        limit:
+          type: integer
+          example: 50
+    SenderEnum:
+      enum:
+      - guest
+      - staff
+      type: string
+      description: '* `guest` - Guest
+
+        * `staff` - Staff'
+    MessageCreate:
+      type: object
+      properties:
+        conversation_id:
+          type: integer
+        content:
+          type: string
+        channel:
+          allOf:
+          - $ref: '#/components/schemas/ChannelEnum'
+          default: internal
+      required:
+      - content
+      - conversation_id
+    NullEnum:
+      enum:
+      - null
   securitySchemes:
     basicAuth:
       type: http

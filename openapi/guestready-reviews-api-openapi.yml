@@ -104,38 +104,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ReviewReply:
-      type: object
-      properties:
-        message:
-          type: string
-        submitted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        author:
-          allOf:
-          - $ref: '#/components/schemas/ReviewReplyAuthor'
-      required:
-      - author
-      - message
-    ReviewReplyAuthor:
-      type: object
-      properties:
-        username:
-          type: string
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-          pattern: ^[\w.@+-]+$
-          maxLength: 150
-        first_name:
-          type: string
-          maxLength: 150
-        last_name:
-          type: string
-          maxLength: 150
-      required:
-      - username
     GuestReview:
       type: object
       properties:
@@ -208,23 +176,6 @@ components:
       - replies
       - reservation_id
       - reservation_platform_name
-    GuestReviewCriteria:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 250
-        rating:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
-        comment:
-          type:
-          - string
-          - 'null'
-      required:
-      - name
-      - rating
     PaginatedGuestReviewList:
       type: object
       required:
@@ -253,6 +204,55 @@ components:
         limit:
           type: integer
           example: 200
+    GuestReviewCriteria:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 250
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        comment:
+          type:
+          - string
+          - 'null'
+      required:
+      - name
+      - rating
+    ReviewReply:
+      type: object
+      properties:
+        message:
+          type: string
+        submitted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        author:
+          allOf:
+          - $ref: '#/components/schemas/ReviewReplyAuthor'
+      required:
+      - author
+      - message
+    ReviewReplyAuthor:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
   securitySchemes:
     basicAuth:
       type: http

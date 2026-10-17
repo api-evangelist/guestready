@@ -110,42 +110,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedSwiklyDepositList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SwiklyDeposit'
-        limit:
-          type: integer
-          example: 100
-    Status6f9Enum:
-      enum:
-      - NOT_PAID
-      - PAID
-      type: string
-      description: '* `NOT_PAID` - NOT_PAID
-
-        * `PAID` - PAID'
     SwiklyDeposit:
       type: object
       properties:
@@ -192,6 +156,42 @@ components:
       - payment_link
       - reservation_id
       - status
+    Status6f9Enum:
+      enum:
+      - NOT_PAID
+      - PAID
+      type: string
+      description: '* `NOT_PAID` - NOT_PAID
+
+        * `PAID` - PAID'
+    PaginatedSwiklyDepositList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SwiklyDeposit'
+        limit:
+          type: integer
+          example: 100
   securitySchemes:
     basicAuth:
       type: http

@@ -68,34 +68,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedIssueCategoryList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/IssueCategory'
-        limit:
-          type: integer
-          example: 50
     IssueCategory:
       type: object
       properties:
@@ -124,6 +96,34 @@ components:
       - id
       - name
       - user
+    PaginatedIssueCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/IssueCategory'
+        limit:
+          type: integer
+          example: 50
   securitySchemes:
     basicAuth:
       type: http

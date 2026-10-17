@@ -43,99 +43,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    AccountingInvoiceCreateTypeEnum:
-      enum:
-      - INVOICE
-      - STATEMENT
-      - CREDIT_NOTE
-      - RECEIPT
-      type: string
-      description: '* `INVOICE` - Invoice
-
-        * `STATEMENT` - Statement
-
-        * `CREDIT_NOTE` - Credit Note
-
-        * `RECEIPT` - Receipt'
-    AccountingInvoiceCreate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        external_id:
-          type: string
-          maxLength: 200
-        pdf:
-          type: string
-          format: uri
-        type:
-          $ref: '#/components/schemas/AccountingInvoiceCreateTypeEnum'
-        category:
-          $ref: '#/components/schemas/AccountingInvoiceCreateCategoryEnum'
-        original_invoice:
-          type:
-          - integer
-          - 'null'
-        serie:
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        emmission_date:
-          type:
-          - string
-          - 'null'
-          format: date
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-        total_net:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          description: Price without VAT
-        total_gross:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-          description: Price with VAT
-        total_vat:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
-        currency:
-          $ref: '#/components/schemas/CurrencyD53Enum'
-        reservation:
-          type:
-          - integer
-          - 'null'
-        payout_adjustment:
-          type:
-          - integer
-          - 'null'
-        payment_link:
-          type:
-          - integer
-          - 'null'
-        source_id:
-          type: integer
-          writeOnly: true
-      required:
-      - category
-      - external_id
-      - id
-      - pdf
-      - source_id
-      - type
     CurrencyD53Enum:
       enum:
       - AED
@@ -236,6 +143,99 @@ components:
         * `EXTRA_FEE` - Extra fee
 
         * `GUEST_INVOICE` - Guest invoice'
+    AccountingInvoiceCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        external_id:
+          type: string
+          maxLength: 200
+        pdf:
+          type: string
+          format: uri
+        type:
+          $ref: '#/components/schemas/AccountingInvoiceCreateTypeEnum'
+        category:
+          $ref: '#/components/schemas/AccountingInvoiceCreateCategoryEnum'
+        original_invoice:
+          type:
+          - integer
+          - 'null'
+        serie:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        emmission_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        total_net:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: Price without VAT
+        total_gross:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+          description: Price with VAT
+        total_vat:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          pattern: ^-?\d{0,13}(?:\.\d{0,2})?$
+        currency:
+          $ref: '#/components/schemas/CurrencyD53Enum'
+        reservation:
+          type:
+          - integer
+          - 'null'
+        payout_adjustment:
+          type:
+          - integer
+          - 'null'
+        payment_link:
+          type:
+          - integer
+          - 'null'
+        source_id:
+          type: integer
+          writeOnly: true
+      required:
+      - category
+      - external_id
+      - id
+      - pdf
+      - source_id
+      - type
+    AccountingInvoiceCreateTypeEnum:
+      enum:
+      - INVOICE
+      - STATEMENT
+      - CREDIT_NOTE
+      - RECEIPT
+      type: string
+      description: '* `INVOICE` - Invoice
+
+        * `STATEMENT` - Statement
+
+        * `CREDIT_NOTE` - Credit Note
+
+        * `RECEIPT` - Receipt'
   securitySchemes:
     basicAuth:
       type: http

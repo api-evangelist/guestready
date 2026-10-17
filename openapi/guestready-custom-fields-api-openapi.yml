@@ -226,6 +226,24 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    EntityTypeEnum:
+      type: string
+      enum:
+      - reservation
+      - rental
+    CustomFieldSearchResponse:
+      type: object
+      properties:
+        entity_type:
+          $ref: '#/components/schemas/EntityTypeEnum'
+        results:
+          type: array
+          items:
+            type: string
+          description: List of object IDs matching the search criteria.
+      required:
+      - entity_type
+      - results
     PatchedCustomFieldDefinition:
       type: object
       properties:
@@ -256,19 +274,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-    CustomFieldSearchResponse:
-      type: object
-      properties:
-        entity_type:
-          $ref: '#/components/schemas/EntityTypeEnum'
-        results:
-          type: array
-          items:
-            type: string
-          description: List of object IDs matching the search criteria.
-      required:
-      - entity_type
-      - results
     PaginatedCustomFieldDefinitionList:
       type: object
       required:
@@ -352,11 +357,6 @@ components:
         * `date` - Date
 
         * `select` - Select'
-    EntityTypeEnum:
-      type: string
-      enum:
-      - reservation
-      - rental
   securitySchemes:
     basicAuth:
       type: http

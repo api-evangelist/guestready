@@ -215,41 +215,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedBedroomList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bedroom'
-        limit:
-          type: integer
-          example: 50
-    Bed:
-      type: object
-      properties:
-        bed_type:
-          type: string
-      required:
-      - bed_type
     Bedroom:
       type: object
       properties:
@@ -281,6 +246,38 @@ components:
       - id
       - rental_id
       - universal_adapter
+    BedroomTypeEnum:
+      enum:
+      - BEDROOM
+      - LIVINGROOM
+      type: string
+      description: '* `BEDROOM` - BEDROOM
+
+        * `LIVINGROOM` - LIVINGROOM'
+    Bed:
+      type: object
+      properties:
+        bed_type:
+          type: string
+      required:
+      - bed_type
+    BedroomWindowCoverageEnum:
+      enum:
+      - SHUTTER
+      - ESHUTTER
+      - CURTAIN
+      - STORE
+      - NOTHING
+      type: string
+      description: '* `SHUTTER` - SHUTTER
+
+        * `ESHUTTER` - ESHUTTER
+
+        * `CURTAIN` - CURTAIN
+
+        * `STORE` - STORE
+
+        * `NOTHING` - NOTHING'
     PatchedBedroom:
       type: object
       properties:
@@ -307,31 +304,34 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Bed'
-    BedroomTypeEnum:
-      enum:
-      - BEDROOM
-      - LIVINGROOM
-      type: string
-      description: '* `BEDROOM` - BEDROOM
-
-        * `LIVINGROOM` - LIVINGROOM'
-    BedroomWindowCoverageEnum:
-      enum:
-      - SHUTTER
-      - ESHUTTER
-      - CURTAIN
-      - STORE
-      - NOTHING
-      type: string
-      description: '* `SHUTTER` - SHUTTER
-
-        * `ESHUTTER` - ESHUTTER
-
-        * `CURTAIN` - CURTAIN
-
-        * `STORE` - STORE
-
-        * `NOTHING` - NOTHING'
+    PaginatedBedroomList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bedroom'
+        limit:
+          type: integer
+          example: 50
     NullEnum:
       enum:
       - null

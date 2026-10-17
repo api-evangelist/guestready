@@ -74,46 +74,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    RentalAccount:
-      type: object
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        rental_id:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-          readOnly: true
-        account_email:
-          type: string
-          readOnly: true
-          maxLength: 500
-        reservation_platform_name:
-          type: string
-          readOnly: true
-          maxLength: 250
-        synchronization_category:
-          $ref: '#/components/schemas/SynchronizationCategoryEnum'
-        url:
-          type:
-          - string
-          - 'null'
-          format: uri
-          maxLength: 200
-        platform_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 250
-        status:
-          $ref: '#/components/schemas/RentalAccountStatusEnum'
-      required:
-      - account_email
-      - rental_id
-      - reservation_platform_name
-      - uuid
     PaginatedRentalAccountList:
       type: object
       required:
@@ -173,6 +133,46 @@ components:
         * `missing_data` - Missing data
 
         * `failed_to_onboard` - Failed to onboard'
+    RentalAccount:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        rental_id:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+          readOnly: true
+        account_email:
+          type: string
+          readOnly: true
+          maxLength: 500
+        reservation_platform_name:
+          type: string
+          readOnly: true
+          maxLength: 250
+        synchronization_category:
+          $ref: '#/components/schemas/SynchronizationCategoryEnum'
+        url:
+          type:
+          - string
+          - 'null'
+          format: uri
+          maxLength: 200
+        platform_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 250
+        status:
+          $ref: '#/components/schemas/RentalAccountStatusEnum'
+      required:
+      - account_email
+      - rental_id
+      - reservation_platform_name
+      - uuid
   securitySchemes:
     basicAuth:
       type: http

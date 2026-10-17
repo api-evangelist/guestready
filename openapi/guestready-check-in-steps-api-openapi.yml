@@ -289,37 +289,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    BlankEnum:
-      enum:
-      - ''
-    PaginatedCheckInStepList:
-      type: object
-      required:
-      - count
-      - results
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckInStep'
-        limit:
-          type: integer
-          example: 50
     CheckInStep:
       type: object
       properties:
@@ -366,35 +335,6 @@ components:
           type: string
       required:
       - order
-    CheckInStepAttachment:
-      type: object
-      properties:
-        image:
-          type:
-          - string
-          - 'null'
-          format: uri
-        file:
-          type:
-          - string
-          - 'null'
-          format: uri
-        image_or_file:
-          type:
-          - string
-          - 'null'
-          format: uri
-    ShowForCheckInTypeEnum:
-      enum:
-      - SELF_CHECK_IN
-      - IN_PERSON
-      type: string
-      description: '* `SELF_CHECK_IN` - Self check-in
-
-        * `IN_PERSON` - In-person check-in'
-    NullEnum:
-      enum:
-      - null
     PatchedCheckInStep:
       type: object
       properties:
@@ -439,6 +379,37 @@ components:
           type: string
         content_nl:
           type: string
+    BlankEnum:
+      enum:
+      - ''
+    PaginatedCheckInStepList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckInStep'
+        limit:
+          type: integer
+          example: 50
     OrderCheckInSteps:
       type: object
       properties:
@@ -451,6 +422,35 @@ components:
       required:
       - rental_id
       - step_ids
+    ShowForCheckInTypeEnum:
+      enum:
+      - SELF_CHECK_IN
+      - IN_PERSON
+      type: string
+      description: '* `SELF_CHECK_IN` - Self check-in
+
+        * `IN_PERSON` - In-person check-in'
+    NullEnum:
+      enum:
+      - null
+    CheckInStepAttachment:
+      type: object
+      properties:
+        image:
+          type:
+          - string
+          - 'null'
+          format: uri
+        file:
+          type:
+          - string
+          - 'null'
+          format: uri
+        image_or_file:
+          type:
+          - string
+          - 'null'
+          format: uri
   securitySchemes:
     basicAuth:
       type: http

@@ -146,6 +146,27 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PatchedRentalPlatformSettings:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rental:
+          type: string
+          title: Contract number
+          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
+          readOnly: true
+        platform:
+          type: integer
+          readOnly: true
+        platform_name:
+          type: string
+          readOnly: true
+        markup:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
     PaginatedRentalPlatformSettingsList:
       type: object
       required:
@@ -200,27 +221,6 @@ components:
       - platform
       - platform_name
       - rental
-    PatchedRentalPlatformSettings:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        rental:
-          type: string
-          title: Contract number
-          description: "This field is not editable after creation.\n ALWAYS fill it with the correct value"
-          readOnly: true
-        platform:
-          type: integer
-          readOnly: true
-        platform_name:
-          type: string
-          readOnly: true
-        markup:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,11}(?:\.\d{0,4})?$
   securitySchemes:
     basicAuth:
       type: http

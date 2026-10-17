@@ -317,20 +317,6 @@ components:
         * `THB` - THB
 
         * `USD` - USD'
-    PaymentCollectionMethodEnum:
-      enum:
-      - CASH
-      - BANK_TRANSFER
-      - CHEQUE
-      - STRIPE
-      type: string
-      description: '* `CASH` - Cash
-
-        * `BANK_TRANSFER` - Bank Transfer
-
-        * `CHEQUE` - Cheque
-
-        * `STRIPE` - Stripe'
     PaginatedPaymentAcceptanceTransactionList:
       type: object
       required:
@@ -359,6 +345,20 @@ components:
         limit:
           type: integer
           example: 100
+    PaymentCollectionMethodEnum:
+      enum:
+      - CASH
+      - BANK_TRANSFER
+      - CHEQUE
+      - STRIPE
+      type: string
+      description: '* `CASH` - Cash
+
+        * `BANK_TRANSFER` - Bank Transfer
+
+        * `CHEQUE` - Cheque
+
+        * `STRIPE` - Stripe'
   securitySchemes:
     basicAuth:
       type: http

@@ -124,6 +124,14 @@ paths:
           description: ''
 components:
   schemas:
+    KindEnum:
+      enum:
+      - PERCENTAGE
+      - FIXED
+      type: string
+      description: '* `PERCENTAGE` - Percentage
+
+        * `FIXED` - Fixed amount'
     Voucher:
       type: object
       properties:
@@ -224,14 +232,6 @@ components:
       - validity_end
       - validity_start
       - value
-    KindEnum:
-      enum:
-      - PERCENTAGE
-      - FIXED
-      type: string
-      description: '* `PERCENTAGE` - Percentage
-
-        * `FIXED` - Fixed amount'
     PaginatedVoucherList:
       type: object
       required:
