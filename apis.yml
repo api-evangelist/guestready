@@ -325,6 +325,8 @@ apis:
   humanURL: https://pms.rentalready.io/api/v3/schema/swagger-ui/
   baseURL: https://pms.rentalready.io/api/v3/
   tags:
+  - ICals
+  tags_raw:
   - icals
   properties:
   - type: OpenAPI
